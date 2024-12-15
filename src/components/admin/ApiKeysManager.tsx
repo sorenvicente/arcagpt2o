@@ -22,6 +22,9 @@ const ApiKeysManager = () => {
 
   useEffect(() => {
     checkAdminStatus();
+  }, []);
+
+  useEffect(() => {
     if (isAdmin) {
       fetchApiKeys();
     }
