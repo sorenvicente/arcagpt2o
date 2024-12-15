@@ -14,7 +14,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { supabase } from "@/integrations/supabase/client";
 
 const promptSchema = z.object({
   name: z.string().min(2, {
@@ -45,19 +44,18 @@ export function PromptCreator() {
 
   async function onSubmit(values: z.infer<typeof promptSchema>) {
     try {
-      const { error } = await supabase
-        .from("prompt_blocks")
-        .insert({
-          name: values.name,
-          description: values.description,
-          prompt: values.prompt,
-          category: values.category,
-        });
-
-      if (error) {
-        console.error("Erro detalhado:", error);
-        throw error;
-      }
+      // Recupera prompts existentes ou inicializa array vazio
+      const existingPrompts = JSON.parse(localStorage.getItem('prompts') || '[]');
+      
+      // Adiciona novo prompt com ID único
+      const newPrompt = {
+        id: Date.now(),
+        ...values,
+        createdAt: new Date().toISOString()
+      };
+      
+      // Salva no localStorage
+      localStorage.setItem('prompts', JSON.stringify([...existingPrompts, newPrompt]));
 
       toast({
         title: "Prompt criado com sucesso!",
