@@ -17,7 +17,9 @@ const ApiKeysPage = () => {
     openai_key: "",
     openrouter_key: "",
   });
-  const [selectedModel, setSelectedModel] = useState("openai");
+  const [selectedModel, setSelectedModel] = useState(() => 
+    localStorage.getItem("selectedModel") || "gpt4"
+  );
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -52,12 +54,15 @@ const ApiKeysPage = () => {
     setIsLoading(true);
 
     try {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from("api_keys")
         .upsert({
+          id: 1, // Using a fixed ID for single record
           openai_key: keys.openai_key,
           openrouter_key: keys.openrouter_key,
-        });
+        })
+        .select()
+        .single();
 
       if (error) throw error;
 
@@ -67,7 +72,15 @@ const ApiKeysPage = () => {
         title: "Sucesso!",
         description: "Chaves API e preferências salvas com sucesso.",
       });
+      
+      if (data) {
+        setKeys({
+          openai_key: data.openai_key || "",
+          openrouter_key: data.openrouter_key || "",
+        });
+      }
     } catch (error: any) {
+      console.error("Error saving:", error);
       toast({
         title: "Erro",
         description: "Erro ao salvar as chaves API.",
