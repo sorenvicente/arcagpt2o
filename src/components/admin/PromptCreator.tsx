@@ -45,7 +45,7 @@ export function PromptCreator() {
 
   async function onSubmit(values: z.infer<typeof promptSchema>) {
     try {
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from("prompt_blocks")
         .insert([{
           name: values.name,
