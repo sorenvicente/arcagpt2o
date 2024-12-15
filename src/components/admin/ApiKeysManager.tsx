@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Shield } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
+import { useAdminStatus } from "./hooks/useAdminStatus";
+import { useApiKeys } from "./hooks/useApiKeys";
 import ApiKeyForm from "./ApiKeyForm";
 import {
   Card,
@@ -12,159 +12,14 @@ import {
 } from "@/components/ui/card";
 
 const ApiKeysManager = () => {
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [keys, setKeys] = useState({
-    openai_key: "",
-    openrouter_key: "",
-  });
-  const { toast } = useToast();
-
-  useEffect(() => {
-    checkAdminStatus();
-  }, []);
+  const { isAdmin, isLoading } = useAdminStatus();
+  const { keys, setKeys, fetchApiKeys, handleSaveKeys } = useApiKeys();
 
   useEffect(() => {
     if (isAdmin) {
       fetchApiKeys();
     }
   }, [isAdmin]);
-
-  const checkAdminStatus = async () => {
-    try {
-      const { data: { user }, error: authError } = await supabase.auth.getUser();
-      
-      if (authError) {
-        console.error("Auth error:", authError);
-        toast({
-          title: "Erro de Autenticação",
-          description: "Erro ao verificar status de administrador.",
-          variant: "destructive",
-        });
-        setIsLoading(false);
-        return;
-      }
-
-      if (!user) {
-        toast({
-          title: "Acesso Negado",
-          description: "Você precisa estar logado como administrador.",
-          variant: "destructive",
-        });
-        setIsLoading(false);
-        return;
-      }
-
-      const { data: profile, error: profileError } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', user.id)
-        .single();
-
-      if (profileError) {
-        console.error("Error fetching profile:", profileError);
-        toast({
-          title: "Erro",
-          description: "Erro ao verificar perfil de administrador.",
-          variant: "destructive",
-        });
-        setIsLoading(false);
-        return;
-      }
-
-      if (profile?.role === 'admin') {
-        setIsAdmin(true);
-      } else {
-        toast({
-          title: "Acesso Negado",
-          description: "Você não tem permissão de administrador.",
-          variant: "destructive",
-        });
-      }
-    } catch (error) {
-      console.error("Error checking admin status:", error);
-      toast({
-        title: "Erro",
-        description: "Erro ao verificar status de administrador.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const fetchApiKeys = async () => {
-    try {
-      const { data, error } = await supabase
-        .from("api_keys")
-        .select("*")
-        .single();
-
-      if (error) {
-        if (error.code === "PGRST116") {
-          // No data found, this is fine for new installations
-          return;
-        }
-        console.error("Error fetching API keys:", error);
-        toast({
-          title: "Erro",
-          description: "Não foi possível carregar as chaves API.",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      if (data) {
-        setKeys({
-          openai_key: data.openai_key || "",
-          openrouter_key: data.openrouter_key || "",
-        });
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      toast({
-        title: "Erro",
-        description: "Erro ao carregar chaves API.",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleSaveKeys = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    try {
-      const { error } = await supabase
-        .from("api_keys")
-        .upsert({
-          id: "1",
-          openai_key: keys.openai_key,
-          openrouter_key: keys.openrouter_key,
-        });
-
-      if (error) {
-        console.error("Error saving keys:", error);
-        toast({
-          title: "Erro ao salvar",
-          description: "Não foi possível salvar as chaves de API.",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      toast({
-        title: "Chaves salvas",
-        description: "As chaves de API foram atualizadas com sucesso.",
-      });
-    } catch (error) {
-      console.error("Error saving keys:", error);
-      toast({
-        title: "Erro",
-        description: "Ocorreu um erro ao salvar as chaves.",
-        variant: "destructive",
-      });
-    }
-  };
 
   if (isLoading) {
     return (
