@@ -3,7 +3,6 @@ import { Shield } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import ApiKeyForm from "./ApiKeyForm";
-import AdminCheck from "./AdminCheck";
 import {
   Card,
   CardContent,
