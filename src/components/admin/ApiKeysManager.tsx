@@ -13,6 +13,7 @@ import {
 
 const ApiKeysManager = () => {
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [keys, setKeys] = useState({
     openai_key: "",
     openrouter_key: "",
@@ -30,57 +31,126 @@ const ApiKeysManager = () => {
   }, [isAdmin]);
 
   const checkAdminStatus = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (user?.email === "admin@example.com") {
-      setIsAdmin(true);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        toast({
+          title: "Acesso Negado",
+          description: "Você precisa estar logado como administrador.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single();
+
+      if (profileError) {
+        console.error("Error fetching profile:", profileError);
+        return;
+      }
+
+      if (profile?.role === 'admin') {
+        setIsAdmin(true);
+      }
+    } catch (error) {
+      console.error("Error checking admin status:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const fetchApiKeys = async () => {
-    const { data, error } = await supabase
-      .from("api_keys")
-      .select("*")
-      .single();
+    try {
+      const { data, error } = await supabase
+        .from("api_keys")
+        .select("*")
+        .single();
 
-    if (error) {
-      console.error("Error fetching API keys:", error);
-      return;
-    }
+      if (error) {
+        if (error.code === "PGRST116") {
+          // No data found, this is fine for new installations
+          return;
+        }
+        console.error("Error fetching API keys:", error);
+        toast({
+          title: "Erro",
+          description: "Não foi possível carregar as chaves API.",
+          variant: "destructive",
+        });
+        return;
+      }
 
-    if (data) {
-      setKeys({
-        openai_key: data.openai_key || "",
-        openrouter_key: data.openrouter_key || "",
-      });
+      if (data) {
+        setKeys({
+          openai_key: data.openai_key || "",
+          openrouter_key: data.openrouter_key || "",
+        });
+      }
+    } catch (error) {
+      console.error("Error:", error);
     }
   };
 
   const handleSaveKeys = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    const { error } = await supabase
-      .from("api_keys")
-      .upsert({
-        openai_key: keys.openai_key,
-        openrouter_key: keys.openrouter_key,
-      });
+    try {
+      const { error } = await supabase
+        .from("api_keys")
+        .upsert({
+          id: 1, // Using a fixed ID for the single row
+          openai_key: keys.openai_key,
+          openrouter_key: keys.openrouter_key,
+        });
 
-    if (error) {
+      if (error) {
+        toast({
+          title: "Erro ao salvar",
+          description: "Não foi possível salvar as chaves de API.",
+          variant: "destructive",
+        });
+        return;
+      }
+
       toast({
-        title: "Erro ao salvar",
-        description: "Não foi possível salvar as chaves de API.",
+        title: "Chaves salvas",
+        description: "As chaves de API foram atualizadas com sucesso.",
+      });
+    } catch (error) {
+      console.error("Error saving keys:", error);
+      toast({
+        title: "Erro",
+        description: "Ocorreu um erro ao salvar as chaves.",
         variant: "destructive",
       });
-      return;
     }
-
-    toast({
-      title: "Chaves salvas",
-      description: "As chaves de API foram atualizadas com sucesso.",
-    });
   };
 
-  if (!isAdmin) return null;
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[200px]">
+        <p className="text-white">Carregando...</p>
+      </div>
+    );
+  }
+
+  if (!isAdmin) {
+    return (
+      <Card className="w-full max-w-2xl mx-auto bg-chatgpt-main border-chatgpt-border">
+        <CardHeader>
+          <CardTitle className="text-white">Acesso Restrito</CardTitle>
+          <CardDescription className="text-gray-400">
+            Esta área é restrita a administradores.
+          </CardDescription>
+        </CardHeader>
+      </Card>
+    );
+  }
 
   return (
     <Card className="w-full max-w-2xl mx-auto bg-chatgpt-main border-chatgpt-border">
