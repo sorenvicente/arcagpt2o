@@ -77,9 +77,9 @@ const PromptBlock = () => {
   };
 
   return (
-    <form onSubmit={handleSave} className="space-y-4 p-4 border rounded-lg">
+    <form onSubmit={handleSave} className="space-y-4 p-4 bg-chatgpt-secondary rounded-lg border border-chatgpt-border">
       <div className="space-y-2">
-        <label htmlFor="name" className="text-sm font-medium">
+        <label htmlFor="name" className="text-sm font-medium text-white">
           Nome do Prompt
         </label>
         <Input
@@ -90,11 +90,12 @@ const PromptBlock = () => {
           }
           placeholder="Digite o nome do prompt"
           required
+          className="bg-chatgpt-input border-chatgpt-border text-white placeholder:text-gray-400"
         />
       </div>
 
       <div className="space-y-2">
-        <label htmlFor="description" className="text-sm font-medium">
+        <label htmlFor="description" className="text-sm font-medium text-white">
           Descrição
         </label>
         <Input
@@ -104,11 +105,12 @@ const PromptBlock = () => {
             setPromptData({ ...promptData, description: e.target.value })
           }
           placeholder="Digite uma breve descrição"
+          className="bg-chatgpt-input border-chatgpt-border text-white placeholder:text-gray-400"
         />
       </div>
 
       <div className="space-y-2">
-        <label htmlFor="prompt" className="text-sm font-medium">
+        <label htmlFor="prompt" className="text-sm font-medium text-white">
           Prompt
         </label>
         <Textarea
@@ -120,11 +122,12 @@ const PromptBlock = () => {
           placeholder="Digite o prompt"
           rows={4}
           required
+          className="bg-chatgpt-input border-chatgpt-border text-white placeholder:text-gray-400"
         />
       </div>
 
       <div className="space-y-2">
-        <label htmlFor="category" className="text-sm font-medium">
+        <label htmlFor="category" className="text-sm font-medium text-white">
           Categoria
         </label>
         <Select
@@ -134,20 +137,20 @@ const PromptBlock = () => {
           }
           required
         >
-          <SelectTrigger>
+          <SelectTrigger className="bg-chatgpt-input border-chatgpt-border text-white">
             <SelectValue placeholder="Selecione uma categoria" />
           </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="proposito">Propósito</SelectItem>
-            <SelectItem value="metodo">Método</SelectItem>
-            <SelectItem value="mentoria">Mentoria</SelectItem>
-            <SelectItem value="curso">Curso</SelectItem>
-            <SelectItem value="conteudo">Conteúdo</SelectItem>
+          <SelectContent className="bg-chatgpt-secondary border-chatgpt-border">
+            <SelectItem value="proposito" className="text-white hover:bg-chatgpt-hover">Propósito</SelectItem>
+            <SelectItem value="metodo" className="text-white hover:bg-chatgpt-hover">Método</SelectItem>
+            <SelectItem value="mentoria" className="text-white hover:bg-chatgpt-hover">Mentoria</SelectItem>
+            <SelectItem value="curso" className="text-white hover:bg-chatgpt-hover">Curso</SelectItem>
+            <SelectItem value="conteudo" className="text-white hover:bg-chatgpt-hover">Conteúdo</SelectItem>
           </SelectContent>
         </Select>
       </div>
 
-      <Button type="submit" className="w-full">
+      <Button type="submit" className="w-full bg-chatgpt-hover hover:bg-chatgpt-secondary border border-chatgpt-border text-white">
         Salvar Prompt
       </Button>
     </form>
