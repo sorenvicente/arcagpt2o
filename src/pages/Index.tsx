@@ -18,7 +18,6 @@ const Index = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isTestingApi, setIsTestingApi] = useState(false);
-  const [activePrompt, setActivePrompt] = useState<string>('');
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -107,15 +106,6 @@ const Index = () => {
     }
   };
 
-  const handleSelectPrompt = (prompt: string) => {
-    setActivePrompt(prompt);
-    toast({
-      title: "Prompt Selecionado",
-      description: "O contexto foi atualizado para o assistente.",
-      duration: 3000,
-    });
-  };
-
   const handleSendMessage = async (content: string) => {
     if (!content.trim()) {
       toast({
@@ -150,10 +140,6 @@ const Index = () => {
       
       setMessages(newMessages);
 
-      const apiMessages = activePrompt 
-        ? [{ role: 'system', content: activePrompt }, ...newMessages]
-        : newMessages;
-
       const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {
@@ -162,7 +148,7 @@ const Index = () => {
         },
         body: JSON.stringify({
           model: "gpt-3.5-turbo",
-          messages: apiMessages,
+          messages: newMessages,
           max_tokens: 1000,
           temperature: 0.7,
         })
@@ -199,7 +185,7 @@ const Index = () => {
       />
       
       <main className={`flex-1 transition-all duration-300 relative ${isSidebarOpen ? 'ml-64' : 'ml-0'}`}>
-        <ChatHeader isSidebarOpen={isSidebarOpen} activePrompt={activePrompt} />
+        <ChatHeader isSidebarOpen={isSidebarOpen} />
         
         <div className={`flex h-full flex-col ${messages.length === 0 ? 'items-center justify-center' : 'justify-between'} pt-[60px] pb-4`}>
           {messages.length === 0 ? (
@@ -215,7 +201,7 @@ const Index = () => {
                     {isTestingApi ? "Testando..." : "Testar Chaves API"}
                   </Button>
                 </div>
-                <ActionButtons onSelectPrompt={handleSelectPrompt} />
+                <ActionButtons />
                 <ChatInput onSend={handleSendMessage} isLoading={isLoading} />
               </div>
             </div>
@@ -223,7 +209,7 @@ const Index = () => {
             <>
               <MessageList messages={messages} />
               <div className="w-full max-w-3xl mx-auto px-4 py-2">
-                <ActionButtons onSelectPrompt={handleSelectPrompt} />
+                <ActionButtons />
                 <ChatInput onSend={handleSendMessage} isLoading={isLoading} />
               </div>
             </>
