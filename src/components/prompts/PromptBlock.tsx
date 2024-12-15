@@ -21,11 +21,23 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+export type Category = "proposito" | "metodo" | "mentoria" | "curso" | "conteudo";
+
 interface PromptFormData {
   name: string;
   description: string;
   prompt: string;
-  category: string;
+  category: Category;
+}
+
+export interface PromptBlockType {
+  id: string;
+  name: string;
+  description: string | null;
+  prompt: string;
+  category: Category;
+  created_at: string;
+  updated_at: string;
 }
 
 export const PromptBlock = () => {
@@ -37,7 +49,7 @@ export const PromptBlock = () => {
       name: "",
       description: "",
       prompt: "",
-      category: "",
+      category: "proposito",
     },
   });
 

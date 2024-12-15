@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { PromptBlock } from "./PromptBlock";
 import { supabase } from "@/integrations/supabase/client";
 import {
   Card,
@@ -10,9 +9,10 @@ import {
 } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
+import { PromptBlockType } from "./PromptBlock";
 
 const PromptList = () => {
-  const [prompts, setPrompts] = useState<PromptBlock[]>([]);
+  const [prompts, setPrompts] = useState<PromptBlockType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
 
@@ -37,10 +37,7 @@ const PromptList = () => {
         }
 
         if (data) {
-          const typedPrompts = data.map(prompt => ({
-            ...prompt,
-            category: prompt.category as PromptBlock["category"]
-          }));
+          const typedPrompts = data as PromptBlockType[];
           setPrompts(typedPrompts);
         }
       } catch (error) {

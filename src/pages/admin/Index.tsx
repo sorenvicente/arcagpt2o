@@ -1,5 +1,5 @@
 import ApiKeysManager from "@/components/admin/ApiKeysManager";
-import PromptBlock from "@/components/prompts/PromptBlock";
+import { PromptBlock } from "@/components/prompts/PromptBlock";
 import PromptList from "@/components/prompts/PromptList";
 
 const AdminPage = () => {
