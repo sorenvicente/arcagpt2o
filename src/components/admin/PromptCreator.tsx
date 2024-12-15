@@ -57,6 +57,9 @@ export function PromptCreator() {
       // Salva no localStorage
       localStorage.setItem('prompts', JSON.stringify([...existingPrompts, newPrompt]));
 
+      // Dispara evento para atualizar a lista
+      window.dispatchEvent(new Event('storage'));
+
       toast({
         title: "Prompt criado com sucesso!",
         description: "O prompt foi salvo e já pode ser utilizado.",
