@@ -7,16 +7,16 @@ create table if not exists public.prompt_blocks (
   category text
 );
 
--- Habilitar RLS
-alter table public.prompt_blocks enable row level security;
+-- Desabilitar RLS temporariamente para testes
+alter table public.prompt_blocks disable row level security;
 
--- Criar política para permitir inserções para todos os usuários
+-- Criar política para permitir inserções para todos os usuários (será ativada quando RLS for reativado)
 create policy "Enable insert for all users" on public.prompt_blocks
   for insert
   to public
   with check (true);
 
--- Criar política para permitir leitura para todos os usuários
+-- Criar política para permitir leitura para todos os usuários (será ativada quando RLS for reativado)
 create policy "Enable read for all users" on public.prompt_blocks
   for select
   to public

@@ -47,14 +47,17 @@ export function PromptCreator() {
     try {
       const { error } = await supabase
         .from("prompt_blocks")
-        .insert([{
+        .insert({
           name: values.name,
           description: values.description,
           prompt: values.prompt,
           category: values.category,
-        }]);
+        });
 
-      if (error) throw error;
+      if (error) {
+        console.error("Erro detalhado:", error);
+        throw error;
+      }
 
       toast({
         title: "Prompt criado com sucesso!",
