@@ -3,11 +3,11 @@ import { useEffect, useState } from "react";
 
 interface ActionButtonsProps {
   onSelectPrompt: (prompt: string, category: string) => void;
+  activeCategory: string | null;
 }
 
-const ActionButtons = ({ onSelectPrompt }: ActionButtonsProps) => {
+const ActionButtons = ({ onSelectPrompt, activeCategory }: ActionButtonsProps) => {
   const [prompts, setPrompts] = useState<any[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   useEffect(() => {
     const loadPrompts = () => {
@@ -23,7 +23,6 @@ const ActionButtons = ({ onSelectPrompt }: ActionButtonsProps) => {
   }, []);
 
   const handlePromptSelect = (category: string) => {
-    setSelectedCategory(category);
     const selectedPrompt = prompts.find(p => p.category.toLowerCase() === category.toLowerCase());
     if (selectedPrompt) {
       onSelectPrompt(selectedPrompt.prompt, category);
@@ -45,8 +44,10 @@ const ActionButtons = ({ onSelectPrompt }: ActionButtonsProps) => {
         <button 
           key={action.label} 
           onClick={() => handlePromptSelect(action.category)}
-          className={`relative flex h-[42px] items-center gap-1.5 rounded-full border border-[#383737] px-3 py-2 text-start text-[13px] shadow-xxs transition enabled:hover:bg-chatgpt-secondary disabled:cursor-not-allowed xl:gap-2 xl:text-[14px] cursor-pointer ${
-            selectedCategory === action.category ? 'bg-chatgpt-secondary' : ''
+          className={`relative flex h-[42px] items-center gap-1.5 rounded-full border px-3 py-2 text-start text-[13px] transition enabled:hover:bg-chatgpt-secondary disabled:cursor-not-allowed xl:gap-2 xl:text-[14px] cursor-pointer ${
+            activeCategory === action.category 
+              ? 'bg-chatgpt-secondary border-chatgpt-border' 
+              : 'border-[#383737] hover:bg-chatgpt-hover'
           }`}
         >
           {action.icon}

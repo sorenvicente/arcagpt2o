@@ -15,13 +15,14 @@ export const useChat = () => {
     setActivePrompt(promptContent);
     setActiveCategory(category);
     
+    // Limpa as mensagens anteriores e define o novo contexto do sistema
     setMessages([{
       role: 'system',
       content: promptContent
     }]);
 
     toast({
-      title: "Prompt selecionado",
+      title: "Agente selecionado",
       description: `Contexto atualizado para: ${category}`,
     });
   };
