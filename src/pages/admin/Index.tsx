@@ -1,6 +1,3 @@
-import ApiKeysManager from "@/components/admin/ApiKeysManager";
-import PromptManager from "@/components/admin/PromptManager";
-
 const AdminPage = () => {
   return (
     <div className="min-h-screen bg-chatgpt-main p-6">
@@ -13,7 +10,7 @@ const AdminPage = () => {
           </div>
           
           <div className="bg-chatgpt-secondary rounded-lg p-6 border border-chatgpt-border">
-            <PromptManager />
+            <p className="text-white text-center">Aguardando criação</p>
           </div>
         </div>
       </div>
