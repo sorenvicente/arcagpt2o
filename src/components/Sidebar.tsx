@@ -1,22 +1,48 @@
 import { Menu, MessageSquare, ChevronDown, User } from 'lucide-react';
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from 'react';
 
 interface SidebarProps {
   isOpen: boolean;
   onToggle: () => void;
 }
 
+interface Prompt {
+  id: number;
+  name: string;
+  category: string;
+}
+
 const Sidebar = ({ isOpen, onToggle }: SidebarProps) => {
   const navigate = useNavigate();
+  const [contentPrompts, setContentPrompts] = useState<Prompt[]>([]);
   
   const mentorGPTs = [
     { title: "Propósito", icon: <MessageSquare className="h-4 w-4" /> },
     { title: "Método", icon: <MessageSquare className="h-4 w-4" /> },
     { title: "Mentoria", icon: <MessageSquare className="h-4 w-4" /> },
     { title: "Curso", icon: <MessageSquare className="h-4 w-4" /> },
-    { title: "Conteúdo", icon: <MessageSquare className="h-4 w-4" /> }
+    { title: "Conteúdo", icon: <MessageSquare className="h-4 w-4" />, prompts: contentPrompts }
   ];
+
+  useEffect(() => {
+    const loadPrompts = () => {
+      const savedPrompts = localStorage.getItem('prompts');
+      if (savedPrompts) {
+        const allPrompts = JSON.parse(savedPrompts);
+        const filtered = allPrompts.filter((p: Prompt) => 
+          p.category.toLowerCase() === 'conteudo' || 
+          p.category.toLowerCase() === 'conteúdo'
+        );
+        setContentPrompts(filtered);
+      }
+    };
+
+    loadPrompts();
+    window.addEventListener('storage', loadPrompts);
+    return () => window.removeEventListener('storage', loadPrompts);
+  }, []);
 
   return (
     <div className={cn(
@@ -52,9 +78,23 @@ const Sidebar = ({ isOpen, onToggle }: SidebarProps) => {
             <div className="mt-4 flex flex-col gap-2">
               <div className="px-3 py-2 text-xs text-gray-500">Mentor GPTs</div>
               {mentorGPTs.map((gpt) => (
-                <div key={gpt.title} className="group flex h-10 items-center gap-2.5 rounded-lg px-4 hover:bg-token-sidebar-surface-secondary cursor-pointer">
-                  {gpt.icon}
-                  <span className="text-sm">{gpt.title}</span>
+                <div key={gpt.title}>
+                  <div className="group flex h-10 items-center gap-2.5 rounded-lg px-4 hover:bg-token-sidebar-surface-secondary cursor-pointer">
+                    {gpt.icon}
+                    <span className="text-sm">{gpt.title}</span>
+                  </div>
+                  {gpt.prompts && gpt.prompts.length > 0 && (
+                    <div className="ml-8 flex flex-col gap-1">
+                      {gpt.prompts.map((prompt) => (
+                        <div 
+                          key={prompt.id}
+                          className="text-sm py-1 px-2 hover:bg-token-sidebar-surface-secondary cursor-pointer rounded-md text-gray-300"
+                        >
+                          {prompt.name}
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
