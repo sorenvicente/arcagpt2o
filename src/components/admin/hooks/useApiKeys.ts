@@ -16,6 +16,17 @@ export const useApiKeys = () => {
 
   const fetchApiKeys = async () => {
     try {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        toast({
+          title: "Erro de Autenticação",
+          description: "Você precisa estar logado para acessar as chaves API.",
+          variant: "destructive",
+        });
+        return;
+      }
+
       const { data, error } = await supabase
         .from("api_keys")
         .select("*")
@@ -54,10 +65,21 @@ export const useApiKeys = () => {
     e.preventDefault();
     
     try {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        toast({
+          title: "Erro de Autenticação",
+          description: "Você precisa estar logado para salvar as chaves API.",
+          variant: "destructive",
+        });
+        return;
+      }
+
       const { error } = await supabase
         .from("api_keys")
         .upsert({
-          id: "1",
+          id: crypto.randomUUID(),
           openai_key: keys.openai_key,
           openrouter_key: keys.openrouter_key,
         });

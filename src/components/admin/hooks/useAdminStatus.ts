@@ -13,22 +13,12 @@ export const useAdminStatus = () => {
 
   const checkAdminStatus = async () => {
     try {
-      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      const { data: { session }, error: authError } = await supabase.auth.getSession();
       
-      if (authError) {
+      if (authError || !session) {
         console.error("Auth error:", authError);
         toast({
           title: "Erro de Autenticação",
-          description: "Erro ao verificar status de administrador.",
-          variant: "destructive",
-        });
-        setIsLoading(false);
-        return;
-      }
-
-      if (!user) {
-        toast({
-          title: "Acesso Negado",
           description: "Você precisa estar logado como administrador.",
           variant: "destructive",
         });
@@ -39,7 +29,7 @@ export const useAdminStatus = () => {
       const { data: profile, error: profileError } = await supabase
         .from('profiles')
         .select('role')
-        .eq('id', user.id)
+        .eq('id', session.user.id)
         .single();
 
       if (profileError) {
@@ -53,9 +43,9 @@ export const useAdminStatus = () => {
         return;
       }
 
-      if (profile?.role === 'admin') {
-        setIsAdmin(true);
-      } else {
+      setIsAdmin(profile?.role === 'admin');
+      
+      if (profile?.role !== 'admin') {
         toast({
           title: "Acesso Negado",
           description: "Você não tem permissão de administrador.",
