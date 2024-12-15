@@ -1,6 +1,5 @@
 import ApiKeysManager from "@/components/admin/ApiKeysManager";
-import { PromptBlock } from "@/components/prompts/PromptBlock";
-import PromptList from "@/components/prompts/PromptList";
+import PromptManager from "@/components/admin/PromptManager";
 
 const AdminPage = () => {
   return (
@@ -13,16 +12,8 @@ const AdminPage = () => {
             <ApiKeysManager />
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="bg-chatgpt-secondary rounded-lg p-6 border border-chatgpt-border">
-              <h2 className="text-xl font-semibold mb-4 text-white">Criar Novo Prompt</h2>
-              <PromptBlock />
-            </div>
-            
-            <div className="bg-chatgpt-secondary rounded-lg p-6 border border-chatgpt-border">
-              <h2 className="text-xl font-semibold mb-4 text-white">Prompts Existentes</h2>
-              <PromptList />
-            </div>
+          <div className="bg-chatgpt-secondary rounded-lg p-6 border border-chatgpt-border">
+            <PromptManager />
           </div>
         </div>
       </div>
