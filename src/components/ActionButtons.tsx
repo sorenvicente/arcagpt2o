@@ -1,5 +1,6 @@
 import { Book, Brain, GraduationCap, School, Target } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useToast } from "@/components/ui/use-toast";
 
 interface ActionButtonsProps {
   onSelectPrompt: (prompt: string, category: string) => void;
@@ -8,12 +9,16 @@ interface ActionButtonsProps {
 
 const ActionButtons = ({ onSelectPrompt, activeCategory }: ActionButtonsProps) => {
   const [prompts, setPrompts] = useState<any[]>([]);
+  const { toast } = useToast();
 
   useEffect(() => {
     const loadPrompts = () => {
       const savedPrompts = localStorage.getItem('prompts');
       if (savedPrompts) {
         setPrompts(JSON.parse(savedPrompts));
+        console.log('Prompts carregados:', JSON.parse(savedPrompts));
+      } else {
+        console.log('Nenhum prompt encontrado no localStorage');
       }
     };
 
@@ -26,9 +31,18 @@ const ActionButtons = ({ onSelectPrompt, activeCategory }: ActionButtonsProps) =
     const selectedPrompt = prompts.find(p => p.category.toLowerCase() === category.toLowerCase());
     if (selectedPrompt) {
       onSelectPrompt(selectedPrompt.prompt, category);
-      console.log('Selected prompt:', selectedPrompt.prompt, 'Category:', category);
+      console.log('Prompt selecionado:', selectedPrompt.prompt, 'Categoria:', category);
+      toast({
+        title: "Agente Ativado",
+        description: `${category} foi selecionado como agente ativo`,
+      });
     } else {
-      console.log('No prompt found for category:', category);
+      console.log('Nenhum prompt encontrado para categoria:', category);
+      toast({
+        title: "Erro",
+        description: `Nenhum prompt encontrado para ${category}`,
+        variant: "destructive",
+      });
     }
   };
 

@@ -13,7 +13,7 @@ export const useChat = () => {
 
   const handlePromptSelect = (promptContent: string, category: string) => {
     if (!promptContent || !category) {
-      console.log('Invalid prompt or category:', { promptContent, category });
+      console.log('Prompt ou categoria inválidos:', { promptContent, category });
       return;
     }
 
@@ -31,7 +31,7 @@ export const useChat = () => {
       description: `Contexto atualizado para: ${category}`,
     });
 
-    console.log('Prompt selected:', { promptContent, category });
+    console.log('Prompt selecionado:', { promptContent, category });
   };
 
   const handleSendMessage = async (content: string) => {
