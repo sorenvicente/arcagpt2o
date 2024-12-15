@@ -6,6 +6,7 @@ import ChatHeader from '@/components/ChatHeader';
 import ChatInput from '@/components/ChatInput';
 import ActionButtons from '@/components/ActionButtons';
 import MessageList from '@/components/MessageList';
+import { Button } from '@/components/ui/button';
 
 type Message = {
   role: 'user' | 'assistant';
@@ -16,11 +17,93 @@ const Index = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isTestingApi, setIsTestingApi] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
 
-  const handleNewChat = () => {
-    setMessages([]);
+  const testApiKeys = async () => {
+    setIsTestingApi(true);
+    const savedKeys = localStorage.getItem("api_keys");
+    
+    if (!savedKeys) {
+      toast({
+        title: "Erro",
+        description: "Chaves API não encontradas. Por favor, configure suas chaves primeiro.",
+        variant: "destructive",
+        duration: 3000,
+      });
+      navigate('/api-keys');
+      setIsTestingApi(false);
+      return;
+    }
+
+    const keys = JSON.parse(savedKeys);
+    
+    if (!keys.openai_key || !keys.openrouter_key) {
+      toast({
+        title: "Erro",
+        description: "Uma ou mais chaves API estão faltando. Configure-as primeiro.",
+        variant: "destructive",
+        duration: 3000,
+      });
+      navigate('/api-keys');
+      setIsTestingApi(false);
+      return;
+    }
+
+    try {
+      // Teste da OpenAI API
+      const openaiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${keys.openai_key}`
+        },
+        body: JSON.stringify({
+          model: "gpt-3.5-turbo",
+          messages: [{ role: "user", content: "Hello" }],
+          max_tokens: 5
+        })
+      });
+
+      if (!openaiResponse.ok) {
+        throw new Error("Chave OpenAI inválida");
+      }
+
+      // Teste da OpenRouter API
+      const openrouterResponse = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${keys.openrouter_key}`,
+          'HTTP-Referer': window.location.origin,
+        },
+        body: JSON.stringify({
+          model: "openai/gpt-3.5-turbo",
+          messages: [{ role: "user", content: "Hello" }],
+          max_tokens: 5
+        })
+      });
+
+      if (!openrouterResponse.ok) {
+        throw new Error("Chave OpenRouter inválida");
+      }
+
+      toast({
+        title: "Sucesso!",
+        description: "As duas chaves API foram testadas e estão funcionando corretamente.",
+        duration: 3000,
+      });
+    } catch (error: any) {
+      toast({
+        title: "Erro",
+        description: error.message || "Erro ao testar as chaves API.",
+        variant: "destructive",
+        duration: 3000,
+      });
+    } finally {
+      setIsTestingApi(false);
+    }
   };
 
   const handleSendMessage = async (content: string) => {
@@ -99,20 +182,26 @@ const Index = () => {
       <Sidebar 
         isOpen={isSidebarOpen} 
         onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
-        onNewChat={handleNewChat}
       />
       
-      <main className={`flex-1 transition-all duration-300 relative ${isSidebarOpen ? 'ml-60' : 'ml-0'} bg-[#0f0f0f]`}>
+      <main className={`flex-1 transition-all duration-300 relative ${isSidebarOpen ? 'ml-64' : 'ml-0'}`}>
         <ChatHeader isSidebarOpen={isSidebarOpen} />
         
         <div className={`flex h-full flex-col ${messages.length === 0 ? 'items-center justify-center' : 'justify-between'} pt-[60px] pb-4`}>
           {messages.length === 0 ? (
             <div className="w-full max-w-3xl px-4 space-y-4">
               <div>
-                <h1 className="mb-8 text-4xl font-semibold text-center text-gray-200">Como posso ajudar?</h1>
+                <h1 className="mb-8 text-4xl font-semibold text-center">Como posso ajudar?</h1>
                 <div className="mb-4">
-                  <ActionButtons />
+                  <Button
+                    onClick={testApiKeys}
+                    disabled={isTestingApi}
+                    className="w-full mb-4"
+                  >
+                    {isTestingApi ? "Testando..." : "Testar Chaves API"}
+                  </Button>
                 </div>
+                <ActionButtons />
                 <ChatInput onSend={handleSendMessage} isLoading={isLoading} />
               </div>
             </div>
