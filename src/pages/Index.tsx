@@ -30,7 +30,7 @@ const Index = () => {
         title: "Erro",
         description: "Chaves API não encontradas. Por favor, configure suas chaves primeiro.",
         variant: "destructive",
-        duration: 3000, // 3 segundos
+        duration: 3000,
       });
       navigate('/api-keys');
       setIsTestingApi(false);
@@ -44,7 +44,7 @@ const Index = () => {
         title: "Erro",
         description: "Uma ou mais chaves API estão faltando. Configure-as primeiro.",
         variant: "destructive",
-        duration: 3000, // 3 segundos
+        duration: 3000,
       });
       navigate('/api-keys');
       setIsTestingApi(false);
@@ -52,18 +52,54 @@ const Index = () => {
     }
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Teste da OpenAI API
+      const openaiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${keys.openai_key}`
+        },
+        body: JSON.stringify({
+          model: "gpt-3.5-turbo",
+          messages: [{ role: "user", content: "Hello" }],
+          max_tokens: 5
+        })
+      });
+
+      if (!openaiResponse.ok) {
+        throw new Error("Chave OpenAI inválida");
+      }
+
+      // Teste da OpenRouter API
+      const openrouterResponse = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${keys.openrouter_key}`,
+          'HTTP-Referer': window.location.origin,
+        },
+        body: JSON.stringify({
+          model: "openai/gpt-3.5-turbo",
+          messages: [{ role: "user", content: "Hello" }],
+          max_tokens: 5
+        })
+      });
+
+      if (!openrouterResponse.ok) {
+        throw new Error("Chave OpenRouter inválida");
+      }
+
       toast({
         title: "Sucesso!",
-        description: "As chaves API foram encontradas no sistema.",
-        duration: 3000, // 3 segundos
+        description: "As duas chaves API foram testadas e estão funcionando corretamente.",
+        duration: 3000,
       });
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: "Erro",
-        description: "Erro ao testar as chaves API.",
+        description: error.message || "Erro ao testar as chaves API.",
         variant: "destructive",
-        duration: 3000, // 3 segundos
+        duration: 3000,
       });
     } finally {
       setIsTestingApi(false);
@@ -76,7 +112,7 @@ const Index = () => {
         title: "Erro",
         description: "Por favor, digite uma mensagem",
         variant: "destructive",
-        duration: 3000, // 3 segundos
+        duration: 3000,
       });
       return;
     }
@@ -105,7 +141,7 @@ const Index = () => {
         title: "Erro",
         description: error.message,
         variant: "destructive",
-        duration: 3000, // 3 segundos
+        duration: 3000,
       });
     } finally {
       setIsLoading(false);
