@@ -30,27 +30,20 @@ export const useApiKeys = () => {
       const { data, error } = await supabase
         .from("api_keys")
         .select("*")
+        .limit(1)
         .single();
 
       if (error) {
+        console.error("Error fetching API keys:", error);
         if (error.code === "PGRST116") {
           // No data found, this is fine for first-time setup
           return;
         }
-        console.error("Error fetching API keys:", error);
-        if (error.code === "42501") {
-          toast({
-            title: "Acesso Negado",
-            description: "Você não tem permissão para acessar as chaves API.",
-            variant: "destructive",
-          });
-        } else {
-          toast({
-            title: "Erro",
-            description: "Não foi possível carregar as chaves API.",
-            variant: "destructive",
-          });
-        }
+        toast({
+          title: "Erro",
+          description: "Não foi possível carregar as chaves API.",
+          variant: "destructive",
+        });
         return;
       }
 
@@ -88,26 +81,17 @@ export const useApiKeys = () => {
       const { error } = await supabase
         .from("api_keys")
         .upsert({
-          id: crypto.randomUUID(),
           openai_key: keys.openai_key,
           openrouter_key: keys.openrouter_key,
         });
 
       if (error) {
         console.error("Error saving keys:", error);
-        if (error.code === "42501") {
-          toast({
-            title: "Acesso Negado",
-            description: "Você não tem permissão para salvar as chaves API.",
-            variant: "destructive",
-          });
-        } else {
-          toast({
-            title: "Erro ao salvar",
-            description: "Não foi possível salvar as chaves de API.",
-            variant: "destructive",
-          });
-        }
+        toast({
+          title: "Erro ao salvar",
+          description: "Não foi possível salvar as chaves de API.",
+          variant: "destructive",
+        });
         return;
       }
 
