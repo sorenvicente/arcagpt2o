@@ -7,22 +7,19 @@ import ChatInput from '@/components/ChatInput';
 import ActionButtons from '@/components/ActionButtons';
 import MessageList from '@/components/MessageList';
 import { Button } from '@/components/ui/button';
-
-type Message = {
-  role: 'user' | 'assistant' | 'system';
-  content: string;
-};
+import { Message } from '@/types/chat';
 
 const Index = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isTestingApi, setIsTestingApi] = useState(false);
+  const [activePrompt, setActivePrompt] = useState<string>('');
   const { toast } = useToast();
   const navigate = useNavigate();
 
   const handlePromptSelect = (promptContent: string) => {
-    // Adiciona o prompt como uma mensagem do sistema
+    setActivePrompt(promptContent);
     setMessages(prev => {
       const systemMessage: Message = {
         role: 'system',
@@ -151,7 +148,7 @@ const Index = () => {
     try {
       const newMessages = [
         ...messages,
-        { role: 'user', content } as const
+        { role: 'user' as const, content }
       ];
       
       setMessages(newMessages);
@@ -163,7 +160,7 @@ const Index = () => {
           'Authorization': `Bearer ${keys.openai_key}`
         },
         body: JSON.stringify({
-          model: "gpt-4o",
+          model: "gpt-4",
           messages: newMessages.filter(msg => msg.role !== 'system' || messages.indexOf(msg) === 0),
           max_tokens: 1000,
           temperature: 0.7,
@@ -201,7 +198,10 @@ const Index = () => {
       />
       
       <main className={`flex-1 transition-all duration-300 relative ${isSidebarOpen ? 'ml-64' : 'ml-0'}`}>
-        <ChatHeader isSidebarOpen={isSidebarOpen} />
+        <ChatHeader 
+          isSidebarOpen={isSidebarOpen} 
+          activePrompt={activePrompt}
+        />
         
         <div className={`flex h-full flex-col ${messages.length === 0 ? 'items-center justify-center' : 'justify-between'} pt-[60px] pb-4`}>
           {messages.length === 0 ? (

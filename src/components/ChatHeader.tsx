@@ -1,16 +1,35 @@
 import { ChevronDown } from "lucide-react";
+import { useState } from "react";
 
 interface ChatHeaderProps {
   isSidebarOpen?: boolean;
+  activePrompt?: string;
 }
 
-const ChatHeader = ({ isSidebarOpen = true }: ChatHeaderProps) => {
+const ChatHeader = ({ isSidebarOpen = true, activePrompt }: ChatHeaderProps) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   return (
     <div className="fixed top-0 z-30 w-full border-b border-white/20 bg-chatgpt-main/95 backdrop-blur">
       <div className="flex h-[60px] items-center justify-between px-4">
-        <div className="flex items-center gap-2">
-          <span className={`font-semibold ${!isSidebarOpen ? 'ml-24' : ''}`}>ChatGPT</span>
-          <ChevronDown className="h-4 w-4" />
+        <div className="flex items-center gap-2 relative">
+          <button 
+            onClick={() => setIsMenuOpen(!isMenuOpen)} 
+            className="flex items-center gap-2 hover:bg-gray-800 rounded-md px-2 py-1"
+          >
+            <span className={`font-semibold ${!isSidebarOpen ? 'ml-24' : ''}`}>
+              {activePrompt || "ChatGPT"}
+            </span>
+            <ChevronDown className="h-4 w-4" />
+          </button>
+          
+          {isMenuOpen && (
+            <div className="absolute top-full left-0 mt-1 w-64 bg-gray-800 rounded-md shadow-lg py-1">
+              <div className="px-4 py-2 text-sm text-gray-300">
+                {activePrompt ? `Usando prompt: ${activePrompt}` : "Nenhum prompt selecionado"}
+              </div>
+            </div>
+          )}
         </div>
         <div className="gizmo-shadow-stroke relative flex h-8 w-8 items-center justify-center rounded-full bg-token-main-surface-primary text-token-text-primary">
           <svg width="41" height="41" viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-2/3 w-2/3" role="img">
