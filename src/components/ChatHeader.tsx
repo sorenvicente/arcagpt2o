@@ -15,7 +15,7 @@ const ChatHeader = ({ isSidebarOpen = true, activePrompt }: ChatHeaderProps) => 
         <div className="flex items-center gap-2 relative">
           <button 
             onClick={() => setIsMenuOpen(!isMenuOpen)} 
-            className="flex items-center gap-2 hover:bg-gray-800 rounded-md px-2 py-1 cursor-pointer"
+            className="flex items-center gap-2 hover:bg-chatgpt-secondary rounded-md px-2 py-1 cursor-pointer"
           >
             <span className={`font-semibold ${!isSidebarOpen ? 'ml-24' : ''}`}>
               {activePrompt ? `ChatGPT (${activePrompt})` : "ChatGPT"}

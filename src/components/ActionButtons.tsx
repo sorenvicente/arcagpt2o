@@ -2,7 +2,7 @@ import { Book, Brain, GraduationCap, School, Target } from "lucide-react";
 import { useEffect, useState } from "react";
 
 interface ActionButtonsProps {
-  onSelectPrompt: (prompt: string) => void;
+  onSelectPrompt: (prompt: string, category: string) => void;
 }
 
 const ActionButtons = ({ onSelectPrompt }: ActionButtonsProps) => {
@@ -26,8 +26,8 @@ const ActionButtons = ({ onSelectPrompt }: ActionButtonsProps) => {
     setSelectedCategory(category);
     const selectedPrompt = prompts.find(p => p.category.toLowerCase() === category.toLowerCase());
     if (selectedPrompt) {
-      onSelectPrompt(selectedPrompt.prompt);
-      console.log('Selected prompt:', selectedPrompt.prompt); // Debug log
+      onSelectPrompt(selectedPrompt.prompt, category);
+      console.log('Selected prompt:', selectedPrompt.prompt, 'Category:', category);
     }
   };
 
@@ -45,7 +45,7 @@ const ActionButtons = ({ onSelectPrompt }: ActionButtonsProps) => {
         <button 
           key={action.label} 
           onClick={() => handlePromptSelect(action.category)}
-          className={`relative flex h-[42px] items-center gap-1.5 rounded-full border border-[#383737] px-3 py-2 text-start text-[13px] shadow-xxs transition enabled:hover:bg-token-main-surface-secondary disabled:cursor-not-allowed xl:gap-2 xl:text-[14px] cursor-pointer ${
+          className={`relative flex h-[42px] items-center gap-1.5 rounded-full border border-[#383737] px-3 py-2 text-start text-[13px] shadow-xxs transition enabled:hover:bg-chatgpt-secondary disabled:cursor-not-allowed xl:gap-2 xl:text-[14px] cursor-pointer ${
             selectedCategory === action.category ? 'bg-chatgpt-secondary' : ''
           }`}
         >

@@ -15,22 +15,23 @@ const Index = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isTestingApi, setIsTestingApi] = useState(false);
   const [activePrompt, setActivePrompt] = useState<string>('');
+  const [activeCategory, setActiveCategory] = useState<string>('');
   const { toast } = useToast();
   const navigate = useNavigate();
 
-  const handlePromptSelect = (promptContent: string) => {
+  const handlePromptSelect = (promptContent: string, category: string) => {
     setActivePrompt(promptContent);
-    setMessages(prev => {
-      const systemMessage: Message = {
-        role: 'system',
-        content: promptContent
-      };
-      return [systemMessage, ...prev.filter(msg => msg.role !== 'system')];
-    });
+    setActiveCategory(category);
+    
+    // Clear previous messages and set the new system message
+    setMessages([{
+      role: 'system',
+      content: promptContent
+    }]);
 
     toast({
       title: "Prompt selecionado",
-      description: "O contexto foi atualizado com sucesso.",
+      description: `Contexto atualizado para: ${category}`,
     });
   };
 
@@ -161,7 +162,7 @@ const Index = () => {
         },
         body: JSON.stringify({
           model: "gpt-4",
-          messages: newMessages.filter(msg => msg.role !== 'system' || messages.indexOf(msg) === 0),
+          messages: newMessages,
           max_tokens: 1000,
           temperature: 0.7,
         })
@@ -200,7 +201,7 @@ const Index = () => {
       <main className={`flex-1 transition-all duration-300 relative ${isSidebarOpen ? 'ml-64' : 'ml-0'}`}>
         <ChatHeader 
           isSidebarOpen={isSidebarOpen} 
-          activePrompt={activePrompt}
+          activePrompt={activeCategory}
         />
         
         <div className={`flex h-full flex-col ${messages.length === 0 ? 'items-center justify-center' : 'justify-between'} pt-[60px] pb-4`}>
