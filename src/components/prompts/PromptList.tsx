@@ -58,25 +58,25 @@ const PromptList = () => {
   }, [toast]);
 
   if (isLoading) {
-    return <div className="p-4">Carregando prompts...</div>;
+    return <div className="p-4 text-white">Carregando prompts...</div>;
   }
 
   if (prompts.length === 0) {
-    return <div className="p-4">Nenhum prompt encontrado.</div>;
+    return <div className="p-4 text-white">Nenhum prompt encontrado.</div>;
   }
 
   return (
     <div className="space-y-4">
       {prompts.map((prompt) => (
-        <Card key={prompt.id}>
+        <Card key={prompt.id} className="bg-[#2F2F2F] border-gray-700">
           <CardHeader>
-            <CardTitle>{prompt.name}</CardTitle>
-            <CardDescription>{prompt.description}</CardDescription>
+            <CardTitle className="text-white">{prompt.name}</CardTitle>
+            <CardDescription className="text-gray-400">{prompt.description}</CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-muted-foreground">{prompt.prompt}</p>
+            <p className="text-sm text-gray-300">{prompt.prompt}</p>
             <div className="mt-2">
-              <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded">
+              <span className="text-xs bg-gray-700 text-white px-2 py-1 rounded">
                 {prompt.category}
               </span>
             </div>
