@@ -15,7 +15,7 @@ const ChatHeader = ({ isSidebarOpen = true, activePrompt }: ChatHeaderProps) => 
         <div className="flex items-center gap-2 relative">
           <button 
             onClick={() => setIsMenuOpen(!isMenuOpen)} 
-            className="flex items-center gap-2 hover:bg-gray-800 rounded-md px-2 py-1"
+            className="flex items-center gap-2 hover:bg-gray-800 rounded-md px-2 py-1 cursor-pointer"
           >
             <span className={`font-semibold ${!isSidebarOpen ? 'ml-24' : ''}`}>
               {activePrompt ? `ChatGPT (${activePrompt})` : "ChatGPT"}
@@ -24,7 +24,7 @@ const ChatHeader = ({ isSidebarOpen = true, activePrompt }: ChatHeaderProps) => 
           </button>
           
           {isMenuOpen && (
-            <div className="absolute top-full left-0 mt-1 w-64 bg-gray-800 rounded-md shadow-lg py-1">
+            <div className="absolute top-full left-0 mt-1 w-64 bg-chatgpt-secondary rounded-md shadow-lg py-1 z-50">
               <div className="px-4 py-2 text-sm text-gray-300">
                 {activePrompt ? `Usando prompt: ${activePrompt}` : "Nenhum prompt selecionado"}
               </div>
