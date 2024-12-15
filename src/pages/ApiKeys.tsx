@@ -2,6 +2,14 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const ApiKeysPage = () => {
   const { toast } = useToast();
@@ -9,21 +17,65 @@ const ApiKeysPage = () => {
     openai_key: "",
     openrouter_key: "",
   });
+  const [selectedModel, setSelectedModel] = useState("openai");
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const savedKeys = localStorage.getItem("api_keys");
-    if (savedKeys) {
-      setKeys(JSON.parse(savedKeys));
-    }
+    fetchApiKeys();
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const fetchApiKeys = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("api_keys")
+        .select("*")
+        .single();
+
+      if (error) {
+        console.error("Error fetching API keys:", error);
+        return;
+      }
+
+      if (data) {
+        setKeys({
+          openai_key: data.openai_key || "",
+          openrouter_key: data.openrouter_key || "",
+        });
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    localStorage.setItem("api_keys", JSON.stringify(keys));
-    toast({
-      title: "Sucesso!",
-      description: "Chaves API salvas com sucesso.",
-    });
+    setIsLoading(true);
+
+    try {
+      const { error } = await supabase
+        .from("api_keys")
+        .upsert({
+          openai_key: keys.openai_key,
+          openrouter_key: keys.openrouter_key,
+        });
+
+      if (error) throw error;
+
+      localStorage.setItem("selectedModel", selectedModel);
+
+      toast({
+        title: "Sucesso!",
+        description: "Chaves API e preferências salvas com sucesso.",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Erro",
+        description: "Erro ao salvar as chaves API.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -33,6 +85,24 @@ const ApiKeysPage = () => {
         
         <div className="bg-chatgpt-secondary rounded-lg p-6 border border-chatgpt-border">
           <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <label htmlFor="model" className="text-sm font-medium text-white">
+                Modelo Padrão
+              </label>
+              <Select
+                value={selectedModel}
+                onValueChange={setSelectedModel}
+              >
+                <SelectTrigger className="w-full bg-chatgpt-secondary border-chatgpt-border text-white">
+                  <SelectValue placeholder="Selecione o modelo" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="openai">OpenAI (GPT-4)</SelectItem>
+                  <SelectItem value="openrouter">OpenRouter</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
             <div className="space-y-2">
               <label htmlFor="openai" className="text-sm font-medium text-white">
                 OpenAI API Key
@@ -63,9 +133,10 @@ const ApiKeysPage = () => {
             
             <Button 
               type="submit"
+              disabled={isLoading}
               className="w-full bg-chatgpt-secondary hover:bg-chatgpt-hover text-white border border-chatgpt-border"
             >
-              Salvar Chaves
+              {isLoading ? "Salvando..." : "Salvar Chaves"}
             </Button>
           </form>
         </div>
