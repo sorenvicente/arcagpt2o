@@ -12,10 +12,15 @@ export const useChat = () => {
   const navigate = useNavigate();
 
   const handlePromptSelect = (promptContent: string, category: string) => {
+    if (!promptContent || !category) {
+      console.log('Invalid prompt or category:', { promptContent, category });
+      return;
+    }
+
     setActivePrompt(promptContent);
     setActiveCategory(category);
     
-    // Limpa as mensagens anteriores e define o novo contexto do sistema
+    // Reset messages and set new system context
     setMessages([{
       role: 'system',
       content: promptContent
@@ -25,6 +30,8 @@ export const useChat = () => {
       title: "Agente selecionado",
       description: `Contexto atualizado para: ${category}`,
     });
+
+    console.log('Prompt selected:', { promptContent, category });
   };
 
   const handleSendMessage = async (content: string) => {

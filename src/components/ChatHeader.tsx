@@ -30,10 +30,10 @@ const ChatHeader = ({ isSidebarOpen = true, activePrompt, activeCategory }: Chat
                 {activePrompt ? (
                   <>
                     <p className="font-semibold mb-1">Agente Ativo: {activeCategory}</p>
-                    <p className="text-xs opacity-75">Prompt: {activePrompt}</p>
+                    <p className="text-xs opacity-75 break-words">{activePrompt}</p>
                   </>
                 ) : (
-                  "Nenhum agente selecionado"
+                  <p>Nenhum agente selecionado</p>
                 )}
               </div>
             </div>
