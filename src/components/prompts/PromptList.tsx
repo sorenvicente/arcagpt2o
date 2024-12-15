@@ -8,33 +8,73 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useToast } from "@/hooks/use-toast";
 
 const PromptList = () => {
   const [prompts, setPrompts] = useState<PromptBlock[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const { toast } = useToast();
 
   useEffect(() => {
+    const fetchPrompts = async () => {
+      try {
+        setIsLoading(true);
+        
+        // First check if we have an authenticated session
+        const { data: sessionData } = await supabase.auth.getSession();
+        if (!sessionData.session) {
+          toast({
+            title: "Não autorizado",
+            description: "Você precisa estar logado para ver os prompts.",
+            variant: "destructive",
+          });
+          return;
+        }
+
+        const { data, error } = await supabase
+          .from("prompt_blocks")
+          .select("*")
+          .order("created_at", { ascending: false });
+
+        if (error) {
+          console.error("Error fetching prompts:", error);
+          toast({
+            title: "Erro ao carregar prompts",
+            description: error.message,
+            variant: "destructive",
+          });
+          return;
+        }
+
+        if (data) {
+          const typedPrompts = data.map(prompt => ({
+            ...prompt,
+            category: prompt.category as PromptBlock["category"]
+          }));
+          setPrompts(typedPrompts);
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        toast({
+          title: "Erro inesperado",
+          description: "Não foi possível carregar os prompts.",
+          variant: "destructive",
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
     fetchPrompts();
-  }, []);
+  }, [toast]);
 
-  const fetchPrompts = async () => {
-    const { data, error } = await supabase
-      .from("prompt_blocks")
-      .select("*")
-      .order("created_at", { ascending: false });
+  if (isLoading) {
+    return <div className="p-4">Carregando prompts...</div>;
+  }
 
-    if (error) {
-      console.error("Error fetching prompts:", error);
-      return;
-    }
-
-    if (data) {
-      const typedPrompts = data.map(prompt => ({
-        ...prompt,
-        category: prompt.category as PromptBlock["category"]
-      }));
-      setPrompts(typedPrompts);
-    }
-  };
+  if (prompts.length === 0) {
+    return <div className="p-4">Nenhum prompt encontrado.</div>;
+  }
 
   return (
     <div className="space-y-4">
