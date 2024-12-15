@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -46,16 +45,14 @@ export function PromptCreator() {
 
   async function onSubmit(values: z.infer<typeof promptSchema>) {
     try {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from("prompt_blocks")
-        .insert({
+        .insert([{
           name: values.name,
           description: values.description,
           prompt: values.prompt,
           category: values.category,
-        })
-        .select()
-        .single();
+        }]);
 
       if (error) throw error;
 
@@ -66,6 +63,7 @@ export function PromptCreator() {
 
       form.reset();
     } catch (error) {
+      console.error("Erro ao criar prompt:", error);
       toast({
         variant: "destructive",
         title: "Erro ao criar prompt",
@@ -75,21 +73,18 @@ export function PromptCreator() {
   }
 
   return (
-    <div className="w-full max-w-2xl mx-auto">
+    <div className="w-full max-w-lg mx-auto">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <FormField
             control={form.control}
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Nome do Prompt</FormLabel>
+                <FormLabel>Nome</FormLabel>
                 <FormControl>
-                  <Input placeholder="Ex: Análise de Dados" {...field} />
+                  <Input placeholder="Nome do prompt" {...field} />
                 </FormControl>
-                <FormDescription>
-                  Um nome curto e descritivo para identificar o prompt.
-                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -102,11 +97,8 @@ export function PromptCreator() {
               <FormItem>
                 <FormLabel>Categoria</FormLabel>
                 <FormControl>
-                  <Input placeholder="Ex: Análise" {...field} />
+                  <Input placeholder="Categoria do prompt" {...field} />
                 </FormControl>
-                <FormDescription>
-                  Categoria para organizar os prompts.
-                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -120,13 +112,11 @@ export function PromptCreator() {
                 <FormLabel>Descrição</FormLabel>
                 <FormControl>
                   <Textarea
-                    placeholder="Descreva o objetivo deste prompt..."
+                    placeholder="Breve descrição do prompt"
+                    className="resize-none"
                     {...field}
                   />
                 </FormControl>
-                <FormDescription>
-                  Uma breve descrição do que este prompt faz.
-                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -140,14 +130,11 @@ export function PromptCreator() {
                 <FormLabel>Prompt</FormLabel>
                 <FormControl>
                   <Textarea
-                    placeholder="Digite o conteúdo do prompt..."
-                    className="min-h-[200px]"
+                    placeholder="Conteúdo do prompt"
+                    className="min-h-[100px] resize-none"
                     {...field}
                   />
                 </FormControl>
-                <FormDescription>
-                  O conteúdo do prompt que será utilizado.
-                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
