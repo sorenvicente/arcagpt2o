@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { PromptBlock as PromptBlockType } from "./PromptBlock";
+import { supabase } from "@/integrations/supabase/client";
 import {
   Card,
   CardContent,
@@ -10,6 +11,24 @@ import {
 
 const PromptList = () => {
   const [prompts, setPrompts] = useState<PromptBlockType[]>([]);
+
+  useEffect(() => {
+    fetchPrompts();
+  }, []);
+
+  const fetchPrompts = async () => {
+    const { data, error } = await supabase
+      .from("prompt_blocks")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("Error fetching prompts:", error);
+      return;
+    }
+
+    setPrompts(data || []);
+  };
 
   return (
     <div className="space-y-4">

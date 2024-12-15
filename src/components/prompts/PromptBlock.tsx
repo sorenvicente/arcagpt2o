@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 import {
   Select,
   SelectContent,
@@ -9,7 +11,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useToast } from "@/hooks/use-toast";
 
 export type Category = "proposito" | "metodo" | "mentoria" | "curso" | "conteudo";
 
@@ -32,9 +33,30 @@ const PromptBlock = () => {
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const { error } = await supabase
+      .from("prompt_blocks")
+      .insert([promptData]);
+
+    if (error) {
+      toast({
+        title: "Erro ao salvar",
+        description: "Não foi possível salvar o bloco de prompt.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     toast({
       title: "Prompt salvo",
       description: "O bloco de prompt foi salvo com sucesso.",
+    });
+
+    setPromptData({
+      name: "",
+      description: "",
+      prompt: "",
+      category: "proposito",
     });
   };
 
