@@ -40,14 +40,18 @@ const PromptManager = () => {
     try {
       setIsLoading(true);
 
-      const { error } = await supabase
+      const { data: insertedData, error } = await supabase
         .from("prompt_blocks")
-        .insert([{
-          name: data.name,
-          description: data.description || null,
-          prompt: data.prompt,
-          category: data.category,
-        }]);
+        .insert([
+          {
+            name: data.name,
+            description: data.description || null,
+            prompt: data.prompt,
+            category: data.category,
+          }
+        ])
+        .select()
+        .single();
 
       if (error) throw error;
 
@@ -80,7 +84,7 @@ const PromptManager = () => {
           </label>
           <Input
             id="name"
-            {...form.register("name")}
+            {...form.register("name", { required: true })}
             placeholder="Digite o nome do prompt"
             className="bg-[#2F2F2F] border-[#7E69AB] text-white placeholder:text-gray-400"
           />
@@ -104,7 +108,7 @@ const PromptManager = () => {
           </label>
           <Textarea
             id="prompt"
-            {...form.register("prompt")}
+            {...form.register("prompt", { required: true })}
             placeholder="Digite o prompt"
             rows={4}
             className="bg-[#2F2F2F] border-[#7E69AB] text-white placeholder:text-gray-400 min-h-[200px]"
