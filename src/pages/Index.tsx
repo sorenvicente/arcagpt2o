@@ -102,7 +102,7 @@ const Index = () => {
         onNewChat={handleNewChat}
       />
       
-      <main className={`flex-1 transition-all duration-300 relative ${isSidebarOpen ? 'ml-72' : 'ml-0'} bg-[#1c1c1c]`}>
+      <main className={`flex-1 transition-all duration-300 relative ${isSidebarOpen ? 'ml-60' : 'ml-0'} bg-[#0f0f0f]`}>
         <ChatHeader isSidebarOpen={isSidebarOpen} />
         
         <div className={`flex h-full flex-col ${messages.length === 0 ? 'items-center justify-center' : 'justify-between'} pt-[60px] pb-4`}>

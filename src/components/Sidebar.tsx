@@ -21,11 +21,11 @@ const Sidebar = ({ isOpen, onToggle, onNewChat }: SidebarProps) => {
 
   return (
     <div className={cn(
-      "fixed top-0 left-0 z-40 h-[calc(100vh-2rem)] bg-[#1a1a1a] shadow-lg transition-all duration-300 my-4 ml-4 rounded-lg",
-      isOpen ? "w-64" : "w-0"
+      "fixed top-0 left-0 z-40 h-[calc(100vh-2rem)] bg-[#0f0f0f] shadow-lg transition-all duration-300 my-4 ml-4 rounded-lg",
+      isOpen ? "w-52" : "w-0"
     )}>
       <nav className="flex h-full w-full flex-col px-3" aria-label="Chat history">
-        <div className="flex justify-between flex h-[60px] items-center">
+        <div className="flex justify-between items-center h-[60px]">
           <button 
             onClick={onToggle} 
             className="flex items-center justify-center h-10 w-10 rounded-lg hover:bg-chatgpt-hover transition-colors"
@@ -34,7 +34,7 @@ const Sidebar = ({ isOpen, onToggle, onNewChat }: SidebarProps) => {
           </button>
           <button 
             onClick={onNewChat}
-            className="flex items-center justify-center h-10 w-10 rounded-lg hover:bg-chatgpt-hover transition-colors ml-4"
+            className="flex items-center justify-center h-10 w-10 rounded-lg hover:bg-chatgpt-hover transition-colors ml-8"
           >
             <MessageSquare className="h-5 w-5 text-white" strokeWidth={1.5} />
           </button>
@@ -44,7 +44,7 @@ const Sidebar = ({ isOpen, onToggle, onNewChat }: SidebarProps) => {
           <div className="pt-0">
             <div className="flex flex-col gap-2 px-2 py-2">
               {mentorGPTs.map((gpt) => (
-                <div key={gpt.title} className="group flex h-10 items-center gap-2.5 rounded-lg px-4 hover:bg-[#2a2a2a] cursor-pointer">
+                <div key={gpt.title} className="group flex h-10 items-center gap-2.5 rounded-lg px-4 hover:bg-[#1a1a1a] cursor-pointer">
                   {gpt.icon}
                   <span className="text-sm text-gray-300">{gpt.title}</span>
                 </div>
@@ -57,7 +57,7 @@ const Sidebar = ({ isOpen, onToggle, onNewChat }: SidebarProps) => {
           <div className="flex flex-col py-2 border-t border-white/20">
             <button 
               onClick={() => navigate('/admin')}
-              className="group flex gap-2 p-2.5 text-sm items-start hover:bg-[#2a2a2a] rounded-lg px-2 text-left w-full min-w-[200px]"
+              className="group flex gap-2 p-2.5 text-sm items-start hover:bg-[#1a1a1a] rounded-lg px-2 text-left w-full min-w-[180px]"
             >
               <span className="flex w-full flex-row flex-wrap-reverse justify-between">
                 <div className="flex items-center gap-2">
