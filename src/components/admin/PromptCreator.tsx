@@ -18,16 +18,10 @@ export function PromptCreator() {
   const [prompt, setPrompt] = useState("");
   const [category, setCategory] = useState("");
 
-  const generatePromptName = (description: string) => {
-    // Generate a name based on the first few words of the description
-    const words = description.split(' ').slice(0, 3);
-    return words.join(' ') + '...';
-  };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!description || !prompt || !category) {
+    if (!name || !description || !prompt || !category) {
       toast({
         title: "Erro",
         description: "Por favor, preencha todos os campos.",
@@ -36,18 +30,15 @@ export function PromptCreator() {
       return;
     }
 
-    // Generate a name if not provided
-    const promptName = name || generatePromptName(description);
-
     const savedPrompts = localStorage.getItem('prompts');
     const prompts = savedPrompts ? JSON.parse(savedPrompts) : [];
     
     const newPrompt = {
       id: Date.now(),
-      name: promptName,
+      name,
       description,
       prompt,
-      category: category.toLowerCase(),
+      category,
       createdAt: new Date().toISOString(),
     };
 
@@ -58,7 +49,7 @@ export function PromptCreator() {
 
     toast({
       title: "Sucesso",
-      description: "Prompt criado e salvo na barra lateral!",
+      description: "Prompt criado com sucesso!",
     });
 
     // Limpar formulário
@@ -77,16 +68,16 @@ export function PromptCreator() {
   ];
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="space-y-2">
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div>
         <Input
-          placeholder="Nome do Prompt (opcional)"
+          placeholder="Nome do Prompt"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
       </div>
       
-      <div className="space-y-2">
+      <div>
         <Input
           placeholder="Descrição"
           value={description}
@@ -94,7 +85,7 @@ export function PromptCreator() {
         />
       </div>
       
-      <div className="space-y-2">
+      <div>
         <Textarea
           placeholder="Prompt"
           value={prompt}
@@ -103,7 +94,7 @@ export function PromptCreator() {
         />
       </div>
       
-      <div className="space-y-2">
+      <div>
         <Select value={category} onValueChange={setCategory}>
           <SelectTrigger>
             <SelectValue placeholder="Selecione uma categoria" />
