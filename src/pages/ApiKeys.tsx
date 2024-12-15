@@ -97,8 +97,13 @@ const ApiKeysPage = () => {
                   <SelectValue placeholder="Selecione o modelo" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="openai">OpenAI (GPT-4)</SelectItem>
-                  <SelectItem value="openrouter">OpenRouter</SelectItem>
+                  <SelectItem value="gpt4">OpenAI (GPT-4)</SelectItem>
+                  <SelectItem value="gpt4-turbo">OpenAI (GPT-4 Turbo)</SelectItem>
+                  <SelectItem value="gpt4-vision">OpenAI (GPT-4 Vision)</SelectItem>
+                  <SelectItem value="anthropic-claude-3">OpenRouter (Claude 3)</SelectItem>
+                  <SelectItem value="anthropic-claude-2">OpenRouter (Claude 2)</SelectItem>
+                  <SelectItem value="meta-llama2">OpenRouter (Llama 2)</SelectItem>
+                  <SelectItem value="google-palm">OpenRouter (PaLM)</SelectItem>
                 </SelectContent>
               </Select>
             </div>
