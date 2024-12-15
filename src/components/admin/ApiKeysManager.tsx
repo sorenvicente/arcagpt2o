@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { Shield } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+import ApiKeyForm from "./ApiKeyForm";
+import AdminCheck from "./AdminCheck";
 import {
   Card,
   CardContent,
@@ -95,37 +95,11 @@ const ApiKeysManager = () => {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSaveKeys} className="space-y-4">
-          <div className="space-y-2">
-            <label htmlFor="openai" className="text-sm font-medium text-white">
-              OpenAI API Key
-            </label>
-            <Input
-              id="openai"
-              type="password"
-              value={keys.openai_key}
-              onChange={(e) => setKeys({ ...keys, openai_key: e.target.value })}
-              placeholder="sk-..."
-              className="w-full bg-chatgpt-secondary border-chatgpt-border text-white"
-            />
-          </div>
-          <div className="space-y-2">
-            <label htmlFor="openrouter" className="text-sm font-medium text-white">
-              OpenRouter API Key
-            </label>
-            <Input
-              id="openrouter"
-              type="password"
-              value={keys.openrouter_key}
-              onChange={(e) => setKeys({ ...keys, openrouter_key: e.target.value })}
-              placeholder="sk-..."
-              className="w-full bg-chatgpt-secondary border-chatgpt-border text-white"
-            />
-          </div>
-          <Button type="submit" className="w-full bg-chatgpt-secondary hover:bg-chatgpt-hover text-white border border-chatgpt-border">
-            Salvar Chaves
-          </Button>
-        </form>
+        <ApiKeyForm 
+          keys={keys} 
+          setKeys={setKeys} 
+          onSubmit={handleSaveKeys} 
+        />
       </CardContent>
     </Card>
   );
