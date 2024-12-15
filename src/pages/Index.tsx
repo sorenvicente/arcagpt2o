@@ -111,7 +111,7 @@ const Index = () => {
     setActivePrompt(prompt);
     toast({
       title: "Prompt Selecionado",
-      description: "O prompt foi selecionado e está pronto para uso.",
+      description: "O contexto foi atualizado para o assistente.",
       duration: 3000,
     });
   };
@@ -143,15 +143,16 @@ const Index = () => {
     setIsLoading(true);
 
     try {
-      const promptPrefix = activePrompt ? `${activePrompt}\n\nUsuário: ` : '';
-      const messageContent = `${promptPrefix}${content}`;
-      
       const newMessages = [
         ...messages,
-        { role: 'user', content: messageContent } as const
+        { role: 'user', content } as const
       ];
       
       setMessages(newMessages);
+
+      const apiMessages = activePrompt 
+        ? [{ role: 'system', content: activePrompt }, ...newMessages]
+        : newMessages;
 
       const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
@@ -161,9 +162,7 @@ const Index = () => {
         },
         body: JSON.stringify({
           model: "gpt-3.5-turbo",
-          messages: activePrompt 
-            ? [{ role: 'system', content: activePrompt }, ...newMessages]
-            : newMessages,
+          messages: apiMessages,
           max_tokens: 1000,
           temperature: 0.7,
         })
