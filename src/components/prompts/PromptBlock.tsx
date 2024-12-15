@@ -32,17 +32,37 @@ const PromptBlock = () => {
     category: "proposito",
   });
   const { toast } = useToast();
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    const checkAdminStatus = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user?.email === 'admin@example.com') {
+        setIsAdmin(true);
+      }
+    };
+    
+    checkAdminStatus();
+  }, []);
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     
     try {
-      // Primeiro verifica se tem uma sessão autenticada
-      const { data: sessionData } = await supabase.auth.getSession();
-      if (!sessionData.session) {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
         toast({
           title: "Não autorizado",
           description: "Você precisa estar logado para criar prompts.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      if (!isAdmin) {
+        toast({
+          title: "Acesso negado",
+          description: "Apenas administradores podem criar prompts.",
           variant: "destructive",
         });
         return;
@@ -57,22 +77,16 @@ const PromptBlock = () => {
         return;
       }
 
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from("prompt_blocks")
         .insert(promptData)
         .select();
 
       if (error) {
         console.error("Erro ao salvar no Supabase:", error);
-        let errorMessage = "Não foi possível salvar o bloco de prompt.";
-        
-        if (error.message.includes("row-level security")) {
-          errorMessage = "Você não tem permissão para criar prompts. Apenas administradores podem criar prompts.";
-        }
-        
         toast({
           title: "Erro ao salvar",
-          description: errorMessage,
+          description: "Não foi possível salvar o bloco de prompt.",
           variant: "destructive",
         });
         return;
