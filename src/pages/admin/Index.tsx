@@ -9,7 +9,9 @@ const AdminPage = () => {
         <h1 className="text-2xl font-bold mb-8 text-white">Painel Administrativo</h1>
         
         <div className="space-y-8">
-          <ApiKeysManager />
+          <div className="bg-chatgpt-secondary rounded-lg p-6 border border-chatgpt-border">
+            <ApiKeysManager />
+          </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="bg-chatgpt-secondary rounded-lg p-6 border border-chatgpt-border">
