@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { PromptBlock as PromptBlockType } from "./PromptBlock";
+import { PromptBlock } from "./PromptBlock";
 import { supabase } from "@/integrations/supabase/client";
 import {
   Card,
@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/card";
 
 const PromptList = () => {
-  const [prompts, setPrompts] = useState<PromptBlockType[]>([]);
+  const [prompts, setPrompts] = useState<PromptBlock[]>([]);
 
   useEffect(() => {
     fetchPrompts();
@@ -27,7 +27,13 @@ const PromptList = () => {
       return;
     }
 
-    setPrompts(data || []);
+    if (data) {
+      const typedPrompts = data.map(prompt => ({
+        ...prompt,
+        category: prompt.category as PromptBlock["category"]
+      }));
+      setPrompts(typedPrompts);
+    }
   };
 
   return (

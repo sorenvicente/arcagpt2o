@@ -17,13 +17,15 @@ export type Category = "proposito" | "metodo" | "mentoria" | "curso" | "conteudo
 export interface PromptBlock {
   id: string;
   name: string;
-  description: string;
+  description: string | null;
   prompt: string;
   category: Category;
+  created_at?: string;
+  updated_at?: string;
 }
 
 const PromptBlock = () => {
-  const [promptData, setPromptData] = useState<Partial<PromptBlock>>({
+  const [promptData, setPromptData] = useState<Omit<PromptBlock, "id">>({
     name: "",
     description: "",
     prompt: "",
@@ -36,7 +38,7 @@ const PromptBlock = () => {
 
     const { error } = await supabase
       .from("prompt_blocks")
-      .insert([promptData]);
+      .insert(promptData);
 
     if (error) {
       toast({
