@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -35,45 +35,68 @@ const PromptBlock = () => {
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Tentando salvar prompt:", promptData);
+    
+    try {
+      // Primeiro verifica se tem uma sessão autenticada
+      const { data: sessionData } = await supabase.auth.getSession();
+      if (!sessionData.session) {
+        toast({
+          title: "Não autorizado",
+          description: "Você precisa estar logado para criar prompts.",
+          variant: "destructive",
+        });
+        return;
+      }
 
-    if (!promptData.name || !promptData.prompt || !promptData.category) {
+      if (!promptData.name || !promptData.prompt || !promptData.category) {
+        toast({
+          title: "Erro ao salvar",
+          description: "Por favor, preencha todos os campos obrigatórios.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from("prompt_blocks")
+        .insert(promptData)
+        .select();
+
+      if (error) {
+        console.error("Erro ao salvar no Supabase:", error);
+        let errorMessage = "Não foi possível salvar o bloco de prompt.";
+        
+        if (error.message.includes("row-level security")) {
+          errorMessage = "Você não tem permissão para criar prompts. Apenas administradores podem criar prompts.";
+        }
+        
+        toast({
+          title: "Erro ao salvar",
+          description: errorMessage,
+          variant: "destructive",
+        });
+        return;
+      }
+
       toast({
-        title: "Erro ao salvar",
-        description: "Por favor, preencha todos os campos obrigatórios.",
+        title: "Prompt salvo",
+        description: "O bloco de prompt foi salvo com sucesso.",
+      });
+
+      setPromptData({
+        name: "",
+        description: "",
+        prompt: "",
+        category: "proposito",
+      });
+    } catch (error) {
+      console.error("Erro inesperado:", error);
+      toast({
+        title: "Erro inesperado",
+        description: "Ocorreu um erro ao tentar salvar o prompt.",
         variant: "destructive",
       });
-      return;
     }
-
-    const { data, error } = await supabase
-      .from("prompt_blocks")
-      .insert(promptData)
-      .select();
-
-    console.log("Resposta do Supabase:", { data, error });
-
-    if (error) {
-      console.error("Erro ao salvar no Supabase:", error);
-      toast({
-        title: "Erro ao salvar",
-        description: "Não foi possível salvar o bloco de prompt. " + error.message,
-        variant: "destructive",
-      });
-      return;
-    }
-
-    toast({
-      title: "Prompt salvo",
-      description: "O bloco de prompt foi salvo com sucesso.",
-    });
-
-    setPromptData({
-      name: "",
-      description: "",
-      prompt: "",
-      category: "proposito",
-    });
   };
 
   return (
