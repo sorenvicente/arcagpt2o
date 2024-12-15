@@ -18,6 +18,7 @@ const Index = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isTestingApi, setIsTestingApi] = useState(false);
+  const [activePrompt, setActivePrompt] = useState<string>('');
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -106,6 +107,15 @@ const Index = () => {
     }
   };
 
+  const handleSelectPrompt = (prompt: string) => {
+    setActivePrompt(prompt);
+    toast({
+      title: "Prompt Selecionado",
+      description: "O prompt foi selecionado e está pronto para uso.",
+      duration: 3000,
+    });
+  };
+
   const handleSendMessage = async (content: string) => {
     if (!content.trim()) {
       toast({
@@ -133,9 +143,12 @@ const Index = () => {
     setIsLoading(true);
 
     try {
+      const promptPrefix = activePrompt ? `${activePrompt}\n\nUsuário: ` : '';
+      const messageContent = `${promptPrefix}${content}`;
+      
       const newMessages = [
         ...messages,
-        { role: 'user', content } as const
+        { role: 'user', content: messageContent } as const
       ];
       
       setMessages(newMessages);
@@ -148,7 +161,9 @@ const Index = () => {
         },
         body: JSON.stringify({
           model: "gpt-3.5-turbo",
-          messages: newMessages,
+          messages: activePrompt 
+            ? [{ role: 'system', content: activePrompt }, ...newMessages]
+            : newMessages,
           max_tokens: 1000,
           temperature: 0.7,
         })
@@ -185,7 +200,7 @@ const Index = () => {
       />
       
       <main className={`flex-1 transition-all duration-300 relative ${isSidebarOpen ? 'ml-64' : 'ml-0'}`}>
-        <ChatHeader isSidebarOpen={isSidebarOpen} />
+        <ChatHeader isSidebarOpen={isSidebarOpen} activePrompt={activePrompt} />
         
         <div className={`flex h-full flex-col ${messages.length === 0 ? 'items-center justify-center' : 'justify-between'} pt-[60px] pb-4`}>
           {messages.length === 0 ? (
@@ -201,7 +216,7 @@ const Index = () => {
                     {isTestingApi ? "Testando..." : "Testar Chaves API"}
                   </Button>
                 </div>
-                <ActionButtons />
+                <ActionButtons onSelectPrompt={handleSelectPrompt} />
                 <ChatInput onSend={handleSendMessage} isLoading={isLoading} />
               </div>
             </div>
@@ -209,7 +224,7 @@ const Index = () => {
             <>
               <MessageList messages={messages} />
               <div className="w-full max-w-3xl mx-auto px-4 py-2">
-                <ActionButtons />
+                <ActionButtons onSelectPrompt={handleSelectPrompt} />
                 <ChatInput onSend={handleSendMessage} isLoading={isLoading} />
               </div>
             </>
