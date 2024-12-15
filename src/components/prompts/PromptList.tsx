@@ -26,7 +26,7 @@ const PromptList = () => {
           .order("created_at", { ascending: false });
 
         if (error) {
-          console.error("Error fetching prompts:", error);
+          console.error("Erro ao carregar prompts:", error);
           toast({
             title: "Erro ao carregar prompts",
             description: error.message,
@@ -43,7 +43,7 @@ const PromptList = () => {
           setPrompts(typedPrompts);
         }
       } catch (error) {
-        console.error("Error:", error);
+        console.error("Erro:", error);
         toast({
           title: "Erro inesperado",
           description: "Não foi possível carregar os prompts.",

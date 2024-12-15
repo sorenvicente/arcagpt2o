@@ -34,32 +34,33 @@ const PromptBlock = () => {
     try {
       if (!promptData.name || !promptData.prompt || !promptData.category) {
         toast({
-          title: "Erro ao salvar",
-          description: "Por favor, preencha todos os campos obrigatórios.",
+          title: "Campos obrigatórios",
+          description: "Por favor, preencha o nome, o prompt e selecione uma categoria.",
           variant: "destructive",
         });
         return;
       }
 
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from("prompt_blocks")
-        .insert(promptData);
+        .insert([promptData]);
 
       if (error) {
-        console.error("Erro ao salvar no Supabase:", error);
+        console.error("Erro ao salvar prompt:", error);
         toast({
           title: "Erro ao salvar",
-          description: "Não foi possível salvar o bloco de prompt.",
+          description: "Não foi possível salvar o prompt. Tente novamente.",
           variant: "destructive",
         });
         return;
       }
 
       toast({
-        title: "Prompt salvo",
-        description: "O bloco de prompt foi salvo com sucesso.",
+        title: "Sucesso!",
+        description: "Prompt salvo com sucesso.",
       });
 
+      // Limpar o formulário após salvar com sucesso
       setPromptData({
         name: "",
         description: "",
