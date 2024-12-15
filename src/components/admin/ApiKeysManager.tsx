@@ -81,20 +81,20 @@ const ApiKeysManager = () => {
   if (!isAdmin) return null;
 
   return (
-    <Card className="w-full max-w-2xl mx-auto">
+    <Card className="w-full max-w-2xl mx-auto bg-chatgpt-main border-chatgpt-border">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
+        <CardTitle className="flex items-center gap-2 text-white">
           <Shield className="h-5 w-5" />
           Gerenciamento de APIs
         </CardTitle>
-        <CardDescription>
+        <CardDescription className="text-gray-400">
           Configure as chaves de API para OpenAI e OpenRouter
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSaveKeys} className="space-y-4">
           <div className="space-y-2">
-            <label htmlFor="openai" className="text-sm font-medium">
+            <label htmlFor="openai" className="text-sm font-medium text-white">
               OpenAI API Key
             </label>
             <Input
@@ -103,11 +103,11 @@ const ApiKeysManager = () => {
               value={keys.openai_key}
               onChange={(e) => setKeys({ ...keys, openai_key: e.target.value })}
               placeholder="sk-..."
-              className="w-full"
+              className="w-full bg-chatgpt-secondary border-chatgpt-border text-white"
             />
           </div>
           <div className="space-y-2">
-            <label htmlFor="openrouter" className="text-sm font-medium">
+            <label htmlFor="openrouter" className="text-sm font-medium text-white">
               OpenRouter API Key
             </label>
             <Input
@@ -116,10 +116,10 @@ const ApiKeysManager = () => {
               value={keys.openrouter_key}
               onChange={(e) => setKeys({ ...keys, openrouter_key: e.target.value })}
               placeholder="sk-..."
-              className="w-full"
+              className="w-full bg-chatgpt-secondary border-chatgpt-border text-white"
             />
           </div>
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="w-full bg-chatgpt-secondary hover:bg-chatgpt-hover text-white border border-chatgpt-border">
             Salvar Chaves
           </Button>
         </form>

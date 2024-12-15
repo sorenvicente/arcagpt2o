@@ -1,7 +1,5 @@
-import { Menu, MessageSquare, ChevronDown, Key, User } from "lucide-react";
+import { Menu, MessageSquare, ChevronDown, User } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Input } from "@/components/ui/input";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 interface SidebarProps {
@@ -11,7 +9,6 @@ interface SidebarProps {
 }
 
 const Sidebar = ({ isOpen, onToggle, onApiKeyChange }: SidebarProps) => {
-  const [apiKey, setApiKey] = useState("");
   const navigate = useNavigate();
   
   const mentorGPTs = [
@@ -21,12 +18,6 @@ const Sidebar = ({ isOpen, onToggle, onApiKeyChange }: SidebarProps) => {
     { title: "Curso", icon: <MessageSquare className="h-4 w-4" /> },
     { title: "Conteúdo", icon: <MessageSquare className="h-4 w-4" /> }
   ];
-
-  const handleApiKeyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newApiKey = e.target.value;
-    setApiKey(newApiKey);
-    onApiKeyChange(newApiKey);
-  };
 
   return (
     <div className={cn(
@@ -46,22 +37,6 @@ const Sidebar = ({ isOpen, onToggle, onApiKeyChange }: SidebarProps) => {
         </div>
 
         <div className="flex-col flex-1 transition-opacity duration-500 relative -mr-2 pr-2 overflow-y-auto">
-          {isOpen && (
-            <div className="p-2 mb-4">
-              <div className="flex items-center gap-2 mb-2">
-                <Key className="h-4 w-4" />
-                <span className="text-sm">API Key</span>
-              </div>
-              <Input
-                type="password"
-                placeholder="Digite sua API key"
-                value={apiKey}
-                onChange={handleApiKeyChange}
-                className="bg-[#2F2F2F] border-none"
-              />
-            </div>
-          )}
-
           <div className="bg-token-sidebar-surface-primary pt-0">
             <div className="flex flex-col gap-2 px-2 py-2">
               <div className="group flex h-10 items-center gap-2.5 rounded-lg px-2 hover:bg-token-sidebar-surface-secondary cursor-pointer">
