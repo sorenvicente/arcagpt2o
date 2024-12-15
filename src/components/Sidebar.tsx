@@ -1,7 +1,8 @@
-import { Menu, MessageSquare, ChevronDown, Key } from "lucide-react";
+import { Menu, MessageSquare, ChevronDown, Key, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -11,6 +12,7 @@ interface SidebarProps {
 
 const Sidebar = ({ isOpen, onToggle, onApiKeyChange }: SidebarProps) => {
   const [apiKey, setApiKey] = useState("");
+  const navigate = useNavigate();
   
   const mentorGPTs = [
     { title: "Propósito", icon: <MessageSquare className="h-4 w-4" /> },
@@ -81,6 +83,27 @@ const Sidebar = ({ isOpen, onToggle, onApiKeyChange }: SidebarProps) => {
             </div>
           </div>
         </div>
+
+        {isOpen && (
+          <div className="flex flex-col py-2 border-t border-white/20">
+            <button 
+              onClick={() => navigate('/admin')}
+              className="group flex gap-2 p-2.5 text-sm items-start hover:bg-token-sidebar-surface-secondary rounded-lg px-2 text-left w-full min-w-[200px]"
+            >
+              <span className="flex w-full flex-row flex-wrap-reverse justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-full border border-token-border-light">
+                    <User className="h-4 w-4" />
+                  </span>
+                  <div className="flex flex-col">
+                    <span>Administrador</span>
+                    <span className="line-clamp-1 text-xs text-token-text-tertiary">Configurações e chaves</span>
+                  </div>
+                </div>
+              </span>
+            </button>
+          </div>
+        )}
       </nav>
     </div>
   );
