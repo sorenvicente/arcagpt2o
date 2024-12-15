@@ -1,16 +1,11 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import PromptNameInput from "./form/PromptNameInput";
+import PromptDescriptionInput from "./form/PromptDescriptionInput";
+import PromptTextArea from "./form/PromptTextArea";
+import CategorySelect from "./form/CategorySelect";
+import SaveButton from "./form/SaveButton";
 
 export type Category = "proposito" | "metodo" | "mentoria" | "curso" | "conteudo";
 
@@ -83,81 +78,27 @@ const PromptBlock = () => {
 
   return (
     <form onSubmit={handleSave} className="space-y-4 p-4 bg-[#2F2F2F] rounded-lg border border-gray-700">
-      <div className="space-y-2">
-        <label htmlFor="name" className="text-sm font-medium text-white">
-          Nome do Prompt
-        </label>
-        <Input
-          id="name"
-          value={promptData.name}
-          onChange={(e) =>
-            setPromptData({ ...promptData, name: e.target.value })
-          }
-          placeholder="Digite o nome do prompt"
-          required
-          className="bg-[#2F2F2F] border-gray-700 text-white placeholder:text-gray-400"
-        />
-      </div>
-
-      <div className="space-y-2">
-        <label htmlFor="description" className="text-sm font-medium text-white">
-          Descrição
-        </label>
-        <Input
-          id="description"
-          value={promptData.description}
-          onChange={(e) =>
-            setPromptData({ ...promptData, description: e.target.value })
-          }
-          placeholder="Digite uma breve descrição"
-          className="bg-[#2F2F2F] border-gray-700 text-white placeholder:text-gray-400"
-        />
-      </div>
-
-      <div className="space-y-2">
-        <label htmlFor="prompt" className="text-sm font-medium text-white">
-          Prompt
-        </label>
-        <Textarea
-          id="prompt"
-          value={promptData.prompt}
-          onChange={(e) =>
-            setPromptData({ ...promptData, prompt: e.target.value })
-          }
-          placeholder="Digite o prompt"
-          rows={4}
-          required
-          className="bg-[#2F2F2F] border-gray-700 text-white placeholder:text-gray-400"
-        />
-      </div>
-
-      <div className="space-y-2">
-        <label htmlFor="category" className="text-sm font-medium text-white">
-          Categoria
-        </label>
-        <Select
-          value={promptData.category}
-          onValueChange={(value) =>
-            setPromptData({ ...promptData, category: value as Category })
-          }
-          required
-        >
-          <SelectTrigger className="bg-[#2F2F2F] border-gray-700 text-white">
-            <SelectValue placeholder="Selecione uma categoria" />
-          </SelectTrigger>
-          <SelectContent className="bg-[#2F2F2F] border-gray-700">
-            <SelectItem value="proposito" className="text-white hover:bg-gray-700">Propósito</SelectItem>
-            <SelectItem value="metodo" className="text-white hover:bg-gray-700">Método</SelectItem>
-            <SelectItem value="mentoria" className="text-white hover:bg-gray-700">Mentoria</SelectItem>
-            <SelectItem value="curso" className="text-white hover:bg-gray-700">Curso</SelectItem>
-            <SelectItem value="conteudo" className="text-white hover:bg-gray-700">Conteúdo</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-
-      <Button type="submit" className="w-full bg-gray-700 hover:bg-gray-600 text-white border-gray-600">
-        Salvar Prompt
-      </Button>
+      <PromptNameInput
+        value={promptData.name}
+        onChange={(value) => setPromptData({ ...promptData, name: value })}
+      />
+      
+      <PromptDescriptionInput
+        value={promptData.description}
+        onChange={(value) => setPromptData({ ...promptData, description: value })}
+      />
+      
+      <PromptTextArea
+        value={promptData.prompt}
+        onChange={(value) => setPromptData({ ...promptData, prompt: value })}
+      />
+      
+      <CategorySelect
+        value={promptData.category}
+        onChange={(value) => setPromptData({ ...promptData, category: value })}
+      />
+      
+      <SaveButton onClick={() => {}} />
     </form>
   );
 };
