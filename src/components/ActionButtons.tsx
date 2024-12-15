@@ -1,11 +1,11 @@
-import { Book, Brain, Graduation, School, MessageSquare, Target } from "lucide-react";
+import { Book, Brain, GraduationCap, School, MessageSquare, Target } from "lucide-react";
 
 const ActionButtons = () => {
   const actions = [
     { icon: <Target className="h-4 w-4 text-purple-400" />, label: "Propósito" },
     { icon: <Brain className="h-4 w-4 text-blue-400" />, label: "Método" },
     { icon: <School className="h-4 w-4 text-green-400" />, label: "Mentoria" },
-    { icon: <Graduation className="h-4 w-4 text-yellow-400" />, label: "Curso" },
+    { icon: <GraduationCap className="h-4 w-4 text-yellow-400" />, label: "Curso" },
     { icon: <Book className="h-4 w-4 text-red-400" />, label: "Conteúdo" },
   ];
 
