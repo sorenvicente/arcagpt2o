@@ -27,12 +27,12 @@ const Sidebar = ({ isOpen, onToggle }: SidebarProps) => {
         <div className="flex justify-between h-[60px] items-center">
           <button 
             onClick={onToggle} 
-            className="flex items-center justify-center h-10 w-10 rounded-lg hover:bg-chatgpt-hover transition-colors mr-2"
+            className="flex items-center justify-center h-10 w-10 rounded-lg hover:bg-chatgpt-hover transition-colors mr-3"
           >
             <Menu className="h-5 w-5 text-white" strokeWidth={1.5} />
           </button>
           <button 
-            className="flex items-center justify-center h-10 w-10 rounded-lg hover:bg-chatgpt-hover transition-colors ml-2"
+            className="flex items-center justify-center h-10 w-10 rounded-lg hover:bg-chatgpt-hover transition-colors ml-3"
           >
             <MessageSquare className="h-5 w-5 text-white" strokeWidth={1.5} />
           </button>
