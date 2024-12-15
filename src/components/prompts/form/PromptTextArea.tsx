@@ -8,7 +8,7 @@ interface PromptTextAreaProps {
 const PromptTextArea = ({ value, onChange }: PromptTextAreaProps) => {
   return (
     <div className="space-y-2">
-      <label htmlFor="prompt" className="text-sm font-medium text-white">
+      <label htmlFor="prompt" className="text-sm font-medium text-[#D6BCFA]">
         Prompt
       </label>
       <Textarea
@@ -18,7 +18,7 @@ const PromptTextArea = ({ value, onChange }: PromptTextAreaProps) => {
         placeholder="Digite o prompt"
         rows={4}
         required
-        className="bg-[#2F2F2F] border-gray-700 text-white placeholder:text-gray-400"
+        className="bg-[#2F2F2F] border-[#7E69AB] text-white placeholder:text-gray-400 min-h-[200px]"
       />
     </div>
   );

@@ -8,7 +8,7 @@ interface PromptNameInputProps {
 const PromptNameInput = ({ value, onChange }: PromptNameInputProps) => {
   return (
     <div className="space-y-2">
-      <label htmlFor="name" className="text-sm font-medium text-white">
+      <label htmlFor="name" className="text-sm font-medium text-[#D6BCFA]">
         Nome do Prompt
       </label>
       <Input
@@ -17,7 +17,7 @@ const PromptNameInput = ({ value, onChange }: PromptNameInputProps) => {
         onChange={(e) => onChange(e.target.value)}
         placeholder="Digite o nome do prompt"
         required
-        className="bg-[#2F2F2F] border-gray-700 text-white placeholder:text-gray-400"
+        className="bg-[#2F2F2F] border-[#7E69AB] text-white placeholder:text-gray-400"
       />
     </div>
   );

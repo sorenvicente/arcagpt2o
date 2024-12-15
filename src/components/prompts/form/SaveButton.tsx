@@ -9,7 +9,7 @@ const SaveButton = ({ onClick }: SaveButtonProps) => {
     <Button
       type="submit"
       onClick={onClick}
-      className="w-full bg-gray-700 hover:bg-gray-600 text-white border-gray-600"
+      className="w-full bg-[#9b87f5] hover:bg-[#8B5CF6] text-white"
     >
       Salvar Prompt
     </Button>

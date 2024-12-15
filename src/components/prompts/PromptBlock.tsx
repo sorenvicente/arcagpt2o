@@ -2,24 +2,12 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Form } from "@/components/ui/form";
+import PromptNameInput from "./form/PromptNameInput";
+import PromptDescriptionInput from "./form/PromptDescriptionInput";
+import PromptTextArea from "./form/PromptTextArea";
+import CategorySelect from "./form/CategorySelect";
+import SaveButton from "./form/SaveButton";
 
 export type Category = "proposito" | "metodo" | "mentoria" | "curso" | "conteudo";
 
@@ -84,93 +72,28 @@ export const PromptBlock = () => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSave)} className="space-y-6">
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-[#D6BCFA]">Nome do Prompt</FormLabel>
-              <FormControl>
-                <Input 
-                  placeholder="Digite o nome do prompt" 
-                  className="bg-[#1A1F2C] border-[#7E69AB] text-white"
-                  {...field} 
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+      <form onSubmit={form.handleSubmit(handleSave)} className="space-y-6 bg-[#1A1F2C] p-6 rounded-lg">
+        <PromptNameInput 
+          value={form.watch("name")}
+          onChange={(value) => form.setValue("name", value)}
         />
-
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-[#D6BCFA]">Descrição</FormLabel>
-              <FormControl>
-                <Input 
-                  placeholder="Digite uma descrição" 
-                  className="bg-[#1A1F2C] border-[#7E69AB] text-white"
-                  {...field} 
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+        
+        <PromptDescriptionInput 
+          value={form.watch("description")}
+          onChange={(value) => form.setValue("description", value)}
         />
-
-        <FormField
-          control={form.control}
-          name="prompt"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-[#D6BCFA]">Prompt</FormLabel>
-              <FormControl>
-                <Textarea 
-                  placeholder="Digite o prompt" 
-                  className="bg-[#1A1F2C] border-[#7E69AB] text-white min-h-[200px]"
-                  {...field} 
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+        
+        <PromptTextArea 
+          value={form.watch("prompt")}
+          onChange={(value) => form.setValue("prompt", value)}
         />
-
-        <FormField
-          control={form.control}
-          name="category"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-[#D6BCFA]">Categoria</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger className="bg-[#1A1F2C] border-[#7E69AB] text-white">
-                    <SelectValue placeholder="Selecione uma categoria" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent className="bg-[#1A1F2C] border-[#7E69AB]">
-                  <SelectItem value="proposito" className="text-white hover:bg-[#2A2B32]">Propósito</SelectItem>
-                  <SelectItem value="metodo" className="text-white hover:bg-[#2A2B32]">Método</SelectItem>
-                  <SelectItem value="mentoria" className="text-white hover:bg-[#2A2B32]">Mentoria</SelectItem>
-                  <SelectItem value="curso" className="text-white hover:bg-[#2A2B32]">Curso</SelectItem>
-                  <SelectItem value="conteudo" className="text-white hover:bg-[#2A2B32]">Conteúdo</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
+        
+        <CategorySelect 
+          value={form.watch("category")}
+          onChange={(value) => form.setValue("category", value)}
         />
-
-        <Button 
-          type="submit" 
-          disabled={isLoading}
-          className="w-full bg-[#9b87f5] hover:bg-[#8B5CF6] text-white"
-        >
-          {isLoading ? "Salvando..." : "Salvar Prompt"}
-        </Button>
+        
+        <SaveButton onClick={form.handleSubmit(handleSave)} />
       </form>
     </Form>
   );
