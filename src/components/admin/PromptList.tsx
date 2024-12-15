@@ -1,14 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { Trash2, Edit } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
+import { EditPromptDialog } from "./EditPromptDialog";
 
 interface Prompt {
   id: number;
@@ -22,6 +16,7 @@ interface Prompt {
 export function PromptList() {
   const { toast } = useToast();
   const [prompts, setPrompts] = React.useState<Prompt[]>([]);
+  const [editingPrompt, setEditingPrompt] = useState<Prompt | null>(null);
 
   React.useEffect(() => {
     const loadPrompts = () => {
@@ -32,7 +27,6 @@ export function PromptList() {
     };
 
     loadPrompts();
-    // Adiciona um listener para atualizar a lista quando houver mudanças
     window.addEventListener('storage', loadPrompts);
     return () => window.removeEventListener('storage', loadPrompts);
   }, []);
@@ -56,32 +50,39 @@ export function PromptList() {
   }
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+    <div className="space-y-2">
       {prompts.map((prompt) => (
-        <Card key={prompt.id} className="flex flex-col">
-          <CardHeader>
-            <div className="flex justify-between items-start">
-              <div>
-                <CardTitle className="text-lg">{prompt.name}</CardTitle>
-                <CardDescription>{prompt.category}</CardDescription>
-              </div>
-              <div className="flex gap-2">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => handleDelete(prompt.id)}
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent className="flex-grow">
-            <p className="text-sm text-gray-600 mb-2">{prompt.description}</p>
-            <p className="text-sm bg-gray-50 p-2 rounded">{prompt.prompt}</p>
-          </CardContent>
-        </Card>
+        <div
+          key={prompt.id}
+          className="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm"
+        >
+          <span className="font-medium">{prompt.name}</span>
+          <div className="flex gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setEditingPrompt(prompt)}
+            >
+              <Edit className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => handleDelete(prompt.id)}
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
       ))}
+      
+      {editingPrompt && (
+        <EditPromptDialog
+          open={!!editingPrompt}
+          onOpenChange={(open) => !open && setEditingPrompt(null)}
+          prompt={editingPrompt}
+        />
+      )}
     </div>
   );
 }

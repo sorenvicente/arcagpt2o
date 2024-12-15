@@ -14,15 +14,17 @@ const AdminPage = () => {
           <TabsTrigger value="api-keys">Chaves API</TabsTrigger>
         </TabsList>
         
-        <TabsContent value="prompts" className="space-y-8">
-          <div>
-            <h2 className="text-xl font-semibold mb-4">Criar Novo Prompt</h2>
-            <PromptCreator />
-          </div>
-          
-          <div>
-            <h2 className="text-xl font-semibold mb-4">Prompts Salvos</h2>
-            <PromptList />
+        <TabsContent value="prompts">
+          <div className="grid grid-cols-2 gap-8">
+            <div>
+              <h2 className="text-xl font-semibold mb-4">Criar Novo Prompt</h2>
+              <PromptCreator />
+            </div>
+            
+            <div>
+              <h2 className="text-xl font-semibold mb-4">Prompts Salvos</h2>
+              <PromptList />
+            </div>
           </div>
         </TabsContent>
         
