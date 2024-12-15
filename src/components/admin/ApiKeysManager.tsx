@@ -32,14 +32,26 @@ const ApiKeysManager = () => {
 
   const checkAdminStatus = async () => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
       
+      if (authError) {
+        console.error("Auth error:", authError);
+        toast({
+          title: "Erro de Autenticação",
+          description: "Erro ao verificar status de administrador.",
+          variant: "destructive",
+        });
+        setIsLoading(false);
+        return;
+      }
+
       if (!user) {
         toast({
           title: "Acesso Negado",
           description: "Você precisa estar logado como administrador.",
           variant: "destructive",
         });
+        setIsLoading(false);
         return;
       }
 
@@ -51,14 +63,31 @@ const ApiKeysManager = () => {
 
       if (profileError) {
         console.error("Error fetching profile:", profileError);
+        toast({
+          title: "Erro",
+          description: "Erro ao verificar perfil de administrador.",
+          variant: "destructive",
+        });
+        setIsLoading(false);
         return;
       }
 
       if (profile?.role === 'admin') {
         setIsAdmin(true);
+      } else {
+        toast({
+          title: "Acesso Negado",
+          description: "Você não tem permissão de administrador.",
+          variant: "destructive",
+        });
       }
     } catch (error) {
       console.error("Error checking admin status:", error);
+      toast({
+        title: "Erro",
+        description: "Erro ao verificar status de administrador.",
+        variant: "destructive",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -93,6 +122,11 @@ const ApiKeysManager = () => {
       }
     } catch (error) {
       console.error("Error:", error);
+      toast({
+        title: "Erro",
+        description: "Erro ao carregar chaves API.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -103,12 +137,13 @@ const ApiKeysManager = () => {
       const { error } = await supabase
         .from("api_keys")
         .upsert({
-          id: "1", // Changed from number to string
+          id: "1",
           openai_key: keys.openai_key,
           openrouter_key: keys.openrouter_key,
         });
 
       if (error) {
+        console.error("Error saving keys:", error);
         toast({
           title: "Erro ao salvar",
           description: "Não foi possível salvar as chaves de API.",
