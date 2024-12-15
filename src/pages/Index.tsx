@@ -20,8 +20,8 @@ const Index = () => {
   const handleSendMessage = async (content: string) => {
     if (!content.trim()) {
       toast({
-        title: "Error",
-        description: "Please enter a message",
+        title: "Erro",
+        description: "Por favor, digite uma mensagem",
         variant: "destructive"
       });
       return;
@@ -42,13 +42,13 @@ const Index = () => {
 
       const assistantMessage: Message = {
         role: 'assistant',
-        content: "I am a hardcoded response. The database connection has been removed for testing purposes. You can modify this response in the Index.tsx file."
+        content: "Olá! Sou uma resposta pré-definida. A conexão com o banco de dados foi removida para fins de teste. Você pode modificar esta resposta no arquivo Index.tsx."
       };
 
       setMessages([...newMessages, assistantMessage]);
     } catch (error: any) {
       toast({
-        title: "Error",
+        title: "Erro",
         description: error.message,
         variant: "destructive"
       });
@@ -62,7 +62,7 @@ const Index = () => {
       <Sidebar 
         isOpen={isSidebarOpen} 
         onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
-        onApiKeyChange={() => {}} // Empty function since we don't need API key anymore
+        onApiKeyChange={() => {}} 
       />
       
       <main className={`flex-1 transition-all duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-0'}`}>
@@ -72,7 +72,7 @@ const Index = () => {
           {messages.length === 0 ? (
             <div className="w-full max-w-3xl px-4 space-y-4">
               <div>
-                <h1 className="mb-8 text-4xl font-semibold text-center">What can I help with?</h1>
+                <h1 className="mb-8 text-4xl font-semibold text-center">Como posso ajudar?</h1>
                 <ChatInput onSend={handleSendMessage} isLoading={isLoading} />
               </div>
               <ActionButtons />
@@ -84,7 +84,7 @@ const Index = () => {
                 <ChatInput onSend={handleSendMessage} isLoading={isLoading} />
               </div>
               <div className="text-xs text-center text-gray-500 py-2">
-                ChatGPT can make mistakes. Check important info.
+                O ChatGPT pode cometer erros. Verifique informações importantes.
               </div>
             </>
           )}
