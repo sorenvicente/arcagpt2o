@@ -46,10 +46,9 @@ const PromptBlock = () => {
         return;
       }
 
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from("prompt_blocks")
-        .insert(promptData)
-        .select();
+        .insert(promptData);
 
       if (error) {
         console.error("Erro ao salvar no Supabase:", error);
