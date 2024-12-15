@@ -1,7 +1,16 @@
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -11,154 +20,146 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
 
-export type Category = "proposito" | "metodo" | "mentoria" | "curso" | "conteudo";
-
-export interface PromptBlock {
-  id: string;
+interface PromptFormData {
   name: string;
-  description: string | null;
+  description: string;
   prompt: string;
-  category: Category;
-  created_at?: string;
-  updated_at?: string;
+  category: string;
 }
 
-const PromptBlock = () => {
-  const [promptData, setPromptData] = useState<Omit<PromptBlock, "id">>({
-    name: "",
-    description: "",
-    prompt: "",
-    category: "proposito",
-  });
+export const PromptBlock = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  
+  const form = useForm<PromptFormData>({
+    defaultValues: {
+      name: "",
+      description: "",
+      prompt: "",
+      category: "",
+    },
+  });
 
-  const handleSave = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
+  const handleSave = async (data: PromptFormData) => {
     try {
-      if (!promptData.name || !promptData.prompt || !promptData.category) {
-        toast({
-          title: "Campos obrigatórios",
-          description: "Por favor, preencha todos os campos obrigatórios.",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      const { data, error } = await supabase
+      setIsLoading(true);
+      
+      const { error } = await supabase
         .from("prompt_blocks")
-        .insert([promptData])
+        .insert([data])
         .select();
 
-      if (error) {
-        console.error("Erro ao salvar prompt:", error);
-        toast({
-          title: "Erro ao salvar",
-          description: "Não foi possível salvar o prompt. Tente novamente.",
-          variant: "destructive",
-        });
-        return;
-      }
+      if (error) throw error;
 
       toast({
-        title: "Sucesso!",
-        description: "Prompt salvo com sucesso.",
+        title: "Prompt salvo com sucesso!",
+        description: "O prompt foi adicionado à lista.",
       });
 
-      setPromptData({
-        name: "",
-        description: "",
-        prompt: "",
-        category: "proposito",
-      });
-    } catch (error) {
-      console.error("Erro inesperado:", error);
+      form.reset();
+    } catch (error: any) {
+      console.error("Erro ao salvar prompt:", error);
       toast({
-        title: "Erro inesperado",
-        description: "Ocorreu um erro ao tentar salvar o prompt.",
+        title: "Erro ao salvar prompt",
+        description: error.message || "Não foi possível salvar o prompt.",
         variant: "destructive",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <Card className="bg-[#1A1F2C] border-[#7E69AB] shadow-lg">
-      <CardHeader>
-        <CardTitle className="text-[#D6BCFA]">Criar Novo Prompt</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSave} className="space-y-6">
-          <div className="space-y-2">
-            <label className="text-[#D6BCFA] text-sm font-medium">
-              Nome do Prompt *
-            </label>
-            <Input
-              value={promptData.name}
-              onChange={(e) => setPromptData({ ...promptData, name: e.target.value })}
-              className="bg-[#2A2B32] border-[#7E69AB] text-white placeholder:text-[#8E9196]"
-              placeholder="Digite o nome do prompt"
-              required
-            />
-          </div>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(handleSave)} className="space-y-6">
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-[#D6BCFA]">Nome do Prompt</FormLabel>
+              <FormControl>
+                <Input 
+                  placeholder="Digite o nome do prompt" 
+                  className="bg-[#1A1F2C] border-[#7E69AB] text-white"
+                  {...field} 
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-          <div className="space-y-2">
-            <label className="text-[#D6BCFA] text-sm font-medium">
-              Descrição
-            </label>
-            <Input
-              value={promptData.description}
-              onChange={(e) => setPromptData({ ...promptData, description: e.target.value })}
-              className="bg-[#2A2B32] border-[#7E69AB] text-white placeholder:text-[#8E9196]"
-              placeholder="Digite uma breve descrição"
-            />
-          </div>
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-[#D6BCFA]">Descrição</FormLabel>
+              <FormControl>
+                <Input 
+                  placeholder="Digite uma descrição" 
+                  className="bg-[#1A1F2C] border-[#7E69AB] text-white"
+                  {...field} 
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-          <div className="space-y-2">
-            <label className="text-[#D6BCFA] text-sm font-medium">
-              Prompt *
-            </label>
-            <Textarea
-              value={promptData.prompt}
-              onChange={(e) => setPromptData({ ...promptData, prompt: e.target.value })}
-              className="bg-[#2A2B32] border-[#7E69AB] text-white placeholder:text-[#8E9196] min-h-[150px]"
-              placeholder="Digite o prompt"
-              required
-            />
-          </div>
+        <FormField
+          control={form.control}
+          name="prompt"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-[#D6BCFA]">Prompt</FormLabel>
+              <FormControl>
+                <Textarea 
+                  placeholder="Digite o prompt" 
+                  className="bg-[#1A1F2C] border-[#7E69AB] text-white min-h-[200px]"
+                  {...field} 
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-          <div className="space-y-2">
-            <label className="text-[#D6BCFA] text-sm font-medium">
-              Categoria *
-            </label>
-            <Select
-              value={promptData.category}
-              onValueChange={(value) => setPromptData({ ...promptData, category: value as Category })}
-            >
-              <SelectTrigger className="bg-[#2A2B32] border-[#7E69AB] text-white">
-                <SelectValue placeholder="Selecione uma categoria" />
-              </SelectTrigger>
-              <SelectContent className="bg-[#1A1F2C] border-[#7E69AB]">
-                <SelectItem value="proposito" className="text-white hover:bg-[#2A2B32]">Propósito</SelectItem>
-                <SelectItem value="metodo" className="text-white hover:bg-[#2A2B32]">Método</SelectItem>
-                <SelectItem value="mentoria" className="text-white hover:bg-[#2A2B32]">Mentoria</SelectItem>
-                <SelectItem value="curso" className="text-white hover:bg-[#2A2B32]">Curso</SelectItem>
-                <SelectItem value="conteudo" className="text-white hover:bg-[#2A2B32]">Conteúdo</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+        <FormField
+          control={form.control}
+          name="category"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-[#D6BCFA]">Categoria</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger className="bg-[#1A1F2C] border-[#7E69AB] text-white">
+                    <SelectValue placeholder="Selecione uma categoria" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent className="bg-[#1A1F2C] border-[#7E69AB]">
+                  <SelectItem value="proposito" className="text-white hover:bg-[#2A2B32]">Propósito</SelectItem>
+                  <SelectItem value="metodo" className="text-white hover:bg-[#2A2B32]">Método</SelectItem>
+                  <SelectItem value="mentoria" className="text-white hover:bg-[#2A2B32]">Mentoria</SelectItem>
+                  <SelectItem value="curso" className="text-white hover:bg-[#2A2B32]">Curso</SelectItem>
+                  <SelectItem value="conteudo" className="text-white hover:bg-[#2A2B32]">Conteúdo</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-          <Button
-            type="submit"
-            className="w-full bg-[#9b87f5] hover:bg-[#7E69AB] text-white transition-colors"
-          >
-            Salvar Prompt
-          </Button>
-        </form>
-      </CardContent>
-    </Card>
+        <Button 
+          type="submit" 
+          disabled={isLoading}
+          className="w-full bg-[#9b87f5] hover:bg-[#8B5CF6] text-white"
+        >
+          {isLoading ? "Salvando..." : "Salvar Prompt"}
+        </Button>
+      </form>
+    </Form>
   );
 };
-
-export default PromptBlock;
