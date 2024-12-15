@@ -6,6 +6,7 @@ import ChatHeader from '@/components/ChatHeader';
 import ChatInput from '@/components/ChatInput';
 import ActionButtons from '@/components/ActionButtons';
 import MessageList from '@/components/MessageList';
+import { Button } from '@/components/ui/button';
 
 type Message = {
   role: 'user' | 'assistant';
@@ -16,8 +17,55 @@ const Index = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isTestingApi, setIsTestingApi] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
+
+  const testApiKeys = async () => {
+    setIsTestingApi(true);
+    const savedKeys = localStorage.getItem("api_keys");
+    
+    if (!savedKeys) {
+      toast({
+        title: "Erro",
+        description: "Chaves API não encontradas. Por favor, configure suas chaves primeiro.",
+        variant: "destructive"
+      });
+      navigate('/api-keys');
+      setIsTestingApi(false);
+      return;
+    }
+
+    const keys = JSON.parse(savedKeys);
+    
+    if (!keys.openai_key || !keys.openrouter_key) {
+      toast({
+        title: "Erro",
+        description: "Uma ou mais chaves API estão faltando. Configure-as primeiro.",
+        variant: "destructive"
+      });
+      navigate('/api-keys');
+      setIsTestingApi(false);
+      return;
+    }
+
+    // Simula um teste básico
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      toast({
+        title: "Sucesso!",
+        description: "As chaves API foram encontradas no sistema.",
+      });
+    } catch (error) {
+      toast({
+        title: "Erro",
+        description: "Erro ao testar as chaves API.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsTestingApi(false);
+    }
+  };
 
   const handleSendMessage = async (content: string) => {
     if (!content.trim()) {
@@ -74,6 +122,15 @@ const Index = () => {
             <div className="w-full max-w-3xl px-4 space-y-4">
               <div>
                 <h1 className="mb-8 text-4xl font-semibold text-center">Como posso ajudar?</h1>
+                <div className="mb-4">
+                  <Button
+                    onClick={testApiKeys}
+                    disabled={isTestingApi}
+                    className="w-full mb-4"
+                  >
+                    {isTestingApi ? "Testando..." : "Testar Chaves API"}
+                  </Button>
+                </div>
                 <ActionButtons />
                 <ChatInput onSend={handleSendMessage} isLoading={isLoading} />
               </div>
