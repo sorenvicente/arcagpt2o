@@ -103,7 +103,7 @@ const ApiKeysManager = () => {
       const { error } = await supabase
         .from("api_keys")
         .upsert({
-          id: 1, // Using a fixed ID for the single row
+          id: "1", // Changed from number to string
           openai_key: keys.openai_key,
           openrouter_key: keys.openrouter_key,
         });
