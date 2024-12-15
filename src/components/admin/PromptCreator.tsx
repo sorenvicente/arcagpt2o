@@ -1,0 +1,163 @@
+import React from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+import { useToast } from "@/components/ui/use-toast";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { supabase } from "@/integrations/supabase/client";
+
+const promptSchema = z.object({
+  name: z.string().min(2, {
+    message: "Nome deve ter pelo menos 2 caracteres.",
+  }),
+  description: z.string().min(10, {
+    message: "Descrição deve ter pelo menos 10 caracteres.",
+  }),
+  prompt: z.string().min(20, {
+    message: "Prompt deve ter pelo menos 20 caracteres.",
+  }),
+  category: z.string().min(2, {
+    message: "Categoria deve ter pelo menos 2 caracteres.",
+  }),
+});
+
+export function PromptCreator() {
+  const { toast } = useToast();
+  const form = useForm<z.infer<typeof promptSchema>>({
+    resolver: zodResolver(promptSchema),
+    defaultValues: {
+      name: "",
+      description: "",
+      prompt: "",
+      category: "",
+    },
+  });
+
+  async function onSubmit(values: z.infer<typeof promptSchema>) {
+    try {
+      const { error } = await supabase
+        .from("prompt_blocks")
+        .insert({
+          name: values.name,
+          description: values.description,
+          prompt: values.prompt,
+          category: values.category,
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      toast({
+        title: "Prompt criado com sucesso!",
+        description: "O prompt foi salvo e já pode ser utilizado.",
+      });
+
+      form.reset();
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Erro ao criar prompt",
+        description: "Ocorreu um erro ao salvar o prompt. Tente novamente.",
+      });
+    }
+  }
+
+  return (
+    <div className="w-full max-w-2xl mx-auto">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Nome do Prompt</FormLabel>
+                <FormControl>
+                  <Input placeholder="Ex: Análise de Dados" {...field} />
+                </FormControl>
+                <FormDescription>
+                  Um nome curto e descritivo para identificar o prompt.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="category"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Categoria</FormLabel>
+                <FormControl>
+                  <Input placeholder="Ex: Análise" {...field} />
+                </FormControl>
+                <FormDescription>
+                  Categoria para organizar os prompts.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Descrição</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="Descreva o objetivo deste prompt..."
+                    {...field}
+                  />
+                </FormControl>
+                <FormDescription>
+                  Uma breve descrição do que este prompt faz.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="prompt"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Prompt</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="Digite o conteúdo do prompt..."
+                    className="min-h-[200px]"
+                    {...field}
+                  />
+                </FormControl>
+                <FormDescription>
+                  O conteúdo do prompt que será utilizado.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <Button type="submit" className="w-full">
+            Criar Prompt
+          </Button>
+        </form>
+      </Form>
+    </div>
+  );
+}

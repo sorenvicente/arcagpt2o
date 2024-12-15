@@ -1,4 +1,5 @@
 import ApiKeysManager from "@/components/admin/ApiKeysManager";
+import { PromptCreator } from "@/components/admin/PromptCreator";
 
 const AdminPage = () => {
   return (
@@ -12,7 +13,8 @@ const AdminPage = () => {
           </div>
           
           <div className="bg-chatgpt-secondary rounded-lg p-6 border border-chatgpt-border">
-            <p className="text-white text-center">Aguardando criação</p>
+            <h2 className="text-xl font-semibold mb-6 text-white">Criar Novo Prompt</h2>
+            <PromptCreator />
           </div>
         </div>
       </div>
