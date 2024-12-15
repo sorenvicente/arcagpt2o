@@ -18,7 +18,7 @@ const ChatHeader = ({ isSidebarOpen = true, activePrompt }: ChatHeaderProps) => 
             className="flex items-center gap-2 hover:bg-gray-800 rounded-md px-2 py-1"
           >
             <span className={`font-semibold ${!isSidebarOpen ? 'ml-24' : ''}`}>
-              {activePrompt || "ChatGPT"}
+              {activePrompt ? `ChatGPT (${activePrompt})` : "ChatGPT"}
             </span>
             <ChevronDown className="h-4 w-4" />
           </button>

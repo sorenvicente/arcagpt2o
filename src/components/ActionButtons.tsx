@@ -7,9 +7,9 @@ interface ActionButtonsProps {
 
 const ActionButtons = ({ onSelectPrompt }: ActionButtonsProps) => {
   const [prompts, setPrompts] = useState<any[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   useEffect(() => {
-    // Carregar prompts do localStorage
     const loadPrompts = () => {
       const savedPrompts = localStorage.getItem('prompts');
       if (savedPrompts) {
@@ -23,6 +23,7 @@ const ActionButtons = ({ onSelectPrompt }: ActionButtonsProps) => {
   }, []);
 
   const handlePromptSelect = (category: string) => {
+    setSelectedCategory(category);
     const selectedPrompt = prompts.find(p => p.category.toLowerCase() === category.toLowerCase());
     if (selectedPrompt) {
       onSelectPrompt(selectedPrompt.prompt);
@@ -43,7 +44,9 @@ const ActionButtons = ({ onSelectPrompt }: ActionButtonsProps) => {
         <button 
           key={action.label} 
           onClick={() => handlePromptSelect(action.category)}
-          className="relative flex h-[42px] items-center gap-1.5 rounded-full border border-[#383737] px-3 py-2 text-start text-[13px] shadow-xxs transition enabled:hover:bg-token-main-surface-secondary disabled:cursor-not-allowed xl:gap-2 xl:text-[14px]"
+          className={`relative flex h-[42px] items-center gap-1.5 rounded-full border border-[#383737] px-3 py-2 text-start text-[13px] shadow-xxs transition enabled:hover:bg-token-main-surface-secondary disabled:cursor-not-allowed xl:gap-2 xl:text-[14px] ${
+            selectedCategory === action.category ? 'bg-token-main-surface-secondary' : ''
+          }`}
         >
           {action.icon}
           {action.label}
