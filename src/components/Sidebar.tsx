@@ -1,82 +1,86 @@
-import { useState } from "react";
+import { Menu, MessageSquare, ChevronDown, User } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
-import {
-  ChevronLeft,
-  MessageSquarePlus,
-  Settings,
-  Menu,
-} from "lucide-react";
 
-const Sidebar = ({
-  isOpen,
-  onToggle,
-}: {
+interface SidebarProps {
   isOpen: boolean;
   onToggle: () => void;
-}) => {
+  onApiKeyChange: (apiKey: string) => void;
+}
+
+const Sidebar = ({ isOpen, onToggle, onApiKeyChange }: SidebarProps) => {
   const navigate = useNavigate();
-  const [conversations] = useState<string[]>([]);
+  
+  const mentorGPTs = [
+    { title: "Propósito", icon: <MessageSquare className="h-4 w-4" /> },
+    { title: "Método", icon: <MessageSquare className="h-4 w-4" /> },
+    { title: "Mentoria", icon: <MessageSquare className="h-4 w-4" /> },
+    { title: "Curso", icon: <MessageSquare className="h-4 w-4" /> },
+    { title: "Conteúdo", icon: <MessageSquare className="h-4 w-4" /> }
+  ];
 
   return (
-    <>
-      <button
-        className={`fixed left-2 top-2 z-40 rounded-md border border-gray-600 p-2 text-gray-300 hover:bg-gray-700 ${
-          isOpen ? "hidden" : "block"
-        }`}
-        onClick={onToggle}
-      >
-        <Menu className="h-4 w-4" />
-      </button>
+    <div className={cn(
+      "fixed top-0 left-0 z-40 h-screen bg-chatgpt-sidebar transition-all duration-300",
+      isOpen ? "w-64" : "w-0"
+    )}>
+      <nav className="flex h-full w-full flex-col px-3" aria-label="Chat history">
+        <div className="flex justify-between flex h-[60px] items-center">
+          <button onClick={onToggle} className="h-10 rounded-lg px-2 text-token-text-secondary hover:bg-token-sidebar-surface-secondary">
+            <Menu className="h-5 w-5" />
+          </button>
+          <button className="flex items-center gap-2 rounded-lg px-3 py-1 text-sm hover:bg-token-sidebar-surface-secondary">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" className="icon-xl-heavy">
+              <path d="M15.6729 3.91287C16.8918 2.69392 18.8682 2.69392 20.0871 3.91287C21.3061 5.13182 21.3061 7.10813 20.0871 8.32708L14.1499 14.2643C13.3849 15.0293 12.3925 15.5255 11.3215 15.6785L9.14142 15.9899C8.82983 16.0344 8.51546 15.9297 8.29289 15.7071C8.07033 15.4845 7.96554 15.1701 8.01005 14.8586L8.32149 12.6785C8.47449 11.6075 8.97072 10.615 9.7357 9.85006L15.6729 3.91287Z" fill="currentColor"/>
+            </svg>
+          </button>
+        </div>
 
-      <aside
-        className={`fixed left-0 top-0 z-30 h-screen w-64 bg-chatgpt-sidebar transition-transform duration-300 ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >
-        <div className="flex h-full flex-col">
-          <div className="flex items-center justify-between p-4">
-            <button
-              className="flex items-center gap-3 rounded-md px-3 py-1 text-sm text-white transition-colors duration-200 hover:bg-chatgpt-hover"
-              onClick={() => {
-                // Reset conversation state here
-              }}
-            >
-              <MessageSquarePlus className="h-4 w-4" />
-              Nova conversa
-            </button>
-            <button
-              className="rounded-md p-2 text-gray-300 hover:bg-gray-700"
-              onClick={onToggle}
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </button>
-          </div>
-
-          <div className="flex-1 overflow-y-auto">
-            {conversations.map((conversation, index) => (
-              <div key={index} className="sidebar-item">
-                {conversation}
+        <div className="flex-col flex-1 transition-opacity duration-500 relative -mr-2 pr-2 overflow-y-auto">
+          <div className="bg-token-sidebar-surface-primary pt-0">
+            <div className="flex flex-col gap-2 px-2 py-2">
+              <div className="group flex h-10 items-center gap-2.5 rounded-lg px-2 hover:bg-token-sidebar-surface-secondary cursor-pointer">
+                <div className="h-6 w-6 flex items-center justify-center">
+                  <MessageSquare className="h-4 w-4" />
+                </div>
+                <span className="text-sm">ChatGPT</span>
               </div>
-            ))}
-          </div>
+            </div>
 
-          <div className="border-t border-white/20 p-4">
-            <button
-              className="action-button w-full"
-              onClick={() => navigate("/admin")}
-            >
-              <Settings className="h-4 w-4" />
-              <div className="flex flex-col items-start">
-                <span>Administrador</span>
-                <span className="text-xs text-gray-400">
-                  Configurações e chaves
-                </span>
-              </div>
-            </button>
+            <div className="mt-4 flex flex-col gap-2">
+              <div className="px-3 py-2 text-xs text-gray-500">Mentor GPTs</div>
+              {mentorGPTs.map((gpt) => (
+                <div key={gpt.title} className="group flex h-10 items-center gap-2.5 rounded-lg px-4 hover:bg-token-sidebar-surface-secondary cursor-pointer">
+                  {gpt.icon}
+                  <span className="text-sm">{gpt.title}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
-      </aside>
-    </>
+
+        {isOpen && (
+          <div className="flex flex-col py-2 border-t border-white/20">
+            <button 
+              onClick={() => navigate('/admin')}
+              className="group flex gap-2 p-2.5 text-sm items-start hover:bg-token-sidebar-surface-secondary rounded-lg px-2 text-left w-full min-w-[200px]"
+            >
+              <span className="flex w-full flex-row flex-wrap-reverse justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-full border border-token-border-light">
+                    <User className="h-4 w-4" />
+                  </span>
+                  <div className="flex flex-col">
+                    <span>Administrador</span>
+                    <span className="line-clamp-1 text-xs text-token-text-tertiary">Configurações e chaves</span>
+                  </div>
+                </div>
+              </span>
+            </button>
+          </div>
+        )}
+      </nav>
+    </div>
   );
 };
 
