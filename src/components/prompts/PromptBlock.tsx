@@ -42,13 +42,28 @@ export const PromptBlock = () => {
   });
 
   const handleSave = async (data: PromptFormData) => {
+    if (!data.name || !data.prompt || !data.category) {
+      toast({
+        title: "Erro ao salvar prompt",
+        description: "Por favor, preencha todos os campos obrigatórios.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     try {
       setIsLoading(true);
       
-      const { error } = await supabase
+      const { data: savedPrompt, error } = await supabase
         .from("prompt_blocks")
-        .insert([data])
-        .select();
+        .insert([{
+          name: data.name,
+          description: data.description || null,
+          prompt: data.prompt,
+          category: data.category,
+        }])
+        .select()
+        .single();
 
       if (error) throw error;
 
@@ -93,7 +108,7 @@ export const PromptBlock = () => {
           onChange={(value) => form.setValue("category", value)}
         />
         
-        <SaveButton onClick={form.handleSubmit(handleSave)} />
+        <SaveButton onClick={form.handleSubmit(handleSave)} isLoading={isLoading} />
       </form>
     </Form>
   );
