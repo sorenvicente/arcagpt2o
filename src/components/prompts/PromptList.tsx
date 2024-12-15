@@ -20,17 +20,6 @@ const PromptList = () => {
       try {
         setIsLoading(true);
         
-        // First check if we have an authenticated session
-        const { data: sessionData } = await supabase.auth.getSession();
-        if (!sessionData.session) {
-          toast({
-            title: "Não autorizado",
-            description: "Você precisa estar logado para ver os prompts.",
-            variant: "destructive",
-          });
-          return;
-        }
-
         const { data, error } = await supabase
           .from("prompt_blocks")
           .select("*")
