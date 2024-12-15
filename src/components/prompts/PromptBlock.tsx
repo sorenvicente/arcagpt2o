@@ -35,15 +35,29 @@ const PromptBlock = () => {
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("Tentando salvar prompt:", promptData);
 
-    const { error } = await supabase
-      .from("prompt_blocks")
-      .insert(promptData);
-
-    if (error) {
+    if (!promptData.name || !promptData.prompt || !promptData.category) {
       toast({
         title: "Erro ao salvar",
-        description: "Não foi possível salvar o bloco de prompt.",
+        description: "Por favor, preencha todos os campos obrigatórios.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const { data, error } = await supabase
+      .from("prompt_blocks")
+      .insert(promptData)
+      .select();
+
+    console.log("Resposta do Supabase:", { data, error });
+
+    if (error) {
+      console.error("Erro ao salvar no Supabase:", error);
+      toast({
+        title: "Erro ao salvar",
+        description: "Não foi possível salvar o bloco de prompt. " + error.message,
         variant: "destructive",
       });
       return;
@@ -75,6 +89,7 @@ const PromptBlock = () => {
             setPromptData({ ...promptData, name: e.target.value })
           }
           placeholder="Digite o nome do prompt"
+          required
         />
       </div>
 
@@ -104,6 +119,7 @@ const PromptBlock = () => {
           }
           placeholder="Digite o prompt"
           rows={4}
+          required
         />
       </div>
 
@@ -116,6 +132,7 @@ const PromptBlock = () => {
           onValueChange={(value) =>
             setPromptData({ ...promptData, category: value as Category })
           }
+          required
         >
           <SelectTrigger>
             <SelectValue placeholder="Selecione uma categoria" />
