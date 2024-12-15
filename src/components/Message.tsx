@@ -1,10 +1,8 @@
 import MessageAvatar from './MessageAvatar';
 import MessageActions from './MessageActions';
+import { Message as MessageType } from '@/types/chat';
 
-type MessageProps = {
-  role: 'user' | 'assistant';
-  content: string;
-};
+type MessageProps = Pick<MessageType, 'role' | 'content'>;
 
 const Message = ({ role, content }: MessageProps) => {
   return (
