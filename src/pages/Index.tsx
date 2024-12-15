@@ -9,7 +9,7 @@ import MessageList from '@/components/MessageList';
 import { Button } from '@/components/ui/button';
 
 type Message = {
-  role: 'user' | 'assistant';
+  role: 'user' | 'assistant' | 'system';
   content: string;
 };
 
@@ -20,6 +20,22 @@ const Index = () => {
   const [isTestingApi, setIsTestingApi] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
+
+  const handlePromptSelect = (promptContent: string) => {
+    // Adiciona o prompt como uma mensagem do sistema
+    setMessages(prev => {
+      const systemMessage: Message = {
+        role: 'system',
+        content: promptContent
+      };
+      return [systemMessage, ...prev.filter(msg => msg.role !== 'system')];
+    });
+
+    toast({
+      title: "Prompt selecionado",
+      description: "O contexto foi atualizado com sucesso.",
+    });
+  };
 
   const testApiKeys = async () => {
     setIsTestingApi(true);
@@ -147,8 +163,8 @@ const Index = () => {
           'Authorization': `Bearer ${keys.openai_key}`
         },
         body: JSON.stringify({
-          model: "gpt-3.5-turbo",
-          messages: newMessages,
+          model: "gpt-4o",
+          messages: newMessages.filter(msg => msg.role !== 'system' || messages.indexOf(msg) === 0),
           max_tokens: 1000,
           temperature: 0.7,
         })
@@ -201,15 +217,15 @@ const Index = () => {
                     {isTestingApi ? "Testando..." : "Testar Chaves API"}
                   </Button>
                 </div>
-                <ActionButtons />
+                <ActionButtons onSelectPrompt={handlePromptSelect} />
                 <ChatInput onSend={handleSendMessage} isLoading={isLoading} />
               </div>
             </div>
           ) : (
             <>
-              <MessageList messages={messages} />
+              <MessageList messages={messages.filter(msg => msg.role !== 'system')} />
               <div className="w-full max-w-3xl mx-auto px-4 py-2">
-                <ActionButtons />
+                <ActionButtons onSelectPrompt={handlePromptSelect} />
                 <ChatInput onSend={handleSendMessage} isLoading={isLoading} />
               </div>
             </>
