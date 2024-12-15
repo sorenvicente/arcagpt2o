@@ -1,14 +1,13 @@
-import { Menu, MessageSquare, ChevronDown, User } from "lucide-react";
+import { Menu, MessageSquare, ChevronDown, User } from 'lucide-react';
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
 
 interface SidebarProps {
   isOpen: boolean;
   onToggle: () => void;
-  onApiKeyChange: (apiKey: string) => void;
 }
 
-const Sidebar = ({ isOpen, onToggle, onApiKeyChange }: SidebarProps) => {
+const Sidebar = ({ isOpen, onToggle }: SidebarProps) => {
   const navigate = useNavigate();
   
   const mentorGPTs = [
@@ -26,13 +25,17 @@ const Sidebar = ({ isOpen, onToggle, onApiKeyChange }: SidebarProps) => {
     )}>
       <nav className="flex h-full w-full flex-col px-3" aria-label="Chat history">
         <div className="flex justify-between flex h-[60px] items-center">
-          <button onClick={onToggle} className="h-10 rounded-lg px-2 text-token-text-secondary hover:bg-token-sidebar-surface-secondary">
-            <Menu className="h-5 w-5" />
+          <button 
+            onClick={onToggle} 
+            className="flex items-center justify-center h-10 w-10 rounded-lg hover:bg-chatgpt-hover transition-colors"
+          >
+            <Menu className="h-5 w-5 text-white" strokeWidth={1.5} />
           </button>
-          <button className="flex items-center gap-2 rounded-lg px-3 py-1 text-sm hover:bg-token-sidebar-surface-secondary">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" className="icon-xl-heavy">
-              <path d="M15.6729 3.91287C16.8918 2.69392 18.8682 2.69392 20.0871 3.91287C21.3061 5.13182 21.3061 7.10813 20.0871 8.32708L14.1499 14.2643C13.3849 15.0293 12.3925 15.5255 11.3215 15.6785L9.14142 15.9899C8.82983 16.0344 8.51546 15.9297 8.29289 15.7071C8.07033 15.4845 7.96554 15.1701 8.01005 14.8586L8.32149 12.6785C8.47449 11.6075 8.97072 10.615 9.7357 9.85006L15.6729 3.91287Z" fill="currentColor"/>
-            </svg>
+          <button 
+            className="flex items-center justify-center h-10 w-10 rounded-lg hover:bg-chatgpt-hover transition-colors"
+            onClick={() => setMessages([])}
+          >
+            <MessageSquare className="h-5 w-5 text-white" strokeWidth={1.5} />
           </button>
         </div>
 

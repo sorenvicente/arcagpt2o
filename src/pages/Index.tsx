@@ -6,7 +6,6 @@ import ChatHeader from '@/components/ChatHeader';
 import ChatInput from '@/components/ChatInput';
 import ActionButtons from '@/components/ActionButtons';
 import MessageList from '@/components/MessageList';
-import { PlusCircle, Menu } from 'lucide-react';
 
 type Message = {
   role: 'user' | 'assistant';
@@ -64,7 +63,7 @@ const Index = () => {
     <div className="flex h-screen">
       <Sidebar 
         isOpen={isSidebarOpen} 
-        onToggle={() => setIsSidebarOpen(!isSidebarOpen)} 
+        onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
       />
       
       <main className={`flex-1 transition-all duration-300 relative ${isSidebarOpen ? 'ml-64' : 'ml-0'}`}>
@@ -75,22 +74,6 @@ const Index = () => {
             <div className="w-full max-w-3xl px-4 space-y-4">
               <div>
                 <h1 className="mb-8 text-4xl font-semibold text-center">Como posso ajudar?</h1>
-                <div className="flex justify-center space-x-4 mb-6">
-                  <button
-                    onClick={() => setMessages([])}
-                    className="flex items-center gap-2 px-4 py-2 rounded-lg bg-chatgpt-secondary hover:bg-chatgpt-hover text-white transition-colors"
-                  >
-                    <PlusCircle className="w-5 h-5" />
-                    Novo Chat
-                  </button>
-                  <button
-                    onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                    className="flex items-center gap-2 px-4 py-2 rounded-lg bg-chatgpt-secondary hover:bg-chatgpt-hover text-white transition-colors"
-                  >
-                    <Menu className="w-5 h-5" />
-                    Menu
-                  </button>
-                </div>
                 <ActionButtons />
                 <ChatInput onSend={handleSendMessage} isLoading={isLoading} />
               </div>
