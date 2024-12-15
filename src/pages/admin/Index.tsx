@@ -1,3 +1,5 @@
+import ApiKeysManager from "@/components/admin/ApiKeysManager";
+
 const AdminPage = () => {
   return (
     <div className="min-h-screen bg-chatgpt-main p-6">
