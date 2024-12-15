@@ -29,7 +29,8 @@ const Index = () => {
       toast({
         title: "Erro",
         description: "Chaves API não encontradas. Por favor, configure suas chaves primeiro.",
-        variant: "destructive"
+        variant: "destructive",
+        duration: 3000, // 3 segundos
       });
       navigate('/api-keys');
       setIsTestingApi(false);
@@ -42,25 +43,27 @@ const Index = () => {
       toast({
         title: "Erro",
         description: "Uma ou mais chaves API estão faltando. Configure-as primeiro.",
-        variant: "destructive"
+        variant: "destructive",
+        duration: 3000, // 3 segundos
       });
       navigate('/api-keys');
       setIsTestingApi(false);
       return;
     }
 
-    // Simula um teste básico
     try {
       await new Promise(resolve => setTimeout(resolve, 1000));
       toast({
         title: "Sucesso!",
         description: "As chaves API foram encontradas no sistema.",
+        duration: 3000, // 3 segundos
       });
     } catch (error) {
       toast({
         title: "Erro",
         description: "Erro ao testar as chaves API.",
-        variant: "destructive"
+        variant: "destructive",
+        duration: 3000, // 3 segundos
       });
     } finally {
       setIsTestingApi(false);
@@ -72,7 +75,8 @@ const Index = () => {
       toast({
         title: "Erro",
         description: "Por favor, digite uma mensagem",
-        variant: "destructive"
+        variant: "destructive",
+        duration: 3000, // 3 segundos
       });
       return;
     }
@@ -100,7 +104,8 @@ const Index = () => {
       toast({
         title: "Erro",
         description: error.message,
-        variant: "destructive"
+        variant: "destructive",
+        duration: 3000, // 3 segundos
       });
     } finally {
       setIsLoading(false);
