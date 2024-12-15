@@ -1,7 +1,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PromptCreator } from "@/components/admin/PromptCreator";
 import { PromptList } from "@/components/admin/PromptList";
-import { ApiKeysManager } from "@/components/admin/ApiKeysManager";
+import ApiKeysManager from "@/components/admin/ApiKeysManager";
 
 const AdminPage = () => {
   return (
