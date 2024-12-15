@@ -73,14 +73,15 @@ const Index = () => {
             <div className="w-full max-w-3xl px-4 space-y-4">
               <div>
                 <h1 className="mb-8 text-4xl font-semibold text-center">Como posso ajudar?</h1>
+                <ActionButtons />
                 <ChatInput onSend={handleSendMessage} isLoading={isLoading} />
               </div>
-              <ActionButtons />
             </div>
           ) : (
             <>
               <MessageList messages={messages} />
               <div className="w-full max-w-3xl mx-auto px-4 py-2">
+                <ActionButtons />
                 <ChatInput onSend={handleSendMessage} isLoading={isLoading} />
               </div>
               <div className="text-xs text-center text-gray-500 py-2">
