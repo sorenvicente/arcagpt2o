@@ -57,7 +57,7 @@ const ApiKeysPage = () => {
       const { data, error } = await supabase
         .from("api_keys")
         .upsert({
-          id: 1, // Using a fixed ID for single record
+          id: "1", // Using a string ID instead of number
           openai_key: keys.openai_key,
           openrouter_key: keys.openrouter_key,
         })
