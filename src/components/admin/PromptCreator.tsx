@@ -1,154 +1,117 @@
-import React from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
+import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-
-const promptSchema = z.object({
-  name: z.string().min(2, {
-    message: "Nome deve ter pelo menos 2 caracteres.",
-  }),
-  description: z.string().min(10, {
-    message: "Descrição deve ter pelo menos 10 caracteres.",
-  }),
-  prompt: z.string().min(20, {
-    message: "Prompt deve ter pelo menos 20 caracteres.",
-  }),
-  category: z.string().min(2, {
-    message: "Categoria deve ter pelo menos 2 caracteres.",
-  }),
-});
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export function PromptCreator() {
   const { toast } = useToast();
-  const form = useForm<z.infer<typeof promptSchema>>({
-    resolver: zodResolver(promptSchema),
-    defaultValues: {
-      name: "",
-      description: "",
-      prompt: "",
-      category: "",
-    },
-  });
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [prompt, setPrompt] = useState("");
+  const [category, setCategory] = useState("");
 
-  async function onSubmit(values: z.infer<typeof promptSchema>) {
-    try {
-      // Recupera prompts existentes ou inicializa array vazio
-      const existingPrompts = JSON.parse(localStorage.getItem('prompts') || '[]');
-      
-      // Adiciona novo prompt com ID único
-      const newPrompt = {
-        id: Date.now(),
-        ...values,
-        createdAt: new Date().toISOString()
-      };
-      
-      // Salva no localStorage
-      localStorage.setItem('prompts', JSON.stringify([...existingPrompts, newPrompt]));
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
 
-      // Dispara evento para atualizar a lista
-      window.dispatchEvent(new Event('storage'));
-
+    if (!name || !description || !prompt || !category) {
       toast({
-        title: "Prompt criado com sucesso!",
-        description: "O prompt foi salvo e já pode ser utilizado.",
-      });
-
-      form.reset();
-    } catch (error) {
-      console.error("Erro ao criar prompt:", error);
-      toast({
+        title: "Erro",
+        description: "Por favor, preencha todos os campos.",
         variant: "destructive",
-        title: "Erro ao criar prompt",
-        description: "Ocorreu um erro ao salvar o prompt. Tente novamente.",
       });
+      return;
     }
-  }
+
+    const savedPrompts = localStorage.getItem('prompts');
+    const prompts = savedPrompts ? JSON.parse(savedPrompts) : [];
+    
+    const newPrompt = {
+      id: Date.now(),
+      name,
+      description,
+      prompt,
+      category,
+      createdAt: new Date().toISOString(),
+    };
+
+    localStorage.setItem('prompts', JSON.stringify([...prompts, newPrompt]));
+    
+    // Dispatch storage event para atualizar outros componentes
+    window.dispatchEvent(new Event('storage'));
+
+    toast({
+      title: "Sucesso",
+      description: "Prompt criado com sucesso!",
+    });
+
+    // Limpar formulário
+    setName("");
+    setDescription("");
+    setPrompt("");
+    setCategory("");
+  };
+
+  const categories = [
+    { value: "propósito", label: "Propósito" },
+    { value: "método", label: "Método" },
+    { value: "mentoria", label: "Mentoria" },
+    { value: "curso", label: "Curso" },
+    { value: "conteudo", label: "Conteúdo" },
+  ];
 
   return (
-    <div className="w-full max-w-lg mx-auto">
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Nome</FormLabel>
-                <FormControl>
-                  <Input placeholder="Nome do prompt" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div>
+        <Input
+          placeholder="Nome do Prompt"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+      </div>
+      
+      <div>
+        <Input
+          placeholder="Descrição"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
+      </div>
+      
+      <div>
+        <Textarea
+          placeholder="Prompt"
+          value={prompt}
+          onChange={(e) => setPrompt(e.target.value)}
+          className="min-h-[100px]"
+        />
+      </div>
+      
+      <div>
+        <Select value={category} onValueChange={setCategory}>
+          <SelectTrigger>
+            <SelectValue placeholder="Selecione uma categoria" />
+          </SelectTrigger>
+          <SelectContent>
+            {categories.map((cat) => (
+              <SelectItem key={cat.value} value={cat.value}>
+                {cat.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
 
-          <FormField
-            control={form.control}
-            name="category"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Categoria</FormLabel>
-                <FormControl>
-                  <Input placeholder="Categoria do prompt" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="description"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Descrição</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="Breve descrição do prompt"
-                    className="resize-none"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="prompt"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Prompt</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="Conteúdo do prompt"
-                    className="min-h-[100px] resize-none"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <Button type="submit" className="w-full">
-            Criar Prompt
-          </Button>
-        </form>
-      </Form>
-    </div>
+      <Button type="submit" className="w-full">
+        Criar Prompt
+      </Button>
+    </form>
   );
 }
