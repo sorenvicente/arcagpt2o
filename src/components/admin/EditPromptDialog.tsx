@@ -76,44 +76,53 @@ export function EditPromptDialog({ open, onOpenChange, prompt }: EditPromptDialo
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent className="bg-chatgpt-secondary border-chatgpt-border">
         <DialogHeader>
-          <DialogTitle>Editar Prompt</DialogTitle>
+          <DialogTitle className="text-white">Editar Prompt</DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
           <Input
             placeholder="Nome do Prompt"
             value={name}
             onChange={(e) => setName(e.target.value)}
+            className="bg-chatgpt-input border-chatgpt-border text-white"
           />
           
           <Input
             placeholder="Descrição"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
+            className="bg-chatgpt-input border-chatgpt-border text-white"
           />
           
           <Textarea
             placeholder="Prompt"
             value={promptText}
             onChange={(e) => setPromptText(e.target.value)}
-            className="min-h-[100px]"
+            className="min-h-[100px] bg-chatgpt-input border-chatgpt-border text-white"
           />
           
           <Select value={category} onValueChange={setCategory}>
-            <SelectTrigger>
+            <SelectTrigger className="bg-chatgpt-input border-chatgpt-border text-white">
               <SelectValue placeholder="Selecione uma categoria" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-chatgpt-secondary border-chatgpt-border">
               {categories.map((cat) => (
-                <SelectItem key={cat.value} value={cat.value}>
+                <SelectItem 
+                  key={cat.value} 
+                  value={cat.value}
+                  className="text-white hover:bg-chatgpt-hover cursor-pointer"
+                >
                   {cat.label}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
 
-          <Button onClick={handleSave} className="w-full">
+          <Button 
+            onClick={handleSave} 
+            className="w-full bg-chatgpt-input hover:bg-chatgpt-hover text-white border border-chatgpt-border"
+          >
             Salvar Alterações
           </Button>
         </div>

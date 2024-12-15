@@ -43,7 +43,7 @@ export function PromptList() {
 
   if (prompts.length === 0) {
     return (
-      <div className="text-center py-8 text-gray-500">
+      <div className="text-center py-8 text-gray-400">
         Nenhum prompt criado ainda.
       </div>
     );
@@ -54,14 +54,15 @@ export function PromptList() {
       {prompts.map((prompt) => (
         <div
           key={prompt.id}
-          className="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm"
+          className="flex items-center justify-between p-3 bg-chatgpt-secondary rounded-lg border border-chatgpt-border"
         >
-          <span className="font-medium">{prompt.name}</span>
+          <span className="font-medium text-white">{prompt.name}</span>
           <div className="flex gap-2">
             <Button
               variant="ghost"
               size="icon"
               onClick={() => setEditingPrompt(prompt)}
+              className="text-gray-400 hover:text-white hover:bg-chatgpt-hover"
             >
               <Edit className="h-4 w-4" />
             </Button>
@@ -69,6 +70,7 @@ export function PromptList() {
               variant="ghost"
               size="icon"
               onClick={() => handleDelete(prompt.id)}
+              className="text-gray-400 hover:text-white hover:bg-chatgpt-hover"
             >
               <Trash2 className="h-4 w-4" />
             </Button>
