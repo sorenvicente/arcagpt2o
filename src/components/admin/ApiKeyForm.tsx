@@ -2,7 +2,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 
 interface ApiKeyFormProps {
   keys: {
@@ -23,11 +24,14 @@ const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
   return (
     <form onSubmit={onSubmit} className="space-y-6">
       <Card className="bg-chatgpt-secondary border-chatgpt-border">
-        <CardContent className="pt-6">
+        <CardHeader>
+          <CardTitle className="text-white text-lg">OpenAI Models</CardTitle>
+          <CardDescription className="text-gray-400">
+            Access to GPT-4, GPT-4 Turbo, and GPT-4 Vision
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
           <div className="space-y-2">
-            <label htmlFor="openai" className="text-sm font-medium text-white">
-              OpenAI API Key (GPT-4, GPT-4 Turbo, GPT-4 Vision)
-            </label>
             <div className="relative">
               <Input
                 id="openai"
@@ -49,16 +53,22 @@ const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
                 )}
               </button>
             </div>
+            <div className="text-xs text-gray-400 mt-2">
+              Supported models: GPT-4, GPT-4 Turbo, GPT-4 Vision
+            </div>
           </div>
         </CardContent>
       </Card>
 
       <Card className="bg-chatgpt-secondary border-chatgpt-border">
-        <CardContent className="pt-6">
+        <CardHeader>
+          <CardTitle className="text-white text-lg">OpenRouter Models</CardTitle>
+          <CardDescription className="text-gray-400">
+            Access to Claude 3, Claude 2, Llama 2, and PaLM
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
           <div className="space-y-2">
-            <label htmlFor="openrouter" className="text-sm font-medium text-white">
-              OpenRouter API Key (Claude 3, Claude 2, Llama 2, PaLM)
-            </label>
             <div className="relative">
               <Input
                 id="openrouter"
@@ -79,6 +89,9 @@ const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
                   <Eye className="h-5 w-5" />
                 )}
               </button>
+            </div>
+            <div className="text-xs text-gray-400 mt-2">
+              Supported models: Claude 3, Claude 2, Llama 2, PaLM
             </div>
           </div>
         </CardContent>
