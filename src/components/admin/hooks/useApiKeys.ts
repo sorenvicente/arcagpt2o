@@ -35,15 +35,21 @@ export const useApiKeys = () => {
 
       if (error) {
         console.error("Error fetching API keys:", error);
-        if (error.code === "PGRST116") {
-          // No data found, this is fine for first-time setup
+        if (error.code === "42501") {
+          toast({
+            title: "Acesso Negado",
+            description: "Apenas administradores podem acessar as chaves API.",
+            variant: "destructive",
+          });
           return;
         }
-        toast({
-          title: "Erro",
-          description: "Não foi possível carregar as chaves API.",
-          variant: "destructive",
-        });
+        if (error.code !== "PGRST116") { // Ignore "no rows returned" error
+          toast({
+            title: "Erro",
+            description: "Não foi possível carregar as chaves API.",
+            variant: "destructive",
+          });
+        }
         return;
       }
 
@@ -83,10 +89,19 @@ export const useApiKeys = () => {
         .upsert({
           openai_key: keys.openai_key,
           openrouter_key: keys.openrouter_key,
+          updated_at: new Date().toISOString(),
         });
 
       if (error) {
         console.error("Error saving keys:", error);
+        if (error.code === "42501") {
+          toast({
+            title: "Acesso Negado",
+            description: "Apenas administradores podem salvar chaves API.",
+            variant: "destructive",
+          });
+          return;
+        }
         toast({
           title: "Erro ao salvar",
           description: "Não foi possível salvar as chaves de API.",
