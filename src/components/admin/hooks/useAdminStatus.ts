@@ -19,7 +19,7 @@ export const useAdminStatus = () => {
         console.error("Auth error:", authError);
         toast({
           title: "Erro de Autenticação",
-          description: "Você precisa estar logado como administrador.",
+          description: "Para acessar esta área, faça login em https://chat.openai.com",
           variant: "destructive",
         });
         setIsLoading(false);
@@ -36,7 +36,7 @@ export const useAdminStatus = () => {
         console.error("Error fetching profile:", profileError);
         toast({
           title: "Erro",
-          description: "Erro ao verificar perfil de administrador.",
+          description: "Erro ao verificar perfil de administrador. Entre em contato com o suporte.",
           variant: "destructive",
         });
         setIsLoading(false);
@@ -48,7 +48,7 @@ export const useAdminStatus = () => {
       if (profile?.role !== 'admin') {
         toast({
           title: "Acesso Negado",
-          description: "Você não tem permissão de administrador.",
+          description: "Você não tem permissão de administrador. Entre em contato com o suporte para solicitar acesso.",
           variant: "destructive",
         });
       }
@@ -56,7 +56,7 @@ export const useAdminStatus = () => {
       console.error("Error checking admin status:", error);
       toast({
         title: "Erro",
-        description: "Erro ao verificar status de administrador.",
+        description: "Erro ao verificar status de administrador. Tente novamente mais tarde.",
         variant: "destructive",
       });
     } finally {
