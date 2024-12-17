@@ -21,11 +21,13 @@ export const useApiKeys = () => {
       if (!session) {
         toast({
           title: "Erro de Autenticação",
-          description: "Você precisa estar logado para acessar as chaves API.",
+          description: "Você precisa estar logado como administrador para acessar as chaves API.",
           variant: "destructive",
         });
         return;
       }
+
+      console.log("Fetching API keys for user:", session.user.email);
 
       const { data, error } = await supabase
         .from("api_keys")
@@ -35,18 +37,20 @@ export const useApiKeys = () => {
 
       if (error) {
         console.error("Error fetching API keys:", error);
+        
         if (error.code === "42501") {
           toast({
             title: "Acesso Negado",
-            description: "Apenas administradores podem acessar as chaves API.",
+            description: "Você não tem permissão de administrador para acessar as chaves API.",
             variant: "destructive",
           });
           return;
         }
-        if (error.code !== "PGRST116") { // Ignore "no rows returned" error
+        
+        if (error.code !== "PGRST116") {
           toast({
             title: "Erro",
-            description: "Não foi possível carregar as chaves API.",
+            description: "Não foi possível carregar as chaves API. Verifique se você está logado como administrador.",
             variant: "destructive",
           });
         }
@@ -58,12 +62,13 @@ export const useApiKeys = () => {
           openai_key: data.openai_key || "",
           openrouter_key: data.openrouter_key || "",
         });
+        console.log("API keys loaded successfully");
       }
     } catch (error) {
       console.error("Error:", error);
       toast({
         title: "Erro",
-        description: "Erro ao carregar chaves API.",
+        description: "Erro ao carregar chaves API. Verifique sua conexão e permissões.",
         variant: "destructive",
       });
     }
@@ -78,11 +83,13 @@ export const useApiKeys = () => {
       if (!session) {
         toast({
           title: "Erro de Autenticação",
-          description: "Você precisa estar logado para salvar as chaves API.",
+          description: "Você precisa estar logado como administrador para salvar as chaves API.",
           variant: "destructive",
         });
         return;
       }
+
+      console.log("Saving API keys for user:", session.user.email);
 
       const { error } = await supabase
         .from("api_keys")
@@ -97,14 +104,14 @@ export const useApiKeys = () => {
         if (error.code === "42501") {
           toast({
             title: "Acesso Negado",
-            description: "Apenas administradores podem salvar chaves API.",
+            description: "Você não tem permissão de administrador para salvar chaves API.",
             variant: "destructive",
           });
           return;
         }
         toast({
           title: "Erro ao salvar",
-          description: "Não foi possível salvar as chaves de API.",
+          description: "Não foi possível salvar as chaves de API. Verifique suas permissões.",
           variant: "destructive",
         });
         return;
@@ -114,11 +121,12 @@ export const useApiKeys = () => {
         title: "Chaves salvas",
         description: "As chaves de API foram atualizadas com sucesso.",
       });
+      console.log("API keys saved successfully");
     } catch (error) {
       console.error("Error saving keys:", error);
       toast({
         title: "Erro",
-        description: "Ocorreu um erro ao salvar as chaves.",
+        description: "Ocorreu um erro ao salvar as chaves. Tente novamente.",
         variant: "destructive",
       });
     }
