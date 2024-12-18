@@ -33,27 +33,6 @@ export type Database = {
         }
         Relationships: []
       }
-      profiles: {
-        Row: {
-          id: string
-          role: string
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id: string
-          role?: string
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          role?: string
-          created_at?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
       prompt_blocks: {
         Row: {
           category: string
@@ -80,6 +59,39 @@ export type Database = {
           id?: string
           name?: string
           prompt?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      prompts: {
+        Row: {
+          content: string
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean
+          model: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          model?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          model?: string
+          title?: string
           updated_at?: string
         }
         Relationships: []
