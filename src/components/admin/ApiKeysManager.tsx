@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { Shield } from "lucide-react";
-import { useAdminStatus } from "./hooks/useAdminStatus";
 import { useApiKeys } from "./hooks/useApiKeys";
 import ApiKeyForm from "./ApiKeyForm";
 import {
@@ -12,35 +11,11 @@ import {
 } from "@/components/ui/card";
 
 const ApiKeysManager = () => {
-  const { isAdmin, isLoading } = useAdminStatus();
   const { keys, setKeys, fetchApiKeys, handleSaveKeys } = useApiKeys();
 
   useEffect(() => {
-    if (isAdmin) {
-      fetchApiKeys();
-    }
-  }, [isAdmin]);
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-[200px]">
-        <p className="text-white">Carregando...</p>
-      </div>
-    );
-  }
-
-  if (!isAdmin) {
-    return (
-      <Card className="w-full max-w-2xl mx-auto bg-chatgpt-main border-chatgpt-border">
-        <CardHeader>
-          <CardTitle className="text-white">Acesso Restrito</CardTitle>
-          <CardDescription className="text-gray-400">
-            Esta área é restrita a administradores.
-          </CardDescription>
-        </CardHeader>
-      </Card>
-    );
-  }
+    fetchApiKeys();
+  }, []);
 
   return (
     <Card className="w-full max-w-2xl mx-auto bg-chatgpt-main border-chatgpt-border">
