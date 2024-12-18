@@ -22,10 +22,10 @@ const ApiKeysManager = () => {
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-white">
           <Shield className="h-5 w-5" />
-          Gerenciamento de APIs
+          API Key Management
         </CardTitle>
         <CardDescription className="text-gray-400">
-          Configure as chaves de API para OpenAI e OpenRouter
+          Configure your OpenAI and OpenRouter API keys
         </CardDescription>
       </CardHeader>
       <CardContent>

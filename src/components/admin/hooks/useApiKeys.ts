@@ -22,31 +22,19 @@ export const useApiKeys = () => {
         .limit(1)
         .single();
 
-      if (error) {
-        console.error("Error fetching API keys:", error);
-        // Don't show error toast for empty results
-        if (error.code !== "PGRST116") {
-          toast({
-            title: "Erro",
-            description: "Não foi possível carregar as chaves API.",
-            variant: "destructive",
-          });
-        }
-        return;
-      }
+      if (error) throw error;
 
       if (data) {
         setKeys({
           openai_key: data.openai_key || "",
           openrouter_key: data.openrouter_key || "",
         });
-        console.log("API keys loaded successfully");
       }
-    } catch (error) {
-      console.error("Error:", error);
+    } catch (error: any) {
+      console.error("Error fetching API keys:", error);
       toast({
-        title: "Erro",
-        description: "Erro ao carregar chaves API. Verifique sua conexão.",
+        title: "Error",
+        description: "Failed to fetch API keys",
         variant: "destructive",
       });
     }
@@ -54,40 +42,53 @@ export const useApiKeys = () => {
 
   const handleSaveKeys = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     try {
-      const { error } = await supabase
+      const { data: existingKeys } = await supabase
         .from("api_keys")
-        .upsert({
-          openai_key: keys.openai_key,
-          openrouter_key: keys.openrouter_key,
-          updated_at: new Date().toISOString(),
-        });
+        .select("*")
+        .limit(1)
+        .single();
 
-      if (error) {
-        console.error("Error saving keys:", error);
-        toast({
-          title: "Erro ao salvar",
-          description: "Não foi possível salvar as chaves de API.",
-          variant: "destructive",
-        });
-        return;
+      if (existingKeys) {
+        const { error } = await supabase
+          .from("api_keys")
+          .update({
+            openai_key: keys.openai_key,
+            openrouter_key: keys.openrouter_key,
+            updated_at: new Date().toISOString(),
+          })
+          .eq("id", existingKeys.id);
+
+        if (error) throw error;
+      } else {
+        const { error } = await supabase.from("api_keys").insert([
+          {
+            openai_key: keys.openai_key,
+            openrouter_key: keys.openrouter_key,
+          },
+        ]);
+
+        if (error) throw error;
       }
 
       toast({
-        title: "Chaves salvas",
-        description: "As chaves de API foram atualizadas com sucesso.",
+        title: "Success",
+        description: "API keys saved successfully",
       });
-      console.log("API keys saved successfully");
-    } catch (error) {
-      console.error("Error saving keys:", error);
+    } catch (error: any) {
+      console.error("Error saving API keys:", error);
       toast({
-        title: "Erro",
-        description: "Ocorreu um erro ao salvar as chaves. Tente novamente.",
+        title: "Error",
+        description: "Failed to save API keys",
         variant: "destructive",
       });
     }
   };
 
-  return { keys, setKeys, fetchApiKeys, handleSaveKeys };
+  return {
+    keys,
+    setKeys,
+    fetchApiKeys,
+    handleSaveKeys,
+  };
 };
