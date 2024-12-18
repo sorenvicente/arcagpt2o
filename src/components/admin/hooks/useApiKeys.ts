@@ -24,6 +24,7 @@ export const useApiKeys = () => {
 
       if (error) {
         console.error("Error fetching API keys:", error);
+        // Don't show error toast for empty results
         if (error.code !== "PGRST116") {
           toast({
             title: "Erro",
