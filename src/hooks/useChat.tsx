@@ -95,22 +95,53 @@ export const useChat = () => {
         body: JSON.stringify({
           model: "gpt-4",
           messages: newMessages,
-          max_tokens: 1000,
+          stream: true,
+          max_tokens: 2000,
           temperature: 0.7,
         })
       });
 
-      if (!response.ok) {
-        throw new Error("Erro ao obter resposta da API");
+      if (!response.body) {
+        throw new Error("No response body");
       }
 
-      const data = await response.json();
-      const assistantMessage: Message = {
-        role: 'assistant',
-        content: data.choices[0].message.content
-      };
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let currentMessage = "";
 
-      setMessages([...newMessages, assistantMessage]);
+      // Add an initial assistant message that we'll update
+      setMessages(prev => [...prev, { role: 'assistant', content: '' }]);
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value);
+        const lines = chunk.split('\n');
+        
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            const data = line.slice(6);
+            if (data === '[DONE]') continue;
+            
+            try {
+              const parsed = JSON.parse(data);
+              const content = parsed.choices[0]?.delta?.content || '';
+              currentMessage += content;
+              
+              // Update the last message with the accumulated content
+              setMessages(prev => {
+                const newMessages = [...prev];
+                newMessages[newMessages.length - 1].content = currentMessage;
+                return newMessages;
+              });
+            } catch (e) {
+              console.error('Error parsing chunk:', e);
+            }
+          }
+        }
+      }
+
     } catch (error: any) {
       toast({
         title: "Erro",
