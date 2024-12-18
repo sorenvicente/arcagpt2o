@@ -1,15 +1,36 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useToast } from '@/components/ui/use-toast';
 import { Message } from '@/types/chat';
 import { useNavigate } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
 
 export const useChat = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [activePrompt, setActivePrompt] = useState<string>('');
   const [activeCategory, setActiveCategory] = useState<string>('');
+  const [apiKeys, setApiKeys] = useState<{ openai_key: string; openrouter_key: string } | null>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchApiKeys();
+  }, []);
+
+  const fetchApiKeys = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('api_keys')
+        .select('*')
+        .limit(1)
+        .single();
+
+      if (error) throw error;
+      setApiKeys(data);
+    } catch (error) {
+      console.error('Error fetching API keys:', error);
+    }
+  };
 
   const handlePromptSelect = (promptContent: string, category: string) => {
     if (!promptContent || !category) {
@@ -20,7 +41,6 @@ export const useChat = () => {
     setActivePrompt(promptContent);
     setActiveCategory(category);
     
-    // Reset messages and set new system context
     setMessages([{
       role: 'system',
       content: promptContent
@@ -45,8 +65,7 @@ export const useChat = () => {
       return;
     }
 
-    const savedKeys = localStorage.getItem("api_keys");
-    if (!savedKeys) {
+    if (!apiKeys?.openai_key) {
       toast({
         title: "Erro",
         description: "Chaves API não encontradas. Configure suas chaves primeiro.",
@@ -57,7 +76,6 @@ export const useChat = () => {
       return;
     }
 
-    const keys = JSON.parse(savedKeys);
     setIsLoading(true);
 
     try {
@@ -72,7 +90,7 @@ export const useChat = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${keys.openai_key}`
+          'Authorization': `Bearer ${apiKeys.openai_key}`
         },
         body: JSON.stringify({
           model: "gpt-4",
