@@ -1,7 +1,8 @@
-import { Menu, MessageSquare, ChevronDown, User, Settings, Key } from 'lucide-react';
+import { Menu, MessageSquare, ChevronDown, User, Settings, Key, Plus } from 'lucide-react';
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 import {
   Popover,
   PopoverContent,
@@ -11,43 +12,45 @@ import {
 interface SidebarProps {
   isOpen: boolean;
   onToggle: () => void;
+  onNewChat: () => void;
 }
 
-interface Prompt {
-  id: number;
-  name: string;
+interface SavedChat {
+  id: string;
+  title: string;
   category: string;
+  created_at: string;
 }
 
-const Sidebar = ({ isOpen, onToggle }: SidebarProps) => {
+const Sidebar = ({ isOpen, onToggle, onNewChat }: SidebarProps) => {
   const navigate = useNavigate();
-  const [contentPrompts, setContentPrompts] = useState<Prompt[]>([]);
+  const [savedChats, setSavedChats] = useState<SavedChat[]>([]);
   
-  const mentorGPTs = [
+  const categories = [
     { title: "Propósito", icon: <MessageSquare className="h-4 w-4" /> },
     { title: "Método", icon: <MessageSquare className="h-4 w-4" /> },
     { title: "Mentoria", icon: <MessageSquare className="h-4 w-4" /> },
     { title: "Curso", icon: <MessageSquare className="h-4 w-4" /> },
-    { title: "Conteúdo", icon: <MessageSquare className="h-4 w-4" />, prompts: contentPrompts }
+    { title: "Conteúdo", icon: <MessageSquare className="h-4 w-4" /> }
   ];
 
   useEffect(() => {
-    const loadPrompts = () => {
-      const savedPrompts = localStorage.getItem('prompts');
-      if (savedPrompts) {
-        const allPrompts = JSON.parse(savedPrompts);
-        const filtered = allPrompts.filter((p: Prompt) => 
-          p.category.toLowerCase() === 'conteudo' || 
-          p.category.toLowerCase() === 'conteúdo'
-        );
-        setContentPrompts(filtered);
-      }
-    };
-
-    loadPrompts();
-    window.addEventListener('storage', loadPrompts);
-    return () => window.removeEventListener('storage', loadPrompts);
+    fetchSavedChats();
   }, []);
+
+  const fetchSavedChats = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('saved_chats')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setSavedChats(data || []);
+    } catch (error) {
+      console.error('Error fetching saved chats:', error);
+    }
+  };
 
   return (
     <div className={cn(
@@ -63,46 +66,32 @@ const Sidebar = ({ isOpen, onToggle }: SidebarProps) => {
             <Menu className="h-5 w-5 text-white" strokeWidth={1.5} />
           </button>
           <button 
+            onClick={onNewChat}
             className="flex items-center justify-center h-10 w-10 rounded-lg hover:bg-chatgpt-hover transition-colors ml-3"
           >
-            <MessageSquare className="h-5 w-5 text-white" strokeWidth={1.5} />
+            <Plus className="h-5 w-5 text-white" strokeWidth={1.5} />
           </button>
         </div>
 
         <div className="flex-col flex-1 transition-opacity duration-500 relative -mr-2 pr-2 overflow-y-auto">
           <div className="bg-token-sidebar-surface-primary pt-0">
-            <div className="flex flex-col gap-2 px-2 py-2">
-              <div className="group flex h-10 items-center gap-2.5 rounded-lg px-2 hover:bg-token-sidebar-surface-secondary cursor-pointer">
-                <div className="h-6 w-6 flex items-center justify-center">
-                  <MessageSquare className="h-4 w-4" />
-                </div>
-                <span className="text-sm">ChatGPT</span>
-              </div>
-            </div>
-
-            <div className="mt-4 flex flex-col gap-2">
-              <div className="px-3 py-2 text-xs text-gray-500">Mentor GPTs</div>
-              {mentorGPTs.map((gpt) => (
-                <div key={gpt.title}>
-                  <div className="group flex h-10 items-center gap-2.5 rounded-lg px-4 hover:bg-token-sidebar-surface-secondary cursor-pointer">
-                    {gpt.icon}
-                    <span className="text-sm">{gpt.title}</span>
-                  </div>
-                  {gpt.prompts && gpt.prompts.length > 0 && (
-                    <div className="ml-8 flex flex-col gap-1">
-                      {gpt.prompts.map((prompt) => (
-                        <div 
-                          key={prompt.id}
-                          className="text-sm py-1 px-2 hover:bg-token-sidebar-surface-secondary cursor-pointer rounded-md text-gray-300"
-                        >
-                          {prompt.name}
-                        </div>
-                      ))}
+            {categories.map((category) => (
+              <div key={category.title} className="mt-4">
+                <div className="px-3 py-2 text-xs text-gray-500">{category.title}</div>
+                {savedChats
+                  .filter(chat => chat.category.toLowerCase() === category.title.toLowerCase())
+                  .map((chat) => (
+                    <div
+                      key={chat.id}
+                      className="group flex h-10 items-center gap-2.5 rounded-lg px-4 hover:bg-token-sidebar-surface-secondary cursor-pointer"
+                    >
+                      {category.icon}
+                      <span className="text-sm truncate">{chat.title}</span>
                     </div>
-                  )}
-                </div>
-              ))}
-            </div>
+                  ))
+                }
+              </div>
+            ))}
           </div>
         </div>
 
