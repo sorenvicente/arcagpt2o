@@ -17,6 +17,33 @@ export const useChat = () => {
     fetchApiKeys();
   }, []);
 
+  // Auto-save chat when messages change
+  useEffect(() => {
+    if (messages.length > 1 && activeCategory) { // Only save if there are messages and a category
+      saveChat();
+    }
+  }, [messages]);
+
+  const saveChat = async () => {
+    try {
+      // Get the first few words of the first user message as the title
+      const firstUserMessage = messages.find(msg => msg.role === 'user')?.content || '';
+      const title = firstUserMessage.split(' ').slice(0, 4).join(' ') + '...';
+
+      const { error } = await supabase
+        .from('saved_chats')
+        .insert({
+          title,
+          category: activeCategory,
+          messages: messages
+        });
+
+      if (error) throw error;
+    } catch (error) {
+      console.error('Error saving chat:', error);
+    }
+  };
+
   const fetchApiKeys = async () => {
     try {
       const { data, error } = await supabase
