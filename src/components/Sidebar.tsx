@@ -40,12 +40,12 @@ const Sidebar = ({ isOpen, onToggle, onNewChat }: SidebarProps) => {
 
   const fetchSavedChats = async () => {
     try {
-      const { data: savedChatsData, error } = await supabase
+      const { data, error } = await supabase
         .from('saved_chats')
         .select('id, title, category, created_at');
 
       if (error) throw error;
-      setSavedChats(savedChatsData || []);
+      setSavedChats(data || []);
     } catch (error) {
       console.error('Error fetching saved chats:', error);
     }
