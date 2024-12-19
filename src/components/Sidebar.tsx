@@ -1,8 +1,9 @@
-import { Menu, MessageSquare, ChevronDown, User, Settings, Key, Plus, Brain } from 'lucide-react';
+import { Menu, MessageSquare, ChevronDown, User, Settings, Key, Plus, Brain, Trash2, Edit2 } from 'lucide-react';
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { useToast } from "@/components/ui/use-toast";
 import {
   Popover,
   PopoverContent,
@@ -25,6 +26,7 @@ interface SidebarProps {
 const Sidebar = ({ isOpen, onToggle, onNewChat }: SidebarProps) => {
   const navigate = useNavigate();
   const [savedChats, setSavedChats] = useState<SavedChat[]>([]);
+  const { toast } = useToast();
   
   const categories = [
     { title: "Propósito", icon: <MessageSquare className="h-4 w-4" /> },
@@ -48,6 +50,56 @@ const Sidebar = ({ isOpen, onToggle, onNewChat }: SidebarProps) => {
       setSavedChats(data || []);
     } catch (error) {
       console.error('Error fetching saved chats:', error);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from('saved_chats')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+
+      setSavedChats(savedChats.filter(chat => chat.id !== id));
+      toast({
+        title: "Chat excluído",
+        description: "O chat foi removido com sucesso.",
+      });
+    } catch (error) {
+      console.error('Error deleting chat:', error);
+      toast({
+        title: "Erro",
+        description: "Não foi possível excluir o chat.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleRename = async (id: string, newTitle: string) => {
+    try {
+      const { error } = await supabase
+        .from('saved_chats')
+        .update({ title: newTitle })
+        .eq('id', id);
+
+      if (error) throw error;
+
+      setSavedChats(savedChats.map(chat => 
+        chat.id === id ? { ...chat, title: newTitle } : chat
+      ));
+      toast({
+        title: "Chat renomeado",
+        description: "O título do chat foi atualizado com sucesso.",
+      });
+    } catch (error) {
+      console.error('Error renaming chat:', error);
+      toast({
+        title: "Erro",
+        description: "Não foi possível renomear o chat.",
+        variant: "destructive"
+      });
     }
   };
 
@@ -82,10 +134,35 @@ const Sidebar = ({ isOpen, onToggle, onNewChat }: SidebarProps) => {
                   .map((chat) => (
                     <div
                       key={chat.id}
-                      className="group flex h-10 items-center gap-2.5 rounded-lg px-4 hover:bg-token-sidebar-surface-secondary cursor-pointer"
+                      className="group flex h-10 items-center gap-2.5 rounded-lg px-4 hover:bg-token-sidebar-surface-secondary cursor-pointer relative"
                     >
                       {category.icon}
-                      <span className="text-sm truncate">{chat.title}</span>
+                      <span className="text-sm truncate flex-1">{chat.title}</span>
+                      <div className="hidden group-hover:flex gap-1">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            const newTitle = prompt('Digite o novo título:', chat.title);
+                            if (newTitle && newTitle !== chat.title) {
+                              handleRename(chat.id, newTitle);
+                            }
+                          }}
+                          className="p-1 hover:bg-chatgpt-hover rounded"
+                        >
+                          <Edit2 className="h-4 w-4 text-gray-400" />
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (confirm('Tem certeza que deseja excluir este chat?')) {
+                              handleDelete(chat.id);
+                            }
+                          }}
+                          className="p-1 hover:bg-chatgpt-hover rounded"
+                        >
+                          <Trash2 className="h-4 w-4 text-gray-400" />
+                        </button>
+                      </div>
                     </div>
                   ))
                 }
