@@ -1,4 +1,4 @@
-import { Menu, MessageSquare, ChevronDown, User, Settings, Key, Plus } from 'lucide-react';
+import { Menu, MessageSquare, ChevronDown, User, Settings, Key, Plus, Brain } from 'lucide-react';
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from 'react';
@@ -9,17 +9,17 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-interface SidebarProps {
-  isOpen: boolean;
-  onToggle: () => void;
-  onNewChat: () => void;
-}
-
 interface SavedChat {
   id: string;
   title: string;
   category: string;
   created_at: string;
+}
+
+interface SidebarProps {
+  isOpen: boolean;
+  onToggle: () => void;
+  onNewChat: () => void;
 }
 
 const Sidebar = ({ isOpen, onToggle, onNewChat }: SidebarProps) => {
@@ -40,13 +40,12 @@ const Sidebar = ({ isOpen, onToggle, onNewChat }: SidebarProps) => {
 
   const fetchSavedChats = async () => {
     try {
-      const { data, error } = await supabase
+      const { data: savedChatsData, error } = await supabase
         .from('saved_chats')
-        .select('*')
-        .order('created_at', { ascending: false });
+        .select('id, title, category, created_at');
 
       if (error) throw error;
-      setSavedChats(data || []);
+      setSavedChats(savedChatsData || []);
     } catch (error) {
       console.error('Error fetching saved chats:', error);
     }

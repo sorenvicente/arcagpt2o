@@ -96,6 +96,33 @@ export type Database = {
         }
         Relationships: []
       }
+      saved_chats: {
+        Row: {
+          category: string
+          created_at: string
+          id: string
+          messages: Json
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          id?: string
+          messages?: Json
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          id?: string
+          messages?: Json
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       whiteboard_prompts: {
         Row: {
           ai_model: string

@@ -20,11 +20,17 @@ const Index = () => {
     handleSendMessage
   } = useChat();
 
+  const handleNewChat = () => {
+    // Reset the chat state and create a new conversation
+    window.location.reload(); // This is a temporary solution, we should implement proper state management
+  };
+
   return (
     <div className="flex h-screen">
       <Sidebar 
         isOpen={isSidebarOpen} 
         onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
+        onNewChat={handleNewChat}
       />
       
       <main className={`flex-1 transition-all duration-300 relative ${isSidebarOpen ? 'ml-64' : 'ml-0'}`}>
