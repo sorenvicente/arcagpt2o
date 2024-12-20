@@ -27,10 +27,9 @@ export const useChat = () => {
       .then(({ data, error }) => {
         if (!error && data) {
           setChatId(data.id);
+        } else {
+          console.error('Error saving chat:', error);
         }
-      })
-      .catch(error => {
-        console.error('Error saving chat:', error);
       });
   }, [messages, chatId, activeCategory]);
 
