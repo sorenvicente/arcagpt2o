@@ -15,7 +15,9 @@ const Index = () => {
     messages,
     isLoading,
     sendMessage,
-    setMessages
+    setMessages,
+    activeCategory,
+    handlePromptSelect
   } = useChat();
 
   const handleNewChat = () => {
@@ -41,7 +43,10 @@ const Index = () => {
             <div className="w-full max-w-3xl px-4 space-y-4">
               <div>
                 <h1 className="mb-8 text-4xl font-semibold text-center">Como posso ajudar?</h1>
-                <ActionButtons />
+                <ActionButtons 
+                  onSelectPrompt={handlePromptSelect}
+                  activeCategory={activeCategory}
+                />
                 <ChatInput onSend={sendMessage} isLoading={isLoading} />
               </div>
             </div>
@@ -49,7 +54,10 @@ const Index = () => {
             <>
               <MessageList messages={messages.filter(msg => msg.role !== 'system')} />
               <div className="w-full max-w-3xl mx-auto px-4 py-2">
-                <ActionButtons />
+                <ActionButtons 
+                  onSelectPrompt={handlePromptSelect}
+                  activeCategory={activeCategory}
+                />
                 <ChatInput onSend={sendMessage} isLoading={isLoading} />
               </div>
             </>

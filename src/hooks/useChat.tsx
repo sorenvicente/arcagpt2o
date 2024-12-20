@@ -7,6 +7,7 @@ export const useChat = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [chatId, setChatId] = useState<string | null>(null);
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const { toast } = useToast();
 
   const saveChat = useCallback(async () => {
@@ -18,7 +19,7 @@ export const useChat = () => {
         .insert([
           {
             title: messages[0].content.substring(0, 50) + '...',
-            category: 'Propósito',
+            category: activeCategory || 'Propósito',
             messages: messages
           }
         ])
@@ -33,13 +34,18 @@ export const useChat = () => {
     } catch (error) {
       console.error('Error saving chat:', error);
     }
-  }, [messages, chatId]);
+  }, [messages, chatId, activeCategory]);
 
   useEffect(() => {
     if (messages.length > 0) {
       saveChat();
     }
   }, [messages, saveChat]);
+
+  const handlePromptSelect = (prompt: string, category: string) => {
+    setActiveCategory(category);
+    sendMessage(prompt);
+  };
 
   const sendMessage = async (content: string) => {
     try {
@@ -85,6 +91,8 @@ export const useChat = () => {
     messages,
     isLoading,
     sendMessage,
-    setMessages
+    setMessages,
+    activeCategory,
+    handlePromptSelect
   };
 };
