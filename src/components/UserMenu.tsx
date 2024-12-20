@@ -26,18 +26,18 @@ export const UserMenu = () => {
           </span>
         </button>
       </PopoverTrigger>
-      <PopoverContent className="w-48 p-2 bg-chatgpt-secondary border-chatgpt-border">
-        <div className="flex flex-col space-y-1">
+      <PopoverContent className="w-48 p-2 bg-chatgpt-secondary border-chatgpt-border rounded-xl shadow-lg">
+        <div className="flex flex-col divide-y divide-chatgpt-border">
           <button
             onClick={() => navigate('/admin')}
-            className="flex items-center gap-2 px-3 py-2 text-sm rounded-md hover:bg-chatgpt-hover text-white"
+            className="flex items-center gap-2 px-3 py-2.5 text-sm rounded-lg hover:bg-chatgpt-hover text-white transition-colors duration-200"
           >
             <Settings className="h-4 w-4" />
             <span>Prompts</span>
           </button>
           <button
             onClick={() => navigate('/api-keys')}
-            className="flex items-center gap-2 px-3 py-2 text-sm rounded-md hover:bg-chatgpt-hover text-white"
+            className="flex items-center gap-2 px-3 py-2.5 text-sm rounded-lg hover:bg-chatgpt-hover text-white transition-colors duration-200"
           >
             <Key className="h-4 w-4" />
             <span>API Keys</span>
