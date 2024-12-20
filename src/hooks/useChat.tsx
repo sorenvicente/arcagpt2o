@@ -16,13 +16,11 @@ export const useChat = () => {
     try {
       const { data, error } = await supabase
         .from('saved_chats')
-        .insert([
-          {
-            title: messages[0].content.substring(0, 50) + '...',
-            category: activeCategory || 'Propósito',
-            messages: messages
-          }
-        ])
+        .insert({
+          title: messages[0].content.substring(0, 50) + '...',
+          category: activeCategory || 'Propósito',
+          messages: messages as unknown as Json // Type assertion to satisfy Supabase's Json type
+        })
         .select('id')
         .single();
 
