@@ -15,7 +15,7 @@ export const useChat = () => {
     if (messages.length === 0 || chatId) return;
 
     // Save chat in background without waiting
-    supabase
+    void supabase
       .from('saved_chats')
       .insert({
         title: messages[0].content.substring(0, 50) + '...',
