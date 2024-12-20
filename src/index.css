@@ -6,6 +6,23 @@ body {
   @apply bg-chatgpt-main text-white;
 }
 
+/* Custom scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-chatgpt-main;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-chatgpt-border rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-chatgpt-hover;
+}
+
 .sidebar-item {
   @apply flex items-center gap-3 rounded-md px-3 py-3 text-sm transition-colors duration-200 hover:bg-chatgpt-hover cursor-pointer;
 }

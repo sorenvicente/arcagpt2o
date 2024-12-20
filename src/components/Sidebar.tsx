@@ -18,6 +18,7 @@ const Sidebar = ({ isOpen, onToggle, onNewChat }: SidebarProps) => {
   const [savedChats, setSavedChats] = useState<SavedChat[]>([]);
   const [selectedChat, setSelectedChat] = useState<SavedChat | null>(null);
   const [isActionsOpen, setIsActionsOpen] = useState(false);
+  const [dialogPosition, setDialogPosition] = useState<{ x: number; y: number } | undefined>();
   const { toast } = useToast();
 
   useEffect(() => {
@@ -29,7 +30,8 @@ const Sidebar = ({ isOpen, onToggle, onNewChat }: SidebarProps) => {
       const { data, error } = await supabase
         .from('saved_chats')
         .select('id, title, category, created_at')
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
+        .limit(1); // Limit to 1 chat as requested
 
       if (error) throw error;
       setSavedChats(data || []);
@@ -93,8 +95,9 @@ const Sidebar = ({ isOpen, onToggle, onNewChat }: SidebarProps) => {
     }
   };
 
-  const handleChatClick = (chat: SavedChat) => {
+  const handleChatClick = (chat: SavedChat, position: { x: number; y: number }) => {
     setSelectedChat(chat);
+    setDialogPosition(position);
     setIsActionsOpen(true);
   };
 
@@ -146,6 +149,7 @@ const Sidebar = ({ isOpen, onToggle, onNewChat }: SidebarProps) => {
         onRename={handleRename}
         onDelete={handleDelete}
         chatTitle={selectedChat?.title || ''}
+        position={dialogPosition}
       />
     </>
   );
