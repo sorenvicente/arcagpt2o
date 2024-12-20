@@ -21,8 +21,7 @@ const Index = () => {
   } = useChat();
 
   const handleNewChat = () => {
-    // Reset the chat state and create a new conversation
-    window.location.reload(); // This is a temporary solution, we should implement proper state management
+    setMessages([]); // Reset messages immediately without page reload
   };
 
   return (

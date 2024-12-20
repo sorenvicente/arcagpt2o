@@ -14,25 +14,24 @@ export const useChat = () => {
   const saveChat = useCallback(async () => {
     if (messages.length === 0 || chatId) return;
 
-    try {
-      const { data, error } = await supabase
-        .from('saved_chats')
-        .insert({
-          title: messages[0].content.substring(0, 50) + '...',
-          category: activeCategory || 'Propósito',
-          messages: messages as unknown as Json // Type assertion to satisfy Supabase's Json type
-        })
-        .select('id')
-        .single();
-
-      if (error) throw error;
-      
-      if (data) {
-        setChatId(data.id);
-      }
-    } catch (error) {
-      console.error('Error saving chat:', error);
-    }
+    // Save chat in background without waiting
+    supabase
+      .from('saved_chats')
+      .insert({
+        title: messages[0].content.substring(0, 50) + '...',
+        category: activeCategory || 'Propósito',
+        messages: messages as unknown as Json
+      })
+      .select('id')
+      .single()
+      .then(({ data, error }) => {
+        if (!error && data) {
+          setChatId(data.id);
+        }
+      })
+      .catch(error => {
+        console.error('Error saving chat:', error);
+      });
   }, [messages, chatId, activeCategory]);
 
   useEffect(() => {
@@ -57,7 +56,6 @@ export const useChat = () => {
       
       setMessages(prev => [...prev, userMessage]);
 
-      // API call logic here
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: {
