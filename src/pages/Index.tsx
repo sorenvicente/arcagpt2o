@@ -14,10 +14,8 @@ const Index = () => {
   const {
     messages,
     isLoading,
-    activePrompt,
-    activeCategory,
-    handlePromptSelect,
-    handleSendMessage
+    sendMessage,
+    setMessages
   } = useChat();
 
   const handleNewChat = () => {
@@ -36,8 +34,6 @@ const Index = () => {
       <main className={`flex-1 transition-all duration-300 relative ${isSidebarOpen ? 'ml-64' : 'ml-0'}`}>
         <ChatHeader 
           isSidebarOpen={isSidebarOpen} 
-          activePrompt={activePrompt}
-          activeCategory={activeCategory}
         />
         
         <div className={`flex h-full flex-col ${messages.length === 0 ? 'items-center justify-center' : 'justify-between'} pt-[60px] pb-4`}>
@@ -45,22 +41,16 @@ const Index = () => {
             <div className="w-full max-w-3xl px-4 space-y-4">
               <div>
                 <h1 className="mb-8 text-4xl font-semibold text-center">Como posso ajudar?</h1>
-                <ActionButtons 
-                  onSelectPrompt={handlePromptSelect} 
-                  activeCategory={activeCategory}
-                />
-                <ChatInput onSend={handleSendMessage} isLoading={isLoading} />
+                <ActionButtons />
+                <ChatInput onSend={sendMessage} isLoading={isLoading} />
               </div>
             </div>
           ) : (
             <>
               <MessageList messages={messages.filter(msg => msg.role !== 'system')} />
               <div className="w-full max-w-3xl mx-auto px-4 py-2">
-                <ActionButtons 
-                  onSelectPrompt={handlePromptSelect} 
-                  activeCategory={activeCategory}
-                />
-                <ChatInput onSend={handleSendMessage} isLoading={isLoading} />
+                <ActionButtons />
+                <ChatInput onSend={sendMessage} isLoading={isLoading} />
               </div>
             </>
           )}
