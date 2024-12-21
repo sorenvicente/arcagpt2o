@@ -3,8 +3,7 @@ import {
   DialogContent,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Pencil, Trash2 } from "lucide-react";
+import { Share, Pencil, Archive, Trash2 } from "lucide-react";
 import { useState } from "react";
 
 interface ChatActionsDialogProps {
@@ -45,11 +44,23 @@ export const ChatActionsDialog = ({
       >
         <div className="space-y-2">
           <Button
+            className="flex items-center justify-start w-full space-x-3 text-xs h-8 rounded-md bg-transparent hover:bg-chatgpt-hover border-0 px-3"
+          >
+            <Share className="h-4 w-4" />
+            <span>Compartilhar</span>
+          </Button>
+          <Button
             onClick={handleRename}
             className="flex items-center justify-start w-full space-x-3 text-xs h-8 rounded-md bg-transparent hover:bg-chatgpt-hover border-0 px-3"
           >
             <Pencil className="h-4 w-4" />
-            <span>Renomear conversa</span>
+            <span>Renomear</span>
+          </Button>
+          <Button
+            className="flex items-center justify-start w-full space-x-3 text-xs h-8 rounded-md bg-transparent hover:bg-chatgpt-hover border-0 px-3"
+          >
+            <Archive className="h-4 w-4" />
+            <span>Arquivar</span>
           </Button>
           <Button
             variant="destructive"
@@ -57,7 +68,7 @@ export const ChatActionsDialog = ({
             className="flex items-center justify-start w-full space-x-3 text-xs h-8 rounded-md bg-transparent hover:bg-red-600/10 text-red-500 hover:text-red-500 border-0 px-3"
           >
             <Trash2 className="h-4 w-4" />
-            <span>Excluir conversa</span>
+            <span>Excluir</span>
           </Button>
         </div>
       </DialogContent>
