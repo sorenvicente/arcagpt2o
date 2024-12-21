@@ -1,7 +1,6 @@
 import {
   Dialog,
   DialogContent,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -42,43 +41,31 @@ export const ChatActionsDialog = ({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent 
-        className="bg-chatgpt-secondary border-chatgpt-border w-[200px] rounded-lg shadow-lg"
+        className="bg-chatgpt-secondary border-chatgpt-border w-[180px] rounded-md shadow-lg p-2"
         style={style}
       >
-        <DialogHeader className="pb-2">
-          <DialogTitle className="text-white text-sm font-medium">Ações do Chat</DialogTitle>
-        </DialogHeader>
-        <div className="space-y-3">
-          <Input
-            value={newTitle}
-            onChange={(e) => setNewTitle(e.target.value)}
-            placeholder="Novo título"
-            className="bg-chatgpt-input text-white border-chatgpt-border text-xs h-7 rounded-md"
-          />
-          <div className="flex flex-col space-y-2">
-            <Button
-              variant="destructive"
-              onClick={onDelete}
-              className="bg-red-600 hover:bg-red-700 text-xs h-6 rounded-md w-full"
+        <div className="space-y-2">
+          <div className="flex items-center space-x-2 mb-1">
+            <Input
+              value={newTitle}
+              onChange={(e) => setNewTitle(e.target.value)}
+              placeholder="Renomear conversa"
+              className="bg-chatgpt-input text-white border-chatgpt-border text-xs h-6 rounded-sm flex-1"
+            />
+            <Button 
+              onClick={handleRename}
+              className="text-xs h-6 rounded-sm bg-chatgpt-hover hover:bg-opacity-80 px-2 min-w-[60px]"
             >
-              Deletar
+              Salvar
             </Button>
-            <div className="flex justify-end space-x-2">
-              <Button 
-                variant="outline" 
-                onClick={onClose}
-                className="text-xs h-6 rounded-md border-chatgpt-border hover:bg-chatgpt-hover px-2"
-              >
-                Cancelar
-              </Button>
-              <Button 
-                onClick={handleRename}
-                className="text-xs h-6 rounded-md bg-chatgpt-hover hover:bg-opacity-80 px-2"
-              >
-                Renomear
-              </Button>
-            </div>
           </div>
+          <Button
+            variant="destructive"
+            onClick={onDelete}
+            className="bg-transparent hover:bg-red-600/10 text-red-500 hover:text-red-500 text-xs h-6 rounded-sm w-full border-0 justify-start px-2"
+          >
+            Excluir conversa
+          </Button>
         </div>
       </DialogContent>
     </Dialog>
