@@ -42,25 +42,25 @@ export const ChatActionsDialog = ({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent 
-        className="bg-chatgpt-secondary border-chatgpt-border w-[280px]"
+        className="bg-chatgpt-secondary border-chatgpt-border w-[240px] rounded-xl overflow-hidden"
         style={style}
       >
         <DialogHeader>
-          <DialogTitle className="text-white text-lg">Ações do Chat</DialogTitle>
+          <DialogTitle className="text-white text-base">Ações do Chat</DialogTitle>
         </DialogHeader>
         <div className="py-2">
           <Input
             value={newTitle}
             onChange={(e) => setNewTitle(e.target.value)}
             placeholder="Novo título"
-            className="bg-chatgpt-input text-white border-chatgpt-border"
+            className="bg-chatgpt-input text-white border-chatgpt-border rounded-lg text-sm h-8"
           />
         </div>
-        <DialogFooter className="flex justify-between gap-2 mt-2">
+        <DialogFooter className="flex justify-between items-center gap-2 mt-2">
           <Button
             variant="destructive"
             onClick={onDelete}
-            className="bg-red-600 hover:bg-red-700 text-sm px-3 py-1"
+            className="bg-red-600 hover:bg-red-700 text-xs px-2 py-1 h-7 rounded-lg"
           >
             Deletar
           </Button>
@@ -68,13 +68,13 @@ export const ChatActionsDialog = ({
             <Button 
               variant="outline" 
               onClick={onClose}
-              className="text-sm px-3 py-1"
+              className="text-xs px-2 py-1 h-7 rounded-lg border-chatgpt-border hover:bg-chatgpt-hover"
             >
               Cancelar
             </Button>
             <Button 
               onClick={handleRename}
-              className="text-sm px-3 py-1"
+              className="text-xs px-2 py-1 h-7 rounded-lg bg-chatgpt-hover hover:bg-opacity-80"
             >
               Renomear
             </Button>
