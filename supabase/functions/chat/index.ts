@@ -12,11 +12,7 @@ serve(async (req) => {
   }
 
   try {
-    const { messages, apiKey } = await req.json()
-
-    if (!apiKey) {
-      throw new Error('API key is required')
-    }
+    const { messages } = await req.json()
 
     // Convert messages to Anthropic format
     const anthropicMessages = messages.map((msg: any) => ({
@@ -30,7 +26,7 @@ serve(async (req) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': apiKey,
+        'x-api-key': Deno.env.get('ANTHROPIC_API_KEY') || '',
         'anthropic-version': '2023-06-01'
       },
       body: JSON.stringify({

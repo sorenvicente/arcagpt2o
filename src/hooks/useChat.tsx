@@ -55,18 +55,17 @@ export const useChat = () => {
       
       setMessages(prev => [...prev, userMessage]);
 
-      const response = await fetch('/api/chat', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ content }),
+      const { data, error } = await supabase.functions.invoke('chat', {
+        body: { messages: [...messages, userMessage] }
       });
 
-      const data = await response.json();
+      if (error) {
+        throw error;
+      }
+
       const botMessage: Message = {
         role: 'assistant',
-        content: data.reply,
+        content: data.content,
       };
 
       setMessages(prev => [...prev, botMessage]);
