@@ -1,11 +1,10 @@
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
-  DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Pencil, Trash2 } from "lucide-react";
 import { useState } from "react";
 
 interface ChatActionsDialogProps {
@@ -45,26 +44,20 @@ export const ChatActionsDialog = ({
         style={style}
       >
         <div className="space-y-2">
-          <div className="flex items-center space-x-2 mb-1">
-            <Input
-              value={newTitle}
-              onChange={(e) => setNewTitle(e.target.value)}
-              placeholder="Renomear conversa"
-              className="bg-chatgpt-input text-white border-chatgpt-border text-xs h-6 rounded-sm flex-1"
-            />
-            <Button 
-              onClick={handleRename}
-              className="text-xs h-6 rounded-sm bg-chatgpt-hover hover:bg-opacity-80 px-2 min-w-[60px]"
-            >
-              Salvar
-            </Button>
-          </div>
+          <Button
+            onClick={handleRename}
+            className="flex items-center justify-start w-full space-x-3 text-xs h-8 rounded-md bg-transparent hover:bg-chatgpt-hover border-0 px-3"
+          >
+            <Pencil className="h-4 w-4" />
+            <span>Renomear conversa</span>
+          </Button>
           <Button
             variant="destructive"
             onClick={onDelete}
-            className="bg-transparent hover:bg-red-600/10 text-red-500 hover:text-red-500 text-xs h-6 rounded-sm w-full border-0 justify-start px-2"
+            className="flex items-center justify-start w-full space-x-3 text-xs h-8 rounded-md bg-transparent hover:bg-red-600/10 text-red-500 hover:text-red-500 border-0 px-3"
           >
-            Excluir conversa
+            <Trash2 className="h-4 w-4" />
+            <span>Excluir conversa</span>
           </Button>
         </div>
       </DialogContent>
