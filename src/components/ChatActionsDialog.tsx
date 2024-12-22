@@ -43,20 +43,20 @@ export const ChatActionsDialog = ({
         className="bg-chatgpt-secondary border-chatgpt-border w-[160px] rounded-xl p-1.5 shadow-lg"
         style={style}
       >
-        <div className="grid grid-cols-2 gap-1">
+        <div className="flex flex-col space-y-1">
           <Button
             onClick={handleRename}
-            className="flex flex-col items-center justify-center space-y-1 text-xs h-16 rounded-lg bg-transparent hover:bg-chatgpt-hover border-0 px-3"
+            className="flex items-center justify-start w-full space-x-3 text-xs h-8 rounded-lg bg-transparent hover:bg-chatgpt-hover border-0 px-3"
           >
-            <Edit2 className="h-5 w-5" />
+            <Edit2 className="h-4 w-4" />
             <span>Renomear</span>
           </Button>
           <Button
             variant="destructive"
             onClick={onDelete}
-            className="flex flex-col items-center justify-center space-y-1 text-xs h-16 rounded-lg bg-transparent hover:bg-red-600/10 text-red-500 hover:text-red-500 border-0 px-3"
+            className="flex items-center justify-start w-full space-x-3 text-xs h-8 rounded-lg bg-transparent hover:bg-red-600/10 text-red-500 hover:text-red-500 border-0 px-3"
           >
-            <Trash2 className="h-5 w-5" />
+            <Trash2 className="h-4 w-4" />
             <span>Excluir</span>
           </Button>
         </div>
