@@ -34,12 +34,13 @@ export const ChatActionsDialog = ({
     position: 'fixed',
     top: `${position.y}px`,
     left: `${position.x}px`,
+    transform: 'none',
   } as React.CSSProperties : {};
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent 
-        className="bg-chatgpt-secondary border-chatgpt-border w-[160px] rounded-xl shadow-lg p-1.5"
+        className="bg-chatgpt-secondary border-chatgpt-border w-[160px] rounded-xl p-1.5 shadow-lg"
         style={style}
       >
         <div className="space-y-1">
