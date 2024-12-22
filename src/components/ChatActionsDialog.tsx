@@ -39,7 +39,7 @@ export const ChatActionsDialog = ({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent 
-        className="bg-chatgpt-secondary border-chatgpt-border w-[160px] rounded-xl shadow-lg p-1.5 absolute"
+        className="bg-chatgpt-secondary border-chatgpt-border w-[160px] rounded-xl shadow-lg p-1.5"
         style={style}
       >
         <div className="space-y-1">
