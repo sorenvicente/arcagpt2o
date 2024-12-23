@@ -40,7 +40,7 @@ export const ChatActionsDialog = ({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent 
-        className="bg-chatgpt-secondary border-chatgpt-border w-[160px] rounded-md overflow-hidden p-0 shadow-lg"
+        className="bg-chatgpt-secondary border-chatgpt-border w-[160px] rounded-lg overflow-hidden p-0 shadow-lg"
         style={style}
       >
         <div className="flex flex-col">
