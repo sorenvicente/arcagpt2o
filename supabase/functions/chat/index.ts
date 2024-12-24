@@ -13,7 +13,7 @@ serve(async (req) => {
   }
 
   try {
-    const { messages } = await req.json()
+    const { messages, selectedModel } = await req.json()
 
     // Create Supabase client
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!
@@ -35,17 +35,20 @@ serve(async (req) => {
     const openAiApiKey = apiKeys?.openai_key
     const openRouterApiKey = apiKeys?.openrouter_key
 
+    console.log('Selected model:', selectedModel)
     console.log('Available APIs:', {
       openai: !!openAiApiKey,
       openRouter: !!openRouterApiKey,
     })
 
-    let lastError = null
+    // Handle OpenAI models
+    if (selectedModel === 'gpt-4o' || selectedModel === 'gpt-4o-mini') {
+      if (!openAiApiKey) {
+        throw new Error('OpenAI API key not configured')
+      }
 
-    // Try OpenAI first if available
-    if (openAiApiKey) {
       try {
-        console.log('Attempting to use OpenAI API')
+        console.log('Using OpenAI API with model:', selectedModel)
         const response = await fetch('https://api.openai.com/v1/chat/completions', {
           method: 'POST',
           headers: {
@@ -53,7 +56,7 @@ serve(async (req) => {
             'Authorization': `Bearer ${openAiApiKey}`,
           },
           body: JSON.stringify({
-            model: 'gpt-4o-mini',
+            model: selectedModel,
             messages: messages,
             max_tokens: 1024,
           }),
@@ -63,12 +66,7 @@ serve(async (req) => {
         
         if (!response.ok) {
           console.error('OpenAI API error:', data.error)
-          lastError = data.error?.message || 'Error calling OpenAI API'
-          // If quota exceeded or other error, try OpenRouter
-          if (openRouterApiKey) {
-            throw new Error('Fallback to OpenRouter')
-          }
-          throw new Error(lastError)
+          throw new Error(data.error?.message || 'Error calling OpenAI API')
         }
 
         return new Response(
@@ -76,17 +74,19 @@ serve(async (req) => {
           { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         )
       } catch (error) {
-        // Only proceed to OpenRouter if it's available
-        if (!openRouterApiKey || error.message !== 'Fallback to OpenRouter') {
-          throw error
-        }
+        console.error('OpenAI API error:', error)
+        throw error
       }
     }
-    
-    // Try OpenRouter if available
-    if (openRouterApiKey) {
+
+    // Handle OpenRouter models
+    if (selectedModel.startsWith('anthropic/') || selectedModel.startsWith('meta/') || selectedModel.startsWith('google/')) {
+      if (!openRouterApiKey) {
+        throw new Error('OpenRouter API key not configured')
+      }
+
       try {
-        console.log('Using OpenRouter API')
+        console.log('Using OpenRouter API with model:', selectedModel)
         const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
           method: 'POST',
           headers: {
@@ -95,7 +95,7 @@ serve(async (req) => {
             'HTTP-Referer': 'https://your-site.com',
           },
           body: JSON.stringify({
-            model: 'anthropic/claude-3-sonnet',
+            model: selectedModel,
             messages: messages,
             max_tokens: 1024,
           }),
@@ -105,8 +105,7 @@ serve(async (req) => {
         
         if (!response.ok) {
           console.error('OpenRouter API error:', data.error)
-          lastError = data.error?.message || 'Error calling OpenRouter API'
-          throw new Error(lastError)
+          throw new Error(data.error?.message || 'Error calling OpenRouter API')
         }
 
         return new Response(
@@ -114,17 +113,12 @@ serve(async (req) => {
           { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         )
       } catch (error) {
-        lastError = error.message
+        console.error('OpenRouter API error:', error)
         throw error
       }
     }
 
-    // If no API keys are configured or both services failed, throw a descriptive error
-    const errorMessage = lastError 
-      ? `All available AI services failed. Last error: ${lastError}. Please check your API keys and credits.`
-      : 'No API keys configured. Please configure at least one API key (OpenAI or OpenRouter) in the settings.'
-    
-    throw new Error(errorMessage)
+    throw new Error(`Invalid model selected: ${selectedModel}`)
 
   } catch (error) {
     console.error('Error in chat function:', error)

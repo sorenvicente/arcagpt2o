@@ -4,17 +4,32 @@ import { Message } from '@/types/chat';
 import { useToast } from '@/components/ui/use-toast';
 import { Json } from '@/integrations/supabase/types';
 
+export type ModelOption = {
+  id: string;
+  name: string;
+  provider: string;
+};
+
+export const modelOptions: ModelOption[] = [
+  { id: 'gpt-4o', name: 'GPT-4 Turbo', provider: 'OpenAI' },
+  { id: 'gpt-4o-mini', name: 'GPT-4 Mini', provider: 'OpenAI' },
+  { id: 'anthropic/claude-3-sonnet', name: 'Claude 3 Sonnet', provider: 'Anthropic' },
+  { id: 'anthropic/claude-2', name: 'Claude 2', provider: 'Anthropic' },
+  { id: 'meta/llama-2-70b-chat', name: 'Llama 2 70B', provider: 'Meta' },
+  { id: 'google/gemini-pro', name: 'Gemini Pro', provider: 'Google' },
+];
+
 export const useChat = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [chatId, setChatId] = useState<string | null>(null);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [selectedModel, setSelectedModel] = useState<string>(modelOptions[0].id);
   const { toast } = useToast();
 
   const saveChat = useCallback(async () => {
     if (messages.length === 0 || chatId) return;
 
-    // Save chat in background without waiting
     void supabase
       .from('saved_chats')
       .insert({
@@ -56,7 +71,10 @@ export const useChat = () => {
       setMessages(prev => [...prev, userMessage]);
 
       const { data, error } = await supabase.functions.invoke('chat', {
-        body: { messages: [...messages, userMessage] }
+        body: { 
+          messages: [...messages, userMessage],
+          selectedModel 
+        }
       });
 
       if (error) {
@@ -88,6 +106,9 @@ export const useChat = () => {
     sendMessage,
     setMessages,
     activeCategory,
-    handlePromptSelect
+    handlePromptSelect,
+    selectedModel,
+    setSelectedModel,
+    modelOptions
   };
 };
