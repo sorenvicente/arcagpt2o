@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/hooks/use-toast";
 
 interface ApiKeyFormProps {
   keys: {
@@ -20,14 +20,31 @@ interface ApiKeyFormProps {
 const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
   const [showOpenAI, setShowOpenAI] = useState(false);
   const [showOpenRouter, setShowOpenRouter] = useState(false);
+  const { toast } = useToast();
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Validate that at least one key is provided
+    if (!keys.openai_key && !keys.openrouter_key) {
+      toast({
+        title: "Erro",
+        description: "Por favor, forneça pelo menos uma chave API",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    onSubmit(e);
+  };
 
   return (
-    <form onSubmit={onSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-6">
       <Card className="bg-chatgpt-secondary border-chatgpt-border">
         <CardHeader>
-          <CardTitle className="text-white text-lg">OpenAI Models</CardTitle>
+          <CardTitle className="text-white text-lg">OpenAI Models (Opcional)</CardTitle>
           <CardDescription className="text-gray-400">
-            Access to GPT-4, GPT-4 Turbo, and GPT-4 Vision
+            Acesso ao GPT-4, GPT-4 Turbo e GPT-4 Vision
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -54,7 +71,7 @@ const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
               </button>
             </div>
             <div className="text-xs text-gray-400 mt-2">
-              Supported models: GPT-4, GPT-4 Turbo, GPT-4 Vision
+              Modelos suportados: GPT-4, GPT-4 Turbo, GPT-4 Vision
             </div>
           </div>
         </CardContent>
@@ -62,9 +79,9 @@ const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
 
       <Card className="bg-chatgpt-secondary border-chatgpt-border">
         <CardHeader>
-          <CardTitle className="text-white text-lg">OpenRouter Models</CardTitle>
+          <CardTitle className="text-white text-lg">OpenRouter Models (Opcional)</CardTitle>
           <CardDescription className="text-gray-400">
-            Access to Claude 3, Claude 2, Llama 2, and PaLM
+            Acesso ao Claude 3, Claude 2, Llama 2 e PaLM
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -91,7 +108,7 @@ const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
               </button>
             </div>
             <div className="text-xs text-gray-400 mt-2">
-              Supported models: Claude 3, Claude 2, Llama 2, PaLM
+              Modelos suportados: Claude 3, Claude 2, Llama 2, PaLM
             </div>
           </div>
         </CardContent>
