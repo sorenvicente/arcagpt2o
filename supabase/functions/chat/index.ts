@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import "https://deno.land/x/xhr@0.1.0/mod.ts"
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -14,15 +15,29 @@ serve(async (req) => {
   try {
     const { messages } = await req.json()
 
-    // Get API keys from environment
-    const openAiApiKey = Deno.env.get('OPENAI_API_KEY')
-    const openRouterApiKey = Deno.env.get('OPENROUTER_API_KEY')
-    const anthropicApiKey = Deno.env.get('ANTHROPIC_API_KEY')
+    // Create Supabase client
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+    const supabase = createClient(supabaseUrl, supabaseServiceKey)
+
+    // Fetch API keys from database
+    const { data: apiKeys, error: fetchError } = await supabase
+      .from('api_keys')
+      .select('*')
+      .limit(1)
+      .single()
+
+    if (fetchError && fetchError.code !== 'PGRST116') {
+      console.error('Error fetching API keys:', fetchError)
+      throw new Error('Erro ao buscar chaves API')
+    }
+
+    const openAiApiKey = apiKeys?.openai_key
+    const openRouterApiKey = apiKeys?.openrouter_key
 
     console.log('Available APIs:', {
       openai: !!openAiApiKey,
       openRouter: !!openRouterApiKey,
-      anthropic: !!anthropicApiKey
     })
 
     // Try OpenAI first if available
