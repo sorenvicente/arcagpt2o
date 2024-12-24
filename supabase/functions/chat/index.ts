@@ -50,7 +50,7 @@ serve(async (req) => {
           'Authorization': `Bearer ${openAiApiKey}`,
         },
         body: JSON.stringify({
-          model: 'gpt-4-turbo-preview',
+          model: 'gpt-4',
           messages: messages,
           max_tokens: 1024,
         }),
