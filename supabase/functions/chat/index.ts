@@ -27,7 +27,7 @@ serve(async (req) => {
       .limit(1)
       .single()
 
-    if (fetchError && fetchError.code !== 'PGRST116') {
+    if (fetchError) {
       console.error('Error fetching API keys:', fetchError)
       throw new Error('Error fetching API keys')
     }
@@ -47,6 +47,11 @@ serve(async (req) => {
         throw new Error('OpenAI API key not configured')
       }
 
+      const modelMap = {
+        'gpt-4o': 'gpt-4-turbo-preview',
+        'gpt-4o-mini': 'gpt-4-turbo-preview'
+      }
+
       try {
         console.log('Using OpenAI API with model:', selectedModel)
         const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -56,7 +61,7 @@ serve(async (req) => {
             'Authorization': `Bearer ${openAiApiKey}`,
           },
           body: JSON.stringify({
-            model: selectedModel,
+            model: modelMap[selectedModel],
             messages: messages,
             max_tokens: 1024,
           }),
