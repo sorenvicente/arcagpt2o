@@ -15,13 +15,19 @@ serve(async (req) => {
     const { messages } = await req.json()
 
     // Get API keys from environment
-    const anthropicApiKey = Deno.env.get('ANTHROPIC_API_KEY')
     const openAiApiKey = Deno.env.get('OPENAI_API_KEY')
     const openRouterApiKey = Deno.env.get('OPENROUTER_API_KEY')
+    const anthropicApiKey = Deno.env.get('ANTHROPIC_API_KEY')
 
-    // Determine which API to use based on available keys
+    console.log('Available APIs:', {
+      openai: !!openAiApiKey,
+      openRouter: !!openRouterApiKey,
+      anthropic: !!anthropicApiKey
+    })
+
+    // Try OpenAI first if available
     if (openAiApiKey) {
-      // Use OpenAI API
+      console.log('Using OpenAI API')
       const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {
@@ -38,6 +44,7 @@ serve(async (req) => {
       const data = await response.json()
       
       if (!response.ok) {
+        console.error('OpenAI API error:', data.error)
         throw new Error(data.error?.message || 'Error calling OpenAI API')
       }
 
@@ -46,8 +53,10 @@ serve(async (req) => {
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     } 
-    else if (openRouterApiKey) {
-      // Use OpenRouter API
+    
+    // Try OpenRouter if available
+    if (openRouterApiKey) {
+      console.log('Using OpenRouter API')
       const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
         method: 'POST',
         headers: {
@@ -65,6 +74,7 @@ serve(async (req) => {
       const data = await response.json()
       
       if (!response.ok) {
+        console.error('OpenRouter API error:', data.error)
         throw new Error(data.error?.message || 'Error calling OpenRouter API')
       }
 
@@ -73,38 +83,9 @@ serve(async (req) => {
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
-    else if (anthropicApiKey) {
-      // Use Anthropic API as fallback
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': anthropicApiKey,
-          'anthropic-version': '2023-06-01'
-        },
-        body: JSON.stringify({
-          model: 'claude-3-sonnet-20240229',
-          messages: messages.map((msg: any) => ({
-            role: msg.role === 'user' ? 'user' : 'assistant',
-            content: msg.content
-          })),
-          max_tokens: 1024,
-        }),
-      })
 
-      const data = await response.json()
-      
-      if (!response.ok) {
-        throw new Error(data.error?.message || 'Error calling Anthropic API')
-      }
-
-      return new Response(
-        JSON.stringify({ content: data.content[0].text }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      )
-    }
-
-    throw new Error('No API keys configured')
+    // If no API keys are configured, throw a more descriptive error
+    throw new Error('Nenhuma chave API configurada. Por favor, configure pelo menos uma chave API (OpenAI ou OpenRouter) nas configurações.')
 
   } catch (error) {
     console.error('Error in chat function:', error)
