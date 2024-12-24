@@ -40,6 +40,8 @@ serve(async (req) => {
       openRouter: !!openRouterApiKey,
     })
 
+    let lastError = null
+
     // Try OpenAI first if available
     if (openAiApiKey) {
       try {
@@ -61,11 +63,12 @@ serve(async (req) => {
         
         if (!response.ok) {
           console.error('OpenAI API error:', data.error)
+          lastError = data.error?.message || 'Error calling OpenAI API'
           // If quota exceeded or other error, try OpenRouter
           if (openRouterApiKey) {
             throw new Error('Fallback to OpenRouter')
           }
-          throw new Error(data.error?.message || 'Error calling OpenAI API')
+          throw new Error(lastError)
         }
 
         return new Response(
@@ -82,36 +85,46 @@ serve(async (req) => {
     
     // Try OpenRouter if available
     if (openRouterApiKey) {
-      console.log('Using OpenRouter API')
-      const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${openRouterApiKey}`,
-          'HTTP-Referer': 'https://your-site.com',
-        },
-        body: JSON.stringify({
-          model: 'anthropic/claude-3-sonnet',
-          messages: messages,
-          max_tokens: 1024,
-        }),
-      })
+      try {
+        console.log('Using OpenRouter API')
+        const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${openRouterApiKey}`,
+            'HTTP-Referer': 'https://your-site.com',
+          },
+          body: JSON.stringify({
+            model: 'anthropic/claude-3-sonnet',
+            messages: messages,
+            max_tokens: 1024,
+          }),
+        })
 
-      const data = await response.json()
-      
-      if (!response.ok) {
-        console.error('OpenRouter API error:', data.error)
-        throw new Error(data.error?.message || 'Error calling OpenRouter API')
+        const data = await response.json()
+        
+        if (!response.ok) {
+          console.error('OpenRouter API error:', data.error)
+          lastError = data.error?.message || 'Error calling OpenRouter API'
+          throw new Error(lastError)
+        }
+
+        return new Response(
+          JSON.stringify({ content: data.choices[0].message.content }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        )
+      } catch (error) {
+        lastError = error.message
+        throw error
       }
-
-      return new Response(
-        JSON.stringify({ content: data.choices[0].message.content }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      )
     }
 
-    // If no API keys are configured, throw a more descriptive error
-    throw new Error('No API keys configured. Please configure at least one API key (OpenAI or OpenRouter) in the settings.')
+    // If no API keys are configured or both services failed, throw a descriptive error
+    const errorMessage = lastError 
+      ? `All available AI services failed. Last error: ${lastError}. Please check your API keys and credits.`
+      : 'No API keys configured. Please configure at least one API key (OpenAI or OpenRouter) in the settings.'
+    
+    throw new Error(errorMessage)
 
   } catch (error) {
     console.error('Error in chat function:', error)
