@@ -70,6 +70,37 @@ serve(async (req) => {
         const data = await response.json()
         
         if (!response.ok) {
+          // If quota exceeded, try OpenRouter as fallback
+          if (data.error?.message?.includes('quota') && openRouterApiKey) {
+            console.log('OpenAI quota exceeded, falling back to OpenRouter')
+            // Use Claude-2 as fallback
+            const openRouterResponse = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${openRouterApiKey}`,
+                'HTTP-Referer': 'https://your-site.com',
+              },
+              body: JSON.stringify({
+                model: 'anthropic/claude-2',
+                messages: messages,
+                max_tokens: 1024,
+              }),
+            })
+
+            const openRouterData = await openRouterResponse.json()
+            
+            if (!openRouterResponse.ok) {
+              console.error('OpenRouter API error:', openRouterData.error)
+              throw new Error(openRouterData.error?.message || 'Error calling OpenRouter API')
+            }
+
+            return new Response(
+              JSON.stringify({ content: openRouterData.choices[0].message.content }),
+              { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+            )
+          }
+          
           console.error('OpenAI API error:', data.error)
           throw new Error(data.error?.message || 'Error calling OpenAI API')
         }
