@@ -48,12 +48,12 @@ serve(async (req) => {
       }
 
       const modelMap = {
-        'gpt-4o': 'gpt-4-turbo-preview',
-        'gpt-4o-mini': 'gpt-4-turbo-preview'
+        'gpt-4o': 'gpt-4-1106-preview',
+        'gpt-4o-mini': 'gpt-4-1106-preview'
       }
 
       try {
-        console.log('Using OpenAI API with model:', selectedModel)
+        console.log('Using OpenAI API with model:', modelMap[selectedModel])
         const response = await fetch('https://api.openai.com/v1/chat/completions', {
           method: 'POST',
           headers: {
