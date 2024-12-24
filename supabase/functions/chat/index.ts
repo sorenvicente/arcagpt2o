@@ -48,8 +48,8 @@ serve(async (req) => {
       }
 
       const modelMap = {
-        'gpt-4o': 'gpt-4-1106-preview',
-        'gpt-4o-mini': 'gpt-4-1106-preview'
+        'gpt-4o': 'gpt-4-0125-preview',
+        'gpt-4o-mini': 'gpt-4-0125-preview'
       }
 
       try {
