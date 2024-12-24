@@ -22,7 +22,13 @@ export const useApiKeys = () => {
         .limit(1)
         .single();
 
-      if (error) throw error;
+      if (error) {
+        if (error.code === 'PGRST116') {
+          // No records found, this is fine for new installations
+          return;
+        }
+        throw error;
+      }
 
       if (data) {
         setKeys({
@@ -33,8 +39,8 @@ export const useApiKeys = () => {
     } catch (error: any) {
       console.error("Error fetching API keys:", error);
       toast({
-        title: "Error",
-        description: "Failed to fetch API keys",
+        title: "Erro",
+        description: "Falha ao buscar as chaves API",
         variant: "destructive",
       });
     }
@@ -53,8 +59,8 @@ export const useApiKeys = () => {
         const { error } = await supabase
           .from("api_keys")
           .update({
-            openai_key: keys.openai_key,
-            openrouter_key: keys.openrouter_key,
+            openai_key: keys.openai_key.trim(),
+            openrouter_key: keys.openrouter_key.trim(),
             updated_at: new Date().toISOString(),
           })
           .eq("id", existingKeys.id);
@@ -63,8 +69,8 @@ export const useApiKeys = () => {
       } else {
         const { error } = await supabase.from("api_keys").insert([
           {
-            openai_key: keys.openai_key,
-            openrouter_key: keys.openrouter_key,
+            openai_key: keys.openai_key.trim(),
+            openrouter_key: keys.openrouter_key.trim(),
           },
         ]);
 
@@ -72,14 +78,14 @@ export const useApiKeys = () => {
       }
 
       toast({
-        title: "Success",
-        description: "API keys saved successfully",
+        title: "Sucesso",
+        description: "Chaves API salvas com sucesso",
       });
     } catch (error: any) {
       console.error("Error saving API keys:", error);
       toast({
-        title: "Error",
-        description: "Failed to save API keys",
+        title: "Erro",
+        description: "Falha ao salvar as chaves API",
         variant: "destructive",
       });
     }

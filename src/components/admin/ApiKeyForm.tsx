@@ -29,7 +29,7 @@ const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
     if (!keys.openai_key && !keys.openrouter_key) {
       toast({
         title: "Erro",
-        description: "Por favor, forneça pelo menos uma chave API",
+        description: "Por favor, forneça pelo menos uma chave API (OpenAI ou OpenRouter)",
         variant: "destructive",
       });
       return;
@@ -42,9 +42,9 @@ const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
     <form onSubmit={handleSubmit} className="space-y-6">
       <Card className="bg-chatgpt-secondary border-chatgpt-border">
         <CardHeader>
-          <CardTitle className="text-white text-lg">OpenAI Models (Opcional)</CardTitle>
+          <CardTitle className="text-white text-lg">OpenAI API Key</CardTitle>
           <CardDescription className="text-gray-400">
-            Acesso ao GPT-4, GPT-4 Turbo e GPT-4 Vision
+            Opcional - Acesso ao GPT-4, GPT-4 Turbo e GPT-4 Vision
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -79,9 +79,9 @@ const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
 
       <Card className="bg-chatgpt-secondary border-chatgpt-border">
         <CardHeader>
-          <CardTitle className="text-white text-lg">OpenRouter Models (Opcional)</CardTitle>
+          <CardTitle className="text-white text-lg">OpenRouter API Key</CardTitle>
           <CardDescription className="text-gray-400">
-            Acesso ao Claude 3, Claude 2, Llama 2 e PaLM
+            Opcional - Acesso ao Claude 3, Claude 2, Llama 2 e PaLM
           </CardDescription>
         </CardHeader>
         <CardContent>
