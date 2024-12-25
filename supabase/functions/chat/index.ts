@@ -13,7 +13,8 @@ serve(async (req) => {
   }
 
   try {
-    const { messages, selectedModel } = await req.json()
+    const { messages } = await req.json()
+    const selectedModel = 'gpt-4o-mini' // Default model if none specified
 
     // Create Supabase client
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!
@@ -111,45 +112,6 @@ serve(async (req) => {
         )
       } catch (error) {
         console.error('OpenAI API error:', error)
-        throw error
-      }
-    }
-
-    // Handle OpenRouter models
-    if (selectedModel.startsWith('anthropic/') || selectedModel.startsWith('meta/') || selectedModel.startsWith('google/')) {
-      if (!openRouterApiKey) {
-        throw new Error('OpenRouter API key not configured')
-      }
-
-      try {
-        console.log('Using OpenRouter API with model:', selectedModel)
-        const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${openRouterApiKey}`,
-            'HTTP-Referer': 'https://your-site.com',
-          },
-          body: JSON.stringify({
-            model: selectedModel,
-            messages: messages,
-            max_tokens: 1024,
-          }),
-        })
-
-        const data = await response.json()
-        
-        if (!response.ok) {
-          console.error('OpenRouter API error:', data.error)
-          throw new Error(data.error?.message || 'Error calling OpenRouter API')
-        }
-
-        return new Response(
-          JSON.stringify({ content: data.choices[0].message.content }),
-          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        )
-      } catch (error) {
-        console.error('OpenRouter API error:', error)
         throw error
       }
     }

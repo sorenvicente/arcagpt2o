@@ -79,12 +79,19 @@ export const useChat = () => {
         .from('saved_chats')
         .select('messages')
         .eq('id', id)
-        .single();
+        .maybeSingle(); // Changed from single() to maybeSingle()
 
       if (error) throw error;
       if (data) {
         setMessages(data.messages as Message[]);
         setChatId(id);
+      } else {
+        // Handle case when chat is not found
+        toast({
+          title: "Erro",
+          description: "Chat não encontrado.",
+          variant: "destructive"
+        });
       }
     } catch (error) {
       console.error('Error loading chat:', error);
