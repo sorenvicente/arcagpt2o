@@ -5,15 +5,6 @@ import ChatInput from '@/components/ChatInput';
 import ActionButtons from '@/components/ActionButtons';
 import MessageList from '@/components/MessageList';
 import { useChat } from '@/hooks/useChat';
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 const Index = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -24,9 +15,6 @@ const Index = () => {
     sendMessage,
     activeCategory,
     handlePromptSelect,
-    selectedModel,
-    setSelectedModel,
-    modelOptions,
     handleNewChat,
     loadChat,
   } = useChat();
@@ -50,35 +38,6 @@ const Index = () => {
             <div className="w-full max-w-3xl px-4 space-y-4">
               <div>
                 <h1 className="mb-8 text-4xl font-semibold text-center">Como posso ajudar?</h1>
-                <div className="mb-4">
-                  <Select value={selectedModel} onValueChange={setSelectedModel}>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Selecione um modelo" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectLabel>OpenAI</SelectLabel>
-                        {modelOptions
-                          .filter(model => model.provider === 'OpenAI')
-                          .map(model => (
-                            <SelectItem key={model.id} value={model.id}>
-                              {model.name}
-                            </SelectItem>
-                          ))}
-                      </SelectGroup>
-                      <SelectGroup>
-                        <SelectLabel>Outros Modelos</SelectLabel>
-                        {modelOptions
-                          .filter(model => model.provider !== 'OpenAI')
-                          .map(model => (
-                            <SelectItem key={model.id} value={model.id}>
-                              {model.name} ({model.provider})
-                            </SelectItem>
-                          ))}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </div>
                 <ActionButtons 
                   onSelectPrompt={handlePromptSelect}
                   activeCategory={activeCategory}
@@ -90,35 +49,6 @@ const Index = () => {
             <>
               <MessageList messages={messages} />
               <div className="w-full max-w-3xl mx-auto px-4 py-2">
-                <div className="mb-4">
-                  <Select value={selectedModel} onValueChange={setSelectedModel}>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Selecione um modelo" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectLabel>OpenAI</SelectLabel>
-                        {modelOptions
-                          .filter(model => model.provider === 'OpenAI')
-                          .map(model => (
-                            <SelectItem key={model.id} value={model.id}>
-                              {model.name}
-                            </SelectItem>
-                          ))}
-                      </SelectGroup>
-                      <SelectGroup>
-                        <SelectLabel>Outros Modelos</SelectLabel>
-                        {modelOptions
-                          .filter(model => model.provider !== 'OpenAI')
-                          .map(model => (
-                            <SelectItem key={model.id} value={model.id}>
-                              {model.name} ({model.provider})
-                            </SelectItem>
-                          ))}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </div>
                 <ActionButtons 
                   onSelectPrompt={handlePromptSelect}
                   activeCategory={activeCategory}

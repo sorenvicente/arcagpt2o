@@ -4,26 +4,11 @@ import { Message } from '@/types/chat';
 import { useToast } from '@/components/ui/use-toast';
 import { Json } from '@/integrations/supabase/types';
 
-export type ModelOption = {
-  id: string;
-  name: string;
-  provider: string;
-};
-
-export const modelOptions: ModelOption[] = [
-  { id: 'gpt-4', name: 'GPT-4', provider: 'OpenAI' },
-  { id: 'gpt-3.5-turbo', name: 'GPT-3.5', provider: 'OpenAI' },
-  { id: 'anthropic/claude-3', name: 'Claude', provider: 'Anthropic' },
-  { id: 'meta/llama-2-70b', name: 'Llama', provider: 'Meta' },
-  { id: 'google/gemini-pro', name: 'Gemini', provider: 'Google' },
-];
-
 export const useChat = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [chatId, setChatId] = useState<string | null>(null);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
-  const [selectedModel, setSelectedModel] = useState<string>(modelOptions[0].id);
   const { toast } = useToast();
 
   const saveChat = useCallback(async () => {
@@ -31,6 +16,23 @@ export const useChat = () => {
 
     try {
       const title = messages[0].content.substring(0, 50) + '...';
+      
+      // Get current number of saved chats
+      const { data: existingChats, error: countError } = await supabase
+        .from('saved_chats')
+        .select('id')
+        .order('created_at', { ascending: false });
+
+      if (countError) throw countError;
+
+      // If we already have 2 chats and this is a new chat, delete the oldest one
+      if (existingChats && existingChats.length >= 2 && !chatId) {
+        const oldestChat = existingChats[existingChats.length - 1];
+        await supabase
+          .from('saved_chats')
+          .delete()
+          .eq('id', oldestChat.id);
+      }
       
       if (chatId) {
         const { error } = await supabase
@@ -128,8 +130,7 @@ export const useChat = () => {
 
       const { data, error } = await supabase.functions.invoke('chat', {
         body: { 
-          messages: [...messages, userMessage],
-          selectedModel 
+          messages: [...messages, userMessage]
         }
       });
 
@@ -160,12 +161,8 @@ export const useChat = () => {
     messages,
     isLoading,
     sendMessage,
-    setMessages,
     activeCategory,
     handlePromptSelect,
-    selectedModel,
-    setSelectedModel,
-    modelOptions,
     handleNewChat,
     loadChat,
     chatId
