@@ -13,10 +13,9 @@ export type ModelOption = {
 export const modelOptions: ModelOption[] = [
   { id: 'gpt-4', name: 'GPT-4', provider: 'OpenAI' },
   { id: 'gpt-3.5-turbo', name: 'GPT-3.5', provider: 'OpenAI' },
-  { id: 'anthropic/claude-3', name: 'Claude 3', provider: 'Anthropic' },
-  { id: 'anthropic/claude-2', name: 'Claude 2', provider: 'Anthropic' },
-  { id: 'meta/llama-2-70b', name: 'Llama 2', provider: 'Meta' },
-  { id: 'google/gemini-pro', name: 'Gemini Pro', provider: 'Google' },
+  { id: 'anthropic/claude-3', name: 'Claude', provider: 'Anthropic' },
+  { id: 'meta/llama-2-70b', name: 'Llama', provider: 'Meta' },
+  { id: 'google/gemini-pro', name: 'Gemini', provider: 'Google' },
 ];
 
 export const useChat = () => {
@@ -49,7 +48,7 @@ export const useChat = () => {
           .from('saved_chats')
           .insert({
             title,
-            category: activeCategory || 'Propósito',
+            category: activeCategory || 'Geral',
             messages: messages as unknown as Json
           })
           .select('id')
@@ -98,13 +97,12 @@ export const useChat = () => {
     }
   };
 
-  const handleNewChat = () => {
+  const handleNewChat = async () => {
     if (messages.length > 0) {
-      saveChat().then(() => {
-        setMessages([]);
-        setChatId(null);
-        setActiveCategory(null);
-      });
+      await saveChat();
+      setMessages([]);
+      setChatId(null);
+      setActiveCategory(null);
     } else {
       setMessages([]);
       setChatId(null);

@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import Sidebar from '@/components/Sidebar';
 import ChatHeader from '@/components/ChatHeader';
 import ChatInput from '@/components/ChatInput';
@@ -18,13 +17,11 @@ import {
 
 const Index = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const navigate = useNavigate();
   
   const {
     messages,
     isLoading,
     sendMessage,
-    setMessages,
     activeCategory,
     handlePromptSelect,
     selectedModel,
@@ -32,7 +29,6 @@ const Index = () => {
     modelOptions,
     handleNewChat,
     loadChat,
-    chatId
   } = useChat();
 
   return (
@@ -71,19 +67,9 @@ const Index = () => {
                           ))}
                       </SelectGroup>
                       <SelectGroup>
-                        <SelectLabel>Anthropic</SelectLabel>
+                        <SelectLabel>Outros Modelos</SelectLabel>
                         {modelOptions
-                          .filter(model => model.provider === 'Anthropic')
-                          .map(model => (
-                            <SelectItem key={model.id} value={model.id}>
-                              {model.name}
-                            </SelectItem>
-                          ))}
-                      </SelectGroup>
-                      <SelectGroup>
-                        <SelectLabel>Outros</SelectLabel>
-                        {modelOptions
-                          .filter(model => !['OpenAI', 'Anthropic'].includes(model.provider))
+                          .filter(model => model.provider !== 'OpenAI')
                           .map(model => (
                             <SelectItem key={model.id} value={model.id}>
                               {model.name} ({model.provider})
@@ -102,7 +88,7 @@ const Index = () => {
             </div>
           ) : (
             <>
-              <MessageList messages={messages.filter(msg => msg.role !== 'system')} />
+              <MessageList messages={messages} />
               <div className="w-full max-w-3xl mx-auto px-4 py-2">
                 <div className="mb-4">
                   <Select value={selectedModel} onValueChange={setSelectedModel}>
@@ -121,19 +107,9 @@ const Index = () => {
                           ))}
                       </SelectGroup>
                       <SelectGroup>
-                        <SelectLabel>Anthropic</SelectLabel>
+                        <SelectLabel>Outros Modelos</SelectLabel>
                         {modelOptions
-                          .filter(model => model.provider === 'Anthropic')
-                          .map(model => (
-                            <SelectItem key={model.id} value={model.id}>
-                              {model.name}
-                            </SelectItem>
-                          ))}
-                      </SelectGroup>
-                      <SelectGroup>
-                        <SelectLabel>Outros</SelectLabel>
-                        {modelOptions
-                          .filter(model => !['OpenAI', 'Anthropic'].includes(model.provider))
+                          .filter(model => model.provider !== 'OpenAI')
                           .map(model => (
                             <SelectItem key={model.id} value={model.id}>
                               {model.name} ({model.provider})
