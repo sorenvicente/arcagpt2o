@@ -11,9 +11,10 @@ interface SidebarProps {
   isOpen: boolean;
   onToggle: () => void;
   onNewChat: () => void;
+  onChatSelect: (chatId: string) => void;
 }
 
-const Sidebar = ({ isOpen, onToggle, onNewChat }: SidebarProps) => {
+const Sidebar = ({ isOpen, onToggle, onNewChat, onChatSelect }: SidebarProps) => {
   const [savedChats, setSavedChats] = useState<SavedChat[]>([]);
   const { toast } = useToast();
 
@@ -26,8 +27,7 @@ const Sidebar = ({ isOpen, onToggle, onNewChat }: SidebarProps) => {
       const { data, error } = await supabase
         .from('saved_chats')
         .select('id, title, category, created_at')
-        .order('created_at', { ascending: false })
-        .limit(1);
+        .order('created_at', { ascending: false });
 
       if (error) throw error;
       setSavedChats(data || []);
@@ -88,6 +88,7 @@ const Sidebar = ({ isOpen, onToggle, onNewChat }: SidebarProps) => {
                 key={chat.id}
                 chat={chat}
                 onDelete={handleDelete}
+                onClick={() => onChatSelect(chat.id)}
               />
             ))}
           </div>

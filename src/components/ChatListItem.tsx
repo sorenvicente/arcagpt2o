@@ -7,9 +7,10 @@ import { useToast } from "@/hooks/use-toast";
 interface ChatListItemProps {
   chat: SavedChat;
   onDelete: (chat: SavedChat) => void;
+  onClick: () => void;
 }
 
-export const ChatListItem = ({ chat, onDelete }: ChatListItemProps) => {
+export const ChatListItem = ({ chat, onDelete, onClick }: ChatListItemProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState(chat.title);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -76,7 +77,10 @@ export const ChatListItem = ({ chat, onDelete }: ChatListItemProps) => {
   };
 
   return (
-    <div className="group flex h-10 items-center gap-2.5 rounded-lg px-4 hover:bg-chatgpt-hover cursor-pointer relative mt-2">
+    <div 
+      className="group flex h-10 items-center gap-2.5 rounded-lg px-4 hover:bg-chatgpt-hover cursor-pointer relative mt-2"
+      onClick={onClick}
+    >
       <MessageSquare className="h-4 w-4" />
       {isEditing ? (
         <input

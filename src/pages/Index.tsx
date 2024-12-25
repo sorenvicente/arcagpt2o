@@ -29,12 +29,11 @@ const Index = () => {
     handlePromptSelect,
     selectedModel,
     setSelectedModel,
-    modelOptions
+    modelOptions,
+    handleNewChat,
+    loadChat,
+    chatId
   } = useChat();
-
-  const handleNewChat = () => {
-    setMessages([]);
-  };
 
   return (
     <div className="flex h-screen">
@@ -42,6 +41,7 @@ const Index = () => {
         isOpen={isSidebarOpen} 
         onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
         onNewChat={handleNewChat}
+        onChatSelect={loadChat}
       />
       
       <main className={`flex-1 transition-all duration-300 relative ${isSidebarOpen ? 'ml-64' : 'ml-0'}`}>

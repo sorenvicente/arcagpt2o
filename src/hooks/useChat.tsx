@@ -11,11 +11,11 @@ export type ModelOption = {
 };
 
 export const modelOptions: ModelOption[] = [
-  { id: 'gpt-4o', name: 'GPT-4 Turbo', provider: 'OpenAI' },
-  { id: 'gpt-4o-mini', name: 'GPT-4 Mini', provider: 'OpenAI' },
-  { id: 'anthropic/claude-3-sonnet', name: 'Claude 3 Sonnet', provider: 'Anthropic' },
+  { id: 'gpt-4', name: 'GPT-4', provider: 'OpenAI' },
+  { id: 'gpt-3.5-turbo', name: 'GPT-3.5', provider: 'OpenAI' },
+  { id: 'anthropic/claude-3', name: 'Claude 3', provider: 'Anthropic' },
   { id: 'anthropic/claude-2', name: 'Claude 2', provider: 'Anthropic' },
-  { id: 'meta/llama-2-70b-chat', name: 'Llama 2 70B', provider: 'Meta' },
+  { id: 'meta/llama-2-70b', name: 'Llama 2', provider: 'Meta' },
   { id: 'google/gemini-pro', name: 'Gemini Pro', provider: 'Google' },
 ];
 
@@ -28,31 +28,89 @@ export const useChat = () => {
   const { toast } = useToast();
 
   const saveChat = useCallback(async () => {
-    if (messages.length === 0 || chatId) return;
+    if (messages.length === 0) return;
 
-    void supabase
-      .from('saved_chats')
-      .insert({
-        title: messages[0].content.substring(0, 50) + '...',
-        category: activeCategory || 'Propósito',
-        messages: messages as unknown as Json
-      })
-      .select('id')
-      .single()
-      .then(({ data, error }) => {
-        if (!error && data) {
-          setChatId(data.id);
-        } else {
-          console.error('Error saving chat:', error);
-        }
+    try {
+      const title = messages[0].content.substring(0, 50) + '...';
+      
+      if (chatId) {
+        const { error } = await supabase
+          .from('saved_chats')
+          .update({
+            title,
+            messages: messages as unknown as Json,
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', chatId);
+
+        if (error) throw error;
+      } else {
+        const { data, error } = await supabase
+          .from('saved_chats')
+          .insert({
+            title,
+            category: activeCategory || 'Propósito',
+            messages: messages as unknown as Json
+          })
+          .select('id')
+          .single();
+
+        if (error) throw error;
+        if (data) setChatId(data.id);
+      }
+    } catch (error) {
+      console.error('Error saving chat:', error);
+      toast({
+        title: "Erro",
+        description: "Não foi possível salvar o chat.",
+        variant: "destructive"
       });
-  }, [messages, chatId, activeCategory]);
+    }
+  }, [messages, chatId, activeCategory, toast]);
 
   useEffect(() => {
     if (messages.length > 0) {
       saveChat();
     }
   }, [messages, saveChat]);
+
+  const loadChat = async (id: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('saved_chats')
+        .select('messages, category')
+        .eq('id', id)
+        .single();
+
+      if (error) throw error;
+      if (data) {
+        setMessages(data.messages as Message[]);
+        setActiveCategory(data.category);
+        setChatId(id);
+      }
+    } catch (error) {
+      console.error('Error loading chat:', error);
+      toast({
+        title: "Erro",
+        description: "Não foi possível carregar o chat.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleNewChat = () => {
+    if (messages.length > 0) {
+      saveChat().then(() => {
+        setMessages([]);
+        setChatId(null);
+        setActiveCategory(null);
+      });
+    } else {
+      setMessages([]);
+      setChatId(null);
+      setActiveCategory(null);
+    }
+  };
 
   const handlePromptSelect = (prompt: string, category: string) => {
     setActiveCategory(category);
@@ -109,6 +167,9 @@ export const useChat = () => {
     handlePromptSelect,
     selectedModel,
     setSelectedModel,
-    modelOptions
+    modelOptions,
+    handleNewChat,
+    loadChat,
+    chatId
   };
 };
