@@ -24,13 +24,12 @@ export const useChat = () => {
 
       if (countError) throw countError;
 
-      // If we already have 2 chats and this is a new chat, delete the oldest one
-      if (existingChats && existingChats.length >= 2 && !chatId) {
-        const oldestChat = existingChats[existingChats.length - 1];
+      // If there's already a chat and this is a new chat, delete the existing one
+      if (existingChats && existingChats.length > 0 && !chatId) {
         await supabase
           .from('saved_chats')
           .delete()
-          .eq('id', oldestChat.id);
+          .eq('id', existingChats[0].id);
       }
       
       if (chatId) {
