@@ -8,7 +8,6 @@ export const useChat = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [chatId, setChatId] = useState<string | null>(null);
-  const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const { toast } = useToast();
 
   const saveChat = useCallback(async () => {
@@ -50,7 +49,7 @@ export const useChat = () => {
           .from('saved_chats')
           .insert({
             title,
-            category: activeCategory || 'Geral',
+            category: 'Geral',
             messages: messages as unknown as Json
           })
           .select('id')
@@ -67,7 +66,7 @@ export const useChat = () => {
         variant: "destructive"
       });
     }
-  }, [messages, chatId, activeCategory, toast]);
+  }, [messages, chatId, toast]);
 
   useEffect(() => {
     if (messages.length > 0) {
@@ -79,14 +78,13 @@ export const useChat = () => {
     try {
       const { data, error } = await supabase
         .from('saved_chats')
-        .select('messages, category')
+        .select('messages')
         .eq('id', id)
         .single();
 
       if (error) throw error;
       if (data) {
         setMessages(data.messages as Message[]);
-        setActiveCategory(data.category);
         setChatId(id);
       }
     } catch (error) {
@@ -102,19 +100,9 @@ export const useChat = () => {
   const handleNewChat = async () => {
     if (messages.length > 0) {
       await saveChat();
-      setMessages([]);
-      setChatId(null);
-      setActiveCategory(null);
-    } else {
-      setMessages([]);
-      setChatId(null);
-      setActiveCategory(null);
     }
-  };
-
-  const handlePromptSelect = (prompt: string, category: string) => {
-    setActiveCategory(category);
-    sendMessage(prompt);
+    setMessages([]);
+    setChatId(null);
   };
 
   const sendMessage = async (content: string) => {
@@ -161,8 +149,6 @@ export const useChat = () => {
     messages,
     isLoading,
     sendMessage,
-    activeCategory,
-    handlePromptSelect,
     handleNewChat,
     loadChat,
     chatId
