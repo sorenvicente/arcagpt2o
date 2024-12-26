@@ -16,23 +16,8 @@ export const useChat = () => {
     try {
       const title = messages[0].content.substring(0, 50) + '...';
       
-      // Get current number of saved chats
-      const { data: existingChats, error: countError } = await supabase
-        .from('saved_chats')
-        .select('id')
-        .order('created_at', { ascending: false });
-
-      if (countError) throw countError;
-
-      // If there's already a chat and this is a new chat, delete the existing one
-      if (existingChats && existingChats.length > 0 && !chatId) {
-        await supabase
-          .from('saved_chats')
-          .delete()
-          .eq('id', existingChats[0].id);
-      }
-      
       if (chatId) {
+        // Update existing chat
         const { error } = await supabase
           .from('saved_chats')
           .update({
@@ -44,6 +29,7 @@ export const useChat = () => {
 
         if (error) throw error;
       } else {
+        // Create new chat
         const { data, error } = await supabase
           .from('saved_chats')
           .insert({
@@ -67,6 +53,7 @@ export const useChat = () => {
     }
   }, [messages, chatId, toast]);
 
+  // Auto-save when messages change
   useEffect(() => {
     if (messages.length > 0) {
       saveChat();
@@ -79,14 +66,13 @@ export const useChat = () => {
         .from('saved_chats')
         .select('messages')
         .eq('id', id)
-        .maybeSingle(); // Changed from single() to maybeSingle()
+        .maybeSingle();
 
       if (error) throw error;
       if (data) {
         setMessages(data.messages as Message[]);
         setChatId(id);
       } else {
-        // Handle case when chat is not found
         toast({
           title: "Erro",
           description: "Chat não encontrado.",
@@ -104,9 +90,11 @@ export const useChat = () => {
   };
 
   const handleNewChat = async () => {
+    // Save current chat before starting a new one
     if (messages.length > 0) {
       await saveChat();
     }
+    // Clear current chat state
     setMessages([]);
     setChatId(null);
   };
