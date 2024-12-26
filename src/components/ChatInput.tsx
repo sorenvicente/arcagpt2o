@@ -50,19 +50,13 @@ const ChatInput = ({ onSend, isLoading = false }: ChatInputProps) => {
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Digite sua mensagem..."
-          className="w-full resize-none rounded-full bg-[#2F2F2F] px-4 py-4 pr-12 focus:outline-none overflow-hidden"
+          className="w-full resize-none rounded-lg bg-chatgpt-input px-4 py-4 pr-12 focus:outline-none"
           style={{ 
             maxHeight: "50vh",
-            scrollbarWidth: "none",
-            msOverflowStyle: "none"
+            overflowY: "auto"
           }}
           disabled={isLoading}
         />
-        <style jsx global>{`
-          textarea::-webkit-scrollbar {
-            display: none;
-          }
-        `}</style>
         <button 
           onClick={handleSubmit}
           disabled={isLoading || !message.trim()}
