@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { ArrowUp, Loader2 } from "lucide-react";
 
 interface ChatInputProps {
@@ -8,11 +8,28 @@ interface ChatInputProps {
 
 const ChatInput = ({ onSend, isLoading = false }: ChatInputProps) => {
   const [message, setMessage] = useState("");
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const adjustTextareaHeight = () => {
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.style.height = "0px";
+      const scrollHeight = textarea.scrollHeight;
+      textarea.style.height = `${scrollHeight}px`;
+    }
+  };
+
+  useEffect(() => {
+    adjustTextareaHeight();
+  }, [message]);
 
   const handleSubmit = () => {
     if (message.trim() && !isLoading) {
       onSend(message);
       setMessage("");
+      if (textareaRef.current) {
+        textareaRef.current.style.height = "auto";
+      }
     }
   };
 
@@ -27,15 +44,25 @@ const ChatInput = ({ onSend, isLoading = false }: ChatInputProps) => {
     <div className="relative flex w-full flex-col items-center">
       <div className="relative w-full">
         <textarea
+          ref={textareaRef}
           rows={1}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Digite sua mensagem..."
-          className="w-full resize-none rounded-full bg-[#2F2F2F] px-4 py-4 pr-12 focus:outline-none"
-          style={{ maxHeight: "200px" }}
+          className="w-full resize-none rounded-full bg-[#2F2F2F] px-4 py-4 pr-12 focus:outline-none overflow-hidden"
+          style={{ 
+            maxHeight: "50vh",
+            scrollbarWidth: "none",
+            msOverflowStyle: "none"
+          }}
           disabled={isLoading}
         />
+        <style jsx global>{`
+          textarea::-webkit-scrollbar {
+            display: none;
+          }
+        `}</style>
         <button 
           onClick={handleSubmit}
           disabled={isLoading || !message.trim()}
