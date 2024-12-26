@@ -50,7 +50,7 @@ const ChatInput = ({ onSend, isLoading = false }: ChatInputProps) => {
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Digite sua mensagem..."
-          className="w-full resize-none rounded-lg bg-chatgpt-input px-4 py-4 pr-12 focus:outline-none"
+          className="w-full resize-none rounded-xl bg-chatgpt-input px-4 py-4 pr-12 focus:outline-none"
           style={{ 
             maxHeight: "50vh",
             overflowY: "auto"
