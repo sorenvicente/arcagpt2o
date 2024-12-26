@@ -20,6 +20,26 @@ const Sidebar = ({ isOpen, onToggle, onNewChat, onChatSelect }: SidebarProps) =>
 
   useEffect(() => {
     fetchSavedChats();
+
+    // Subscribe to real-time updates
+    const channel = supabase
+      .channel('saved_chats_changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'saved_chats'
+        },
+        () => {
+          fetchSavedChats();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   const fetchSavedChats = async () => {
