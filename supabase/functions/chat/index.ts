@@ -102,12 +102,12 @@ serve(async (req) => {
         const error = await response.json();
         console.error('OpenRouter API error:', error);
         
-        // Check if it's a credits error
-        if (error.error?.includes('Insufficient credits')) {
-          throw new Error('OpenRouter: Insufficient credits. Please add more credits at https://openrouter.ai/credits');
-        }
+        // Safely check for insufficient credits error
+        const errorMessage = typeof error.error === 'string' && error.error.includes('Insufficient credits')
+          ? 'OpenRouter: Insufficient credits. Please add more credits at https://openrouter.ai/credits'
+          : error.error?.message || 'Error calling OpenRouter API';
         
-        throw new Error(error.error?.message || 'Error calling OpenRouter API');
+        throw new Error(errorMessage);
       }
 
       const data = await response.json();
