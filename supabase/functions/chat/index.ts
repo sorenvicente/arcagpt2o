@@ -27,42 +27,62 @@ serve(async (req) => {
       .single();
 
     if (apiKeysError) {
+      console.error('Error fetching API keys:', apiKeysError);
       throw new Error('Failed to fetch API keys');
+    }
+
+    if (!apiKeys.openai_key && !apiKeys.openrouter_key) {
+      throw new Error('No API keys configured. Please configure either OpenAI or OpenRouter API key.');
     }
 
     const { messages } = await req.json();
     console.log('Processing chat request with messages:', messages);
 
-    // Determine which API to use based on available keys
+    // Try OpenAI first if the key exists
     if (apiKeys.openai_key) {
-      console.log('Using OpenAI API');
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${apiKeys.openai_key}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'gpt-4-turbo-preview',
-          messages: messages,
-          max_tokens: 1024,
-        }),
-      });
+      try {
+        console.log('Attempting to use OpenAI API');
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${apiKeys.openai_key}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            model: 'gpt-4-turbo-preview',
+            messages: messages,
+            max_tokens: 1024,
+          }),
+        });
 
-      if (!response.ok) {
-        const error = await response.json();
-        console.error('OpenAI API error:', error);
-        throw new Error(error.error?.message || 'Error calling OpenAI API');
+        if (!response.ok) {
+          const error = await response.json();
+          console.error('OpenAI API error:', error);
+          // If OpenAI fails and we have OpenRouter key, we'll try that next
+          if (apiKeys.openrouter_key) {
+            throw new Error('OpenAI failed, trying OpenRouter');
+          }
+          throw new Error(error.error?.message || 'Error calling OpenAI API');
+        }
+
+        const data = await response.json();
+        console.log('Successfully received response from OpenAI');
+
+        return new Response(
+          JSON.stringify({ content: data.choices[0].message.content }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      } catch (error) {
+        // Only throw if we don't have OpenRouter as backup
+        if (!apiKeys.openrouter_key) {
+          throw error;
+        }
+        console.log('OpenAI failed, falling back to OpenRouter:', error);
       }
+    }
 
-      const data = await response.json();
-      console.log('Successfully received response from OpenAI');
-
-      return new Response(
-        JSON.stringify({ content: data.choices[0].message.content }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    } else if (apiKeys.openrouter_key) {
+    // Try OpenRouter if we have the key (either as primary or as fallback)
+    if (apiKeys.openrouter_key) {
       console.log('Using OpenRouter API');
       const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
         method: 'POST',
@@ -90,9 +110,8 @@ serve(async (req) => {
         JSON.stringify({ content: data.choices[0].message.content }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
-    } else {
-      throw new Error('No API keys configured');
     }
+
   } catch (error) {
     console.error('Error in chat function:', error);
     return new Response(
