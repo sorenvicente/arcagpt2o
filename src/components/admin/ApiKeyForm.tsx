@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
+import ReactMarkdown from 'react-markdown';
 
 interface ApiKeyFormProps {
   keys: {
@@ -17,6 +18,50 @@ interface ApiKeyFormProps {
   onSubmit: (e: React.FormEvent) => Promise<void>;
 }
 
+const openAiMarkdown = `
+### Modelos Disponíveis:
+
+#### GPT-4 Turbo
+- Modelo mais recente e avançado
+- Conhecimento atualizado até 2024
+- Melhor compreensão de contexto
+- Respostas mais precisas
+
+#### GPT-4
+- Alta qualidade e confiabilidade
+- Excelente para tarefas complexas
+- Forte capacidade de raciocínio
+
+#### GPT-4 Vision
+- Capacidade de análise de imagens
+- Pode descrever e entender conteúdo visual
+- Ideal para tarefas que combinam texto e imagem
+`;
+
+const openRouterMarkdown = `
+### Modelos Disponíveis:
+
+#### Claude 3 Opus
+- Modelo mais avançado da Anthropic
+- Excelente em análises detalhadas
+- Respostas mais longas e elaboradas
+
+#### Claude 2
+- Alta qualidade e confiabilidade
+- Bom para tarefas analíticas
+- Respostas bem estruturadas
+
+#### Llama 2
+- Modelo open source da Meta
+- Bom equilíbrio entre performance e custo
+- Ideal para tarefas gerais
+
+#### PaLM
+- Modelo do Google
+- Bom para processamento de linguagem natural
+- Respostas concisas e objetivas
+`;
+
 const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
   const [showOpenAI, setShowOpenAI] = useState(false);
   const [showOpenRouter, setShowOpenRouter] = useState(false);
@@ -25,7 +70,6 @@ const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validate that at least one key is provided
     if (!keys.openai_key && !keys.openrouter_key) {
       toast({
         title: "Erro",
@@ -48,7 +92,7 @@ const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-2">
+          <div className="space-y-4">
             <div className="relative">
               <Input
                 id="openai"
@@ -70,8 +114,8 @@ const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
                 )}
               </button>
             </div>
-            <div className="text-xs text-gray-400 mt-2">
-              Modelos suportados: GPT-4, GPT-4 Turbo, GPT-4 Vision
+            <div className="prose prose-invert max-w-none">
+              <ReactMarkdown>{openAiMarkdown}</ReactMarkdown>
             </div>
           </div>
         </CardContent>
@@ -85,7 +129,7 @@ const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-2">
+          <div className="space-y-4">
             <div className="relative">
               <Input
                 id="openrouter"
@@ -107,8 +151,8 @@ const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
                 )}
               </button>
             </div>
-            <div className="text-xs text-gray-400 mt-2">
-              Modelos suportados: Claude 3, Claude 2, Llama 2, PaLM
+            <div className="prose prose-invert max-w-none">
+              <ReactMarkdown>{openRouterMarkdown}</ReactMarkdown>
             </div>
           </div>
         </CardContent>
