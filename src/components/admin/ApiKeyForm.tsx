@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ReactMarkdown from 'react-markdown';
 
 interface ApiKeyFormProps {
@@ -41,30 +42,47 @@ const openAiMarkdown = `
 const openRouterMarkdown = `
 ### Modelos Disponíveis:
 
-#### Claude 3 Opus
-- Modelo mais avançado da Anthropic
-- Excelente em análises detalhadas
-- Respostas mais longas e elaboradas
+#### Meta Llama 3.2 11B Vision Instruct
+- Modelo mais recente da Meta
+- Suporte a análise de imagens
+- Excelente para instruções visuais
 
-#### Claude 2
-- Alta qualidade e confiabilidade
-- Bom para tarefas analíticas
-- Respostas bem estruturadas
-
-#### Llama 2
-- Modelo open source da Meta
-- Bom equilíbrio entre performance e custo
-- Ideal para tarefas gerais
-
-#### PaLM
+#### Google Gemini 2.9B
 - Modelo do Google
-- Bom para processamento de linguagem natural
-- Respostas concisas e objetivas
+- Rápido e eficiente
+- Bom para tarefas gerais
+
+#### Google Gemini Flash 1.5
+- Versão otimizada do Gemini
+- Resposta ultra-rápida
+- Ideal para interações em tempo real
+
+#### Meta Llama 3.1 70B Instruct
+- Grande modelo de linguagem da Meta
+- Excelente compreensão contextual
+- Ótimo para tarefas complexas
+
+#### Meta Llama 3.1 8B Instruct
+- Versão compacta do Llama
+- Boa relação performance/tamanho
+- Ideal para dispositivos com recursos limitados
+
+#### Meta Llama 3.1 405B Instruct
+- Maior modelo da série Llama
+- Capacidade excepcional de raciocínio
+- Melhor qualidade de resposta
+
+#### Nous Hermes 3 405B Instruct
+- Modelo especializado em instruções
+- Alta precisão nas respostas
+- Excelente para tarefas específicas
 `;
 
 const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
   const [showOpenAI, setShowOpenAI] = useState(false);
   const [showOpenRouter, setShowOpenRouter] = useState(false);
+  const [selectedOpenAIModel, setSelectedOpenAIModel] = useState("gpt-4-turbo");
+  const [selectedOpenRouterModel, setSelectedOpenRouterModel] = useState("meta-llama-3.2-11b");
   const { toast } = useToast();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -114,9 +132,16 @@ const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
                 )}
               </button>
             </div>
-            <div className="prose prose-invert max-w-none">
-              <ReactMarkdown>{openAiMarkdown}</ReactMarkdown>
-            </div>
+            <Tabs defaultValue="models" className="w-full">
+              <TabsList className="w-full bg-chatgpt-main border-chatgpt-border">
+                <TabsTrigger value="models" className="w-full text-white">Modelos Disponíveis</TabsTrigger>
+              </TabsList>
+              <TabsContent value="models" className="mt-4">
+                <div className="prose prose-invert max-w-none">
+                  <ReactMarkdown>{openAiMarkdown}</ReactMarkdown>
+                </div>
+              </TabsContent>
+            </Tabs>
           </div>
         </CardContent>
       </Card>
@@ -125,7 +150,7 @@ const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
         <CardHeader>
           <CardTitle className="text-white text-lg">OpenRouter API Key</CardTitle>
           <CardDescription className="text-gray-400">
-            Opcional - Acesso ao Claude 3, Claude 2, Llama 2 e PaLM
+            Opcional - Acesso aos modelos Llama, Gemini e outros
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -151,9 +176,16 @@ const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
                 )}
               </button>
             </div>
-            <div className="prose prose-invert max-w-none">
-              <ReactMarkdown>{openRouterMarkdown}</ReactMarkdown>
-            </div>
+            <Tabs defaultValue="models" className="w-full">
+              <TabsList className="w-full bg-chatgpt-main border-chatgpt-border">
+                <TabsTrigger value="models" className="w-full text-white">Modelos Disponíveis</TabsTrigger>
+              </TabsList>
+              <TabsContent value="models" className="mt-4">
+                <div className="prose prose-invert max-w-none">
+                  <ReactMarkdown>{openRouterMarkdown}</ReactMarkdown>
+                </div>
+              </TabsContent>
+            </Tabs>
           </div>
         </CardContent>
       </Card>
