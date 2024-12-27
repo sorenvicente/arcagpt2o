@@ -49,7 +49,7 @@ serve(async (req) => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            model: 'gpt-4-turbo-preview',
+            model: 'gpt-4-1106-preview',  // Updated to use the correct model name
             messages: messages,
             max_tokens: 1024,
           }),
@@ -92,7 +92,7 @@ serve(async (req) => {
           'HTTP-Referer': 'http://localhost:5173',
         },
         body: JSON.stringify({
-          model: 'meta-llama/llama-2-70b-chat',
+          model: 'anthropic/claude-2',  // Updated to use a valid OpenRouter model
           messages: messages,
         }),
       });
