@@ -49,7 +49,7 @@ serve(async (req) => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            model: 'gpt-4-1106-preview',  // Updated to use the correct model name
+            model: 'gpt-4-1106-preview',
             messages: messages,
             max_tokens: 1024,
           }),
@@ -60,6 +60,7 @@ serve(async (req) => {
           console.error('OpenAI API error:', error);
           // If OpenAI fails and we have OpenRouter key, we'll try that next
           if (apiKeys.openrouter_key) {
+            console.log('OpenAI failed, falling back to OpenRouter');
             throw new Error('OpenAI failed, trying OpenRouter');
           }
           throw new Error(error.error?.message || 'Error calling OpenAI API');
@@ -92,7 +93,7 @@ serve(async (req) => {
           'HTTP-Referer': 'http://localhost:5173',
         },
         body: JSON.stringify({
-          model: 'anthropic/claude-2',  // Updated to use a valid OpenRouter model
+          model: 'meta-llama/llama-2-70b-chat',  // Using a model that requires less credits
           messages: messages,
         }),
       });
@@ -100,6 +101,12 @@ serve(async (req) => {
       if (!response.ok) {
         const error = await response.json();
         console.error('OpenRouter API error:', error);
+        
+        // Check if it's a credits error
+        if (error.error?.includes('Insufficient credits')) {
+          throw new Error('OpenRouter: Insufficient credits. Please add more credits at https://openrouter.ai/credits');
+        }
+        
         throw new Error(error.error?.message || 'Error calling OpenRouter API');
       }
 
