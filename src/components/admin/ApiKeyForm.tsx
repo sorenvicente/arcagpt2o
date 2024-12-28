@@ -1,9 +1,15 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, List } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import ModelSelector from "./ModelSelector";
 
 interface ApiKeyFormProps {
@@ -40,8 +46,6 @@ const openRouterModels = [
 const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
   const [showOpenAI, setShowOpenAI] = useState(false);
   const [showOpenRouter, setShowOpenRouter] = useState(false);
-  const [selectedOpenAIModel, setSelectedOpenAIModel] = useState("gpt-4-turbo");
-  const [selectedOpenRouterModel, setSelectedOpenRouterModel] = useState("meta-llama/llama-2-70b-chat");
   const { toast } = useToast();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -86,6 +90,23 @@ const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
                 {showOpenAI ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
               </button>
             </div>
+            <Accordion type="single" collapsible className="w-full">
+              <AccordionItem value="openai-models" className="border-chatgpt-border">
+                <AccordionTrigger className="text-white hover:text-white hover:no-underline">
+                  <div className="flex items-center gap-2">
+                    <List className="h-5 w-5" />
+                    Modelos Disponíveis
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent className="text-gray-400">
+                  <ul className="list-disc pl-6 space-y-2">
+                    {openAiModels.map((model) => (
+                      <li key={model.value}>{model.label}</li>
+                    ))}
+                  </ul>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           </div>
         </CardContent>
       </Card>
@@ -115,6 +136,23 @@ const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
                 {showOpenRouter ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
               </button>
             </div>
+            <Accordion type="single" collapsible className="w-full">
+              <AccordionItem value="openrouter-models" className="border-chatgpt-border">
+                <AccordionTrigger className="text-white hover:text-white hover:no-underline">
+                  <div className="flex items-center gap-2">
+                    <List className="h-5 w-5" />
+                    Modelos Gratuitos Disponíveis
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent className="text-gray-400">
+                  <ul className="list-disc pl-6 space-y-2">
+                    {openRouterModels.map((model) => (
+                      <li key={model.value}>{model.label}</li>
+                    ))}
+                  </ul>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
             <div className="text-sm text-gray-400 mt-2">
               <p>Observação: OpenRouter oferece créditos gratuitos para testar vários modelos de IA.</p>
               <p>Você pode obter sua chave API gratuita em <a href="https://openrouter.ai/keys" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">openrouter.ai/keys</a></p>
