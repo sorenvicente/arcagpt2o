@@ -26,9 +26,12 @@ const openAiModels = [
 
 const openRouterModels = [
   { value: "meta-llama/llama-2-70b-chat", label: "Meta Llama 2 70B (Free)" },
+  { value: "meta-llama/llama-2-13b-chat", label: "Meta Llama 2 13B (Free)" },
+  { value: "meta-llama/llama-2-7b-chat", label: "Meta Llama 2 7B (Free)" },
   { value: "google/gemini-pro", label: "Google Gemini Pro (Free)" },
   { value: "anthropic/claude-2", label: "Anthropic Claude 2 (Free)" },
   { value: "mistral/mistral-7b", label: "Mistral 7B (Free)" },
+  { value: "mistral/mixtral-8x7b", label: "Mixtral 8x7B (Free)" },
 ];
 
 const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
@@ -80,12 +83,6 @@ const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
                 {showOpenAI ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
               </button>
             </div>
-            <ModelSelector
-              value={selectedOpenAIModel}
-              onChange={setSelectedOpenAIModel}
-              models={openAiModels}
-              label="Selecione o Modelo OpenAI"
-            />
           </div>
         </CardContent>
       </Card>
@@ -94,7 +91,7 @@ const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
         <CardHeader>
           <CardTitle className="text-white text-lg">OpenRouter API Key</CardTitle>
           <CardDescription className="text-gray-400">
-            Opcional - Acesso gratuito aos modelos Llama 2, Gemini Pro, Claude 2 e outros
+            Opcional - Acesso gratuito aos modelos Llama 2 (70B, 13B, 7B), Gemini Pro, Claude 2, Mistral e outros
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -115,12 +112,6 @@ const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
                 {showOpenRouter ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
               </button>
             </div>
-            <ModelSelector
-              value={selectedOpenRouterModel}
-              onChange={setSelectedOpenRouterModel}
-              models={openRouterModels}
-              label="Selecione o Modelo OpenRouter (Gratuitos)"
-            />
             <div className="text-sm text-gray-400 mt-2">
               <p>Observação: OpenRouter oferece créditos gratuitos para testar vários modelos de IA.</p>
               <p>Você pode obter sua chave API gratuita em <a href="https://openrouter.ai/keys" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">openrouter.ai/keys</a></p>
