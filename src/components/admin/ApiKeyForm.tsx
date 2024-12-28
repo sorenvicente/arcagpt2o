@@ -28,6 +28,9 @@ const openRouterModels = [
   { value: "meta-llama/llama-2-70b-chat", label: "Meta Llama 2 70B (Free)" },
   { value: "meta-llama/llama-2-13b-chat", label: "Meta Llama 2 13B (Free)" },
   { value: "meta-llama/llama-2-7b-chat", label: "Meta Llama 2 7B (Free)" },
+  { value: "meta-llama/codellama-34b-instruct", label: "Code Llama 34B (Free)" },
+  { value: "meta-llama/codellama-70b-instruct", label: "Code Llama 70B (Free)" },
+  { value: "meta-llama/llama-2-13b-code-instruct", label: "Llama 2 13B Code (Free)" },
   { value: "google/gemini-pro", label: "Google Gemini Pro (Free)" },
   { value: "anthropic/claude-2", label: "Anthropic Claude 2 (Free)" },
   { value: "mistral/mistral-7b", label: "Mistral 7B (Free)" },
@@ -91,7 +94,7 @@ const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
         <CardHeader>
           <CardTitle className="text-white text-lg">OpenRouter API Key</CardTitle>
           <CardDescription className="text-gray-400">
-            Opcional - Acesso gratuito aos modelos Llama 2 (70B, 13B, 7B), Gemini Pro, Claude 2, Mistral e outros
+            Opcional - Acesso gratuito aos modelos Llama 2 (70B, 13B, 7B), Code Llama (70B, 34B, 13B), Gemini Pro, Claude 2, Mistral e outros
           </CardDescription>
         </CardHeader>
         <CardContent>
