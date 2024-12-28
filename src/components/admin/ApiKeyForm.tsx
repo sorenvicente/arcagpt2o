@@ -46,6 +46,8 @@ const openRouterModels = [
 const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
   const [showOpenAI, setShowOpenAI] = useState(false);
   const [showOpenRouter, setShowOpenRouter] = useState(false);
+  const [selectedOpenAIModel, setSelectedOpenAIModel] = useState("gpt-4-turbo");
+  const [selectedOpenRouterModel, setSelectedOpenRouterModel] = useState("meta-llama/llama-2-70b-chat");
   const { toast } = useToast();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -90,6 +92,14 @@ const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
                 {showOpenAI ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
               </button>
             </div>
+            {keys.openai_key && (
+              <ModelSelector
+                value={selectedOpenAIModel}
+                onChange={setSelectedOpenAIModel}
+                models={openAiModels}
+                label="Selecione o Modelo OpenAI"
+              />
+            )}
             <Accordion type="single" collapsible className="w-full">
               <AccordionItem value="openai-models" className="border-chatgpt-border">
                 <AccordionTrigger className="text-white hover:text-white hover:no-underline">
@@ -136,6 +146,14 @@ const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
                 {showOpenRouter ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
               </button>
             </div>
+            {keys.openrouter_key && (
+              <ModelSelector
+                value={selectedOpenRouterModel}
+                onChange={setSelectedOpenRouterModel}
+                models={openRouterModels}
+                label="Selecione o Modelo OpenRouter"
+              />
+            )}
             <Accordion type="single" collapsible className="w-full">
               <AccordionItem value="openrouter-models" className="border-chatgpt-border">
                 <AccordionTrigger className="text-white hover:text-white hover:no-underline">
