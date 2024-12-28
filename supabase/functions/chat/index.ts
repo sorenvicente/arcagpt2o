@@ -13,13 +13,11 @@ serve(async (req) => {
   }
 
   try {
-    // Create Supabase client
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
 
-    // Fetch API keys from the database
     const { data: apiKeys, error: apiKeysError } = await supabaseClient
       .from('api_keys')
       .select('*')
@@ -38,7 +36,7 @@ serve(async (req) => {
     const { messages } = await req.json();
     console.log('Processing chat request with messages:', messages);
 
-    // Try OpenAI first if the key exists
+    // Try OpenAI first if key exists
     if (apiKeys.openai_key) {
       try {
         console.log('Attempting to use OpenAI API');
@@ -58,7 +56,7 @@ serve(async (req) => {
         if (!response.ok) {
           const error = await response.json();
           console.error('OpenAI API error:', error);
-          // If OpenAI fails and we have OpenRouter key, we'll try that next
+          // If OpenAI fails and we have OpenRouter key, try that next
           if (apiKeys.openrouter_key) {
             console.log('OpenAI failed, falling back to OpenRouter');
             throw new Error('OpenAI failed, trying OpenRouter');
@@ -93,7 +91,7 @@ serve(async (req) => {
           'HTTP-Referer': 'http://localhost:5173',
         },
         body: JSON.stringify({
-          model: 'meta-llama/llama-2-70b-chat',  // Using a model that requires less credits
+          model: 'meta-llama/llama-2-70b-chat',
           messages: messages,
         }),
       });

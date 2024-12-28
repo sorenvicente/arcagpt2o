@@ -5,7 +5,6 @@ import { Eye, EyeOff } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import ModelSelector from "./ModelSelector";
-import ModelInfo from "./ModelInfo";
 
 interface ApiKeyFormProps {
   keys: {
@@ -26,42 +25,17 @@ const openAiModels = [
 ];
 
 const openRouterModels = [
-  { value: "meta-llama-3.2-11b", label: "Meta Llama 3.2 11B Vision" },
-  { value: "google-gemini-2.9b", label: "Google Gemini 2.9B" },
-  { value: "google-gemini-flash-1.5", label: "Google Gemini Flash 1.5" },
-  { value: "meta-llama-3.1-70b", label: "Meta Llama 3.1 70B" },
-  { value: "meta-llama-3.1-8b", label: "Meta Llama 3.1 8B" },
-  { value: "meta-llama-3.1-405b", label: "Meta Llama 3.1 405B" },
-  { value: "nous-hermes-3-405b", label: "Nous Hermes 3 405B" },
+  { value: "meta-llama/llama-2-70b-chat", label: "Meta Llama 2 70B (Free)" },
+  { value: "google/gemini-pro", label: "Google Gemini Pro (Free)" },
+  { value: "anthropic/claude-2", label: "Anthropic Claude 2 (Free)" },
+  { value: "mistral/mistral-7b", label: "Mistral 7B (Free)" },
 ];
-
-const openAiMarkdown = `
-### Informações do Modelo Selecionado:
-
-O modelo selecionado oferece as seguintes características:
-
-- Processamento avançado de linguagem natural
-- Compreensão contextual aprimorada
-- Respostas precisas e relevantes
-- Suporte a diferentes tipos de tarefas
-`;
-
-const openRouterMarkdown = `
-### Informações do Modelo Selecionado:
-
-O modelo selecionado oferece as seguintes características:
-
-- Alta performance em processamento de linguagem
-- Capacidade de análise contextual
-- Suporte a diferentes tipos de entrada
-- Otimizado para diferentes casos de uso
-`;
 
 const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
   const [showOpenAI, setShowOpenAI] = useState(false);
   const [showOpenRouter, setShowOpenRouter] = useState(false);
   const [selectedOpenAIModel, setSelectedOpenAIModel] = useState("gpt-4-turbo");
-  const [selectedOpenRouterModel, setSelectedOpenRouterModel] = useState("meta-llama-3.2-11b");
+  const [selectedOpenRouterModel, setSelectedOpenRouterModel] = useState("meta-llama/llama-2-70b-chat");
   const { toast } = useToast();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -112,7 +86,6 @@ const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
               models={openAiModels}
               label="Selecione o Modelo OpenAI"
             />
-            <ModelInfo markdown={openAiMarkdown} />
           </div>
         </CardContent>
       </Card>
@@ -121,7 +94,7 @@ const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
         <CardHeader>
           <CardTitle className="text-white text-lg">OpenRouter API Key</CardTitle>
           <CardDescription className="text-gray-400">
-            Opcional - Acesso aos modelos Llama, Gemini e outros
+            Opcional - Acesso gratuito aos modelos Llama 2, Gemini Pro, Claude 2 e outros
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -146,9 +119,12 @@ const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
               value={selectedOpenRouterModel}
               onChange={setSelectedOpenRouterModel}
               models={openRouterModels}
-              label="Selecione o Modelo OpenRouter"
+              label="Selecione o Modelo OpenRouter (Gratuitos)"
             />
-            <ModelInfo markdown={openRouterMarkdown} />
+            <div className="text-sm text-gray-400 mt-2">
+              <p>Observação: OpenRouter oferece créditos gratuitos para testar vários modelos de IA.</p>
+              <p>Você pode obter sua chave API gratuita em <a href="https://openrouter.ai/keys" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">openrouter.ai/keys</a></p>
+            </div>
           </div>
         </CardContent>
       </Card>
