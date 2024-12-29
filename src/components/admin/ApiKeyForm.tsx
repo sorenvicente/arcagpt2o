@@ -1,16 +1,7 @@
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { Eye, EyeOff, List } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import ModelSelector from "./ModelSelector";
+import ApiKeySection from "./ApiKeySection";
 
 interface ApiKeyFormProps {
   keys: {
@@ -44,8 +35,6 @@ const openRouterModels = [
 ];
 
 const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
-  const [showOpenAI, setShowOpenAI] = useState(false);
-  const [showOpenRouter, setShowOpenRouter] = useState(false);
   const [selectedOpenAIModel, setSelectedOpenAIModel] = useState("gpt-4-turbo");
   const [selectedOpenRouterModel, setSelectedOpenRouterModel] = useState("meta-llama/llama-2-70b-chat");
   const { toast } = useToast();
@@ -65,119 +54,39 @@ const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
     onSubmit(e);
   };
 
+  const openRouterExtraContent = (
+    <div className="text-sm text-gray-400 mt-2">
+      <p>Observação: OpenRouter oferece créditos gratuitos para testar vários modelos de IA.</p>
+      <p>Você pode obter sua chave API gratuita em <a href="https://openrouter.ai/keys" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">openrouter.ai/keys</a></p>
+    </div>
+  );
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <Card className="bg-chatgpt-secondary border-chatgpt-border">
-        <CardHeader>
-          <CardTitle className="text-white text-lg">OpenAI API Key</CardTitle>
-          <CardDescription className="text-gray-400">
-            Opcional - Acesso ao GPT-4, GPT-4 Turbo e GPT-4 Vision
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="relative">
-              <Input
-                type={showOpenAI ? "text" : "password"}
-                value={keys.openai_key}
-                onChange={(e) => setKeys({ ...keys, openai_key: e.target.value })}
-                placeholder="sk-..."
-                className="w-full bg-chatgpt-main border-chatgpt-border text-white pr-10"
-              />
-              <button
-                type="button"
-                onClick={() => setShowOpenAI(!showOpenAI)}
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
-              >
-                {showOpenAI ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-              </button>
-            </div>
-            {keys.openai_key && (
-              <ModelSelector
-                value={selectedOpenAIModel}
-                onChange={setSelectedOpenAIModel}
-                models={openAiModels}
-                label="Selecione o Modelo OpenAI"
-              />
-            )}
-            <Accordion type="single" collapsible className="w-full">
-              <AccordionItem value="openai-models" className="border-chatgpt-border">
-                <AccordionTrigger className="text-white hover:text-white hover:no-underline">
-                  <div className="flex items-center gap-2">
-                    <List className="h-5 w-5" />
-                    Modelos Disponíveis
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent className="text-gray-400">
-                  <ul className="list-disc pl-6 space-y-2">
-                    {openAiModels.map((model) => (
-                      <li key={model.value}>{model.label}</li>
-                    ))}
-                  </ul>
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          </div>
-        </CardContent>
-      </Card>
+      <ApiKeySection
+        title="OpenAI API Key"
+        description="Opcional - Acesso ao GPT-4, GPT-4 Turbo e GPT-4 Vision"
+        apiKey={keys.openai_key}
+        onApiKeyChange={(value) => setKeys({ ...keys, openai_key: value })}
+        selectedModel={selectedOpenAIModel}
+        onModelChange={setSelectedOpenAIModel}
+        models={openAiModels}
+        modelSelectorLabel="Selecione o Modelo OpenAI"
+        modelListTitle="Modelos Disponíveis"
+      />
 
-      <Card className="bg-chatgpt-secondary border-chatgpt-border">
-        <CardHeader>
-          <CardTitle className="text-white text-lg">OpenRouter API Key</CardTitle>
-          <CardDescription className="text-gray-400">
-            Opcional - Acesso gratuito aos modelos Llama 2 (70B, 13B, 7B), Code Llama (70B, 34B, 13B), Gemini Pro, Claude 2, Mistral e outros
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="relative">
-              <Input
-                type={showOpenRouter ? "text" : "password"}
-                value={keys.openrouter_key}
-                onChange={(e) => setKeys({ ...keys, openrouter_key: e.target.value })}
-                placeholder="sk-..."
-                className="w-full bg-chatgpt-main border-chatgpt-border text-white pr-10"
-              />
-              <button
-                type="button"
-                onClick={() => setShowOpenRouter(!showOpenRouter)}
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
-              >
-                {showOpenRouter ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-              </button>
-            </div>
-            {keys.openrouter_key && (
-              <ModelSelector
-                value={selectedOpenRouterModel}
-                onChange={setSelectedOpenRouterModel}
-                models={openRouterModels}
-                label="Selecione o Modelo OpenRouter"
-              />
-            )}
-            <Accordion type="single" collapsible className="w-full">
-              <AccordionItem value="openrouter-models" className="border-chatgpt-border">
-                <AccordionTrigger className="text-white hover:text-white hover:no-underline">
-                  <div className="flex items-center gap-2">
-                    <List className="h-5 w-5" />
-                    Modelos Gratuitos Disponíveis
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent className="text-gray-400">
-                  <ul className="list-disc pl-6 space-y-2">
-                    {openRouterModels.map((model) => (
-                      <li key={model.value}>{model.label}</li>
-                    ))}
-                  </ul>
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-            <div className="text-sm text-gray-400 mt-2">
-              <p>Observação: OpenRouter oferece créditos gratuitos para testar vários modelos de IA.</p>
-              <p>Você pode obter sua chave API gratuita em <a href="https://openrouter.ai/keys" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">openrouter.ai/keys</a></p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      <ApiKeySection
+        title="OpenRouter API Key"
+        description="Opcional - Acesso gratuito aos modelos Llama 2 (70B, 13B, 7B), Code Llama (70B, 34B, 13B), Gemini Pro, Claude 2, Mistral e outros"
+        apiKey={keys.openrouter_key}
+        onApiKeyChange={(value) => setKeys({ ...keys, openrouter_key: value })}
+        selectedModel={selectedOpenRouterModel}
+        onModelChange={setSelectedOpenRouterModel}
+        models={openRouterModels}
+        modelSelectorLabel="Selecione o Modelo OpenRouter"
+        modelListTitle="Modelos Gratuitos Disponíveis"
+        extraContent={openRouterExtraContent}
+      />
 
       <Button 
         type="submit" 
