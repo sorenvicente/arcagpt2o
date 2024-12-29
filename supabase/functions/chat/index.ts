@@ -39,15 +39,13 @@ serve(async (req) => {
     // Try OpenRouter first if key exists
     if (apiKeys.openrouter_key) {
       try {
-        console.log('Attempting to use OpenRouter API with Llama 3.1 405B');
+        console.log('Attempting OpenRouter API call...');
         
         const openRouterBody = {
           model: 'meta-llama/llama-3.1-405b-instruct:free',
           messages: messages,
           max_tokens: 1000,
         };
-        
-        console.log('OpenRouter request body:', JSON.stringify(openRouterBody));
 
         const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
           method: 'POST',
@@ -62,67 +60,73 @@ serve(async (req) => {
 
         if (!response.ok) {
           const errorText = await response.text();
-          console.error('OpenRouter API error status:', response.status);
-          console.error('OpenRouter API error response:', errorText);
-          throw new Error(`OpenRouter API error: ${errorText}`);
+          console.error('OpenRouter API error:', {
+            status: response.status,
+            response: errorText
+          });
+          throw new Error(errorText);
         }
 
         const data = await response.json();
-        console.log('Successfully received response from OpenRouter:', data);
+        console.log('OpenRouter API success:', data);
 
         return new Response(
           JSON.stringify({ content: data.choices[0].message.content }),
           { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       } catch (error) {
-        console.error('OpenRouter error:', error);
-        // Only throw if we don't have OpenAI as backup
+        console.error('OpenRouter API failed:', error);
         if (!apiKeys.openai_key) {
           throw new Error(`OpenRouter error: ${error.message}`);
         }
-        console.log('OpenRouter failed, falling back to OpenAI');
+        console.log('Falling back to OpenAI...');
       }
     }
 
-    // Only try OpenAI if we have a key and OpenRouter failed or isn't configured
+    // Only try OpenAI as fallback
     if (apiKeys.openai_key) {
-      console.log('Attempting to use OpenAI API');
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${apiKeys.openai_key}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'gpt-4-1106-preview',
-          messages: messages,
-          max_tokens: 1024,
-        }),
-      });
+      try {
+        console.log('Attempting OpenAI API call...');
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${apiKeys.openai_key}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            model: 'gpt-4-1106-preview',
+            messages: messages,
+            max_tokens: 1024,
+          }),
+        });
 
-      if (!response.ok) {
-        const error = await response.json();
-        console.error('OpenAI API error:', error);
-        throw new Error(error.error?.message || 'Error calling OpenAI API');
+        if (!response.ok) {
+          const error = await response.json();
+          console.error('OpenAI API error:', error);
+          throw new Error(error.error?.message || 'Error calling OpenAI API');
+        }
+
+        const data = await response.json();
+        console.log('OpenAI API success');
+
+        return new Response(
+          JSON.stringify({ content: data.choices[0].message.content }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      } catch (error) {
+        console.error('OpenAI API failed:', error);
+        throw error;
       }
-
-      const data = await response.json();
-      console.log('Successfully received response from OpenAI');
-
-      return new Response(
-        JSON.stringify({ content: data.choices[0].message.content }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
     }
 
     throw new Error('No working API service available');
 
   } catch (error) {
-    console.error('Error in chat function:', error);
+    console.error('Chat function error:', error);
     return new Response(
       JSON.stringify({ 
         error: error.message,
-        details: 'If using OpenAI, please check your API key quota. If using OpenRouter, verify your API key is valid.'
+        details: 'Please verify your API keys and quotas in the API Keys page.'
       }),
       { 
         status: 500, 
