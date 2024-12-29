@@ -1,6 +1,5 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -36,10 +35,10 @@ serve(async (req) => {
     const { messages } = await req.json();
     console.log('Processing chat request with messages:', messages);
 
-    // Try OpenRouter first if key exists (changed order to test OpenRouter)
+    // Try OpenRouter first if key exists
     if (apiKeys.openrouter_key) {
       try {
-        console.log('Attempting to use OpenRouter API');
+        console.log('Attempting to use OpenRouter API with Llama 3.1 405B');
         const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
           method: 'POST',
           headers: {
@@ -49,7 +48,7 @@ serve(async (req) => {
             'X-Title': 'Lovable Chat App',
           },
           body: JSON.stringify({
-            model: 'meta-llama/llama-2-70b-chat', // Using Llama 2 70B as default
+            model: 'meta-llama/llama-3.1-405b-instruct:free',
             messages: messages,
             max_tokens: 1000,
           }),

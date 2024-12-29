@@ -22,6 +22,7 @@ const openAiModels = [
 ];
 
 const openRouterModels = [
+  { value: "meta-llama/llama-3.1-405b-instruct:free", label: "Meta Llama 3.1 405B (Free)" },
   { value: "meta-llama/llama-2-70b-chat", label: "Meta Llama 2 70B (Free)" },
   { value: "meta-llama/llama-2-13b-chat", label: "Meta Llama 2 13B (Free)" },
   { value: "meta-llama/llama-2-7b-chat", label: "Meta Llama 2 7B (Free)" },
@@ -36,7 +37,7 @@ const openRouterModels = [
 
 const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
   const [selectedOpenAIModel, setSelectedOpenAIModel] = useState("gpt-4-turbo");
-  const [selectedOpenRouterModel, setSelectedOpenRouterModel] = useState("meta-llama/llama-2-70b-chat");
+  const [selectedOpenRouterModel, setSelectedOpenRouterModel] = useState("meta-llama/llama-3.1-405b-instruct:free");
   const { toast } = useToast();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -77,7 +78,7 @@ const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
 
       <ApiKeySection
         title="OpenRouter API Key"
-        description="Opcional - Acesso gratuito aos modelos Llama 2 (70B, 13B, 7B), Code Llama (70B, 34B, 13B), Gemini Pro, Claude 2, Mistral e outros"
+        description="Opcional - Acesso gratuito aos modelos Llama 3.1 405B, Llama 2 (70B, 13B, 7B), Code Llama (70B, 34B, 13B), Gemini Pro, Claude 2, Mistral e outros"
         apiKey={keys.openrouter_key}
         onApiKeyChange={(value) => setKeys({ ...keys, openrouter_key: value })}
         selectedModel={selectedOpenRouterModel}
