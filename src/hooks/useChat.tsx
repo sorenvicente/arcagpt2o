@@ -8,6 +8,7 @@ export const useChat = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [chatId, setChatId] = useState<string | null>(null);
+  const [activeAssistant, setActiveAssistant] = useState<string | null>(null);
   const { toast } = useToast();
 
   const saveChat = useCallback(async () => {
@@ -53,7 +54,6 @@ export const useChat = () => {
     }
   }, [messages, chatId, toast]);
 
-  // Auto-save when messages change
   useEffect(() => {
     if (messages.length > 0) {
       saveChat();
@@ -90,42 +90,57 @@ export const useChat = () => {
   };
 
   const handleNewChat = async () => {
-    // Save current chat before starting a new one
     if (messages.length > 0) {
       await saveChat();
     }
-    // Clear current chat state
     setMessages([]);
     setChatId(null);
+    setActiveAssistant(null);
   };
 
-  const sendMessage = async (content: string) => {
+  const sendMessage = async (content: string, category?: string) => {
     try {
       setIsLoading(true);
       
-      const userMessage: Message = {
-        role: 'user',
-        content
-      };
-      
-      setMessages(prev => [...prev, userMessage]);
+      let updatedMessages = [...messages];
 
-      const { data, error } = await supabase.functions.invoke('chat', {
-        body: { 
-          messages: [...messages, userMessage]
-        }
-      });
-
-      if (error) {
-        throw error;
+      // If this is a system message (from action buttons)
+      if (category) {
+        setActiveAssistant(category);
+        updatedMessages = [{ role: 'system', content }];
+        toast({
+          title: "Assistente Ativado",
+          description: `Você pode começar a conversar com o assistente de ${category}`,
+        });
+      } else {
+        // Regular user message
+        const userMessage: Message = {
+          role: 'user',
+          content
+        };
+        updatedMessages.push(userMessage);
       }
+      
+      setMessages(updatedMessages);
 
-      const botMessage: Message = {
-        role: 'assistant',
-        content: data.content,
-      };
+      if (!category) { // Only make API call for user messages, not system messages
+        const { data, error } = await supabase.functions.invoke('chat', {
+          body: { 
+            messages: updatedMessages
+          }
+        });
 
-      setMessages(prev => [...prev, botMessage]);
+        if (error) {
+          throw error;
+        }
+
+        const botMessage: Message = {
+          role: 'assistant',
+          content: data.content,
+        };
+
+        setMessages(prev => [...prev, botMessage]);
+      }
 
     } catch (error) {
       console.error('Error sending message:', error);
@@ -145,6 +160,7 @@ export const useChat = () => {
     sendMessage,
     handleNewChat,
     loadChat,
-    chatId
+    chatId,
+    activeAssistant
   };
 };

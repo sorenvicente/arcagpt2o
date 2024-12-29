@@ -39,11 +39,13 @@ const ActionButtons = ({ onSelectPrompt, activeCategory }: ActionButtonsProps) =
     );
     
     if (selectedPrompt) {
-      onSelectPrompt(selectedPrompt.prompt, category);
+      // Instead of sending the prompt directly, we'll send a system message
+      const systemMessage = `Você está agora atuando como um assistente especializado em ${category}. Seu objetivo é: ${selectedPrompt.prompt}`;
+      onSelectPrompt(systemMessage, category);
       console.log('Prompt selecionado:', selectedPrompt.prompt, 'Categoria:', category);
       toast({
-        title: "Agente Ativado",
-        description: `${category} foi selecionado como agente ativo`,
+        title: "Assistente Ativado",
+        description: `Assistente de ${category} está pronto para ajudar`,
       });
     } else {
       console.log('Nenhum prompt encontrado para categoria:', category);
