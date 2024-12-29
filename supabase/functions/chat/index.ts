@@ -39,6 +39,16 @@ serve(async (req) => {
     if (apiKeys.openrouter_key) {
       try {
         console.log('Attempting to use OpenRouter API with Llama 3.1 405B');
+        console.log('OpenRouter Key exists:', !!apiKeys.openrouter_key);
+        
+        const openRouterBody = {
+          model: 'meta-llama/llama-3.1-405b-instruct:free',
+          messages: messages,
+          max_tokens: 1000,
+        };
+        
+        console.log('Request body:', JSON.stringify(openRouterBody));
+
         const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
           method: 'POST',
           headers: {
@@ -47,23 +57,25 @@ serve(async (req) => {
             'HTTP-Referer': Deno.env.get('SUPABASE_URL') || 'http://localhost:5173',
             'X-Title': 'Lovable Chat App',
           },
-          body: JSON.stringify({
-            model: 'meta-llama/llama-3.1-405b-instruct:free',
-            messages: messages,
-            max_tokens: 1000,
-          }),
+          body: JSON.stringify(openRouterBody),
         });
 
         const responseText = await response.text();
         console.log('OpenRouter raw response:', responseText);
 
         if (!response.ok) {
-          console.error('OpenRouter API error:', responseText);
+          console.error('OpenRouter API error status:', response.status);
+          console.error('OpenRouter API error response:', responseText);
           throw new Error(`OpenRouter API error: ${responseText}`);
         }
 
         const data = JSON.parse(responseText);
         console.log('Successfully received response from OpenRouter:', data);
+
+        if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+          console.error('Unexpected OpenRouter response format:', data);
+          throw new Error('Invalid response format from OpenRouter');
+        }
 
         return new Response(
           JSON.stringify({ content: data.choices[0].message.content }),
