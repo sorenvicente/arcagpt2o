@@ -1,6 +1,6 @@
 import { Menu, Plus } from 'lucide-react';
 import { cn } from "@/lib/utils";
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from "@/hooks/use-toast";
 import { ChatListItem } from './ChatListItem';
@@ -14,14 +14,39 @@ interface SidebarProps {
   onChatSelect: (chatId: string) => void;
 }
 
+const HOVER_THRESHOLD = 50; // pixels from the left edge to trigger hover
+
 const Sidebar = ({ isOpen, onToggle, onNewChat, onChatSelect }: SidebarProps) => {
   const [savedChats, setSavedChats] = useState<SavedChat[]>([]);
+  const [isHovering, setIsHovering] = useState(false);
+  const hoverTimeoutRef = useRef<NodeJS.Timeout>();
   const { toast } = useToast();
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (e.clientX <= HOVER_THRESHOLD && !isOpen && !isHovering) {
+        clearTimeout(hoverTimeoutRef.current);
+        setIsHovering(true);
+        onToggle();
+      } else if (e.clientX > 256 && isOpen && isHovering) { // 256px is sidebar width
+        clearTimeout(hoverTimeoutRef.current);
+        hoverTimeoutRef.current = setTimeout(() => {
+          setIsHovering(false);
+          onToggle();
+        }, 300); // Small delay before closing
+      }
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      clearTimeout(hoverTimeoutRef.current);
+    };
+  }, [isOpen, isHovering, onToggle]);
 
   useEffect(() => {
     fetchSavedChats();
 
-    // Subscribe to real-time updates
     const channel = supabase
       .channel('saved_chats_changes')
       .on(
@@ -81,10 +106,12 @@ const Sidebar = ({ isOpen, onToggle, onNewChat, onChatSelect }: SidebarProps) =>
   };
 
   return (
-    <div className={cn(
-      "fixed top-0 left-0 z-40 h-screen bg-chatgpt-sidebar transition-all duration-300",
-      isOpen ? "w-64" : "w-0"
-    )}>
+    <div 
+      className={cn(
+        "fixed top-0 left-0 z-40 h-screen bg-chatgpt-sidebar transition-all duration-300",
+        isOpen ? "w-64" : "w-0"
+      )}
+    >
       <nav className="flex h-full w-full flex-col px-3" aria-label="Chat history">
         <div className="flex justify-between h-[60px] items-center">
           <button 
