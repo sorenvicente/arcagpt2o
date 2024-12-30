@@ -41,7 +41,12 @@ export const useChatMessages = (
         });
 
         if (error) {
-          throw error;
+          console.error('Error from chat function:', error);
+          throw new Error(error.message || 'Failed to send message');
+        }
+
+        if (!data?.content) {
+          throw new Error('No response content received');
         }
 
         const botMessage: Message = {
@@ -49,14 +54,14 @@ export const useChatMessages = (
           content: data.content,
         };
 
-        setMessages(prev => [...prev, botMessage]);
+        setMessages([...updatedMessages, botMessage]);
       }
 
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error sending message:', error);
       toast({
         title: "Erro",
-        description: "Não foi possível enviar a mensagem.",
+        description: error.message || "Não foi possível enviar a mensagem. Por favor, verifique suas chaves API.",
         variant: "destructive"
       });
     } finally {

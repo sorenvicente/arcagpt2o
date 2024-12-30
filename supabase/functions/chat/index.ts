@@ -64,11 +64,11 @@ serve(async (req) => {
             status: response.status,
             response: errorText
           });
-          throw new Error(errorText);
+          throw new Error(`OpenRouter error: ${errorText}`);
         }
 
         const data = await response.json();
-        console.log('OpenRouter API success:', data);
+        console.log('OpenRouter API success');
 
         return new Response(
           JSON.stringify({ content: data.choices[0].message.content }),
@@ -77,13 +77,13 @@ serve(async (req) => {
       } catch (error) {
         console.error('OpenRouter API failed:', error);
         if (!apiKeys.openai_key) {
-          throw new Error(`OpenRouter error: ${error.message}`);
+          throw error;
         }
         console.log('Falling back to OpenAI...');
       }
     }
 
-    // Only try OpenAI as fallback
+    // Try OpenAI as fallback
     if (apiKeys.openai_key) {
       try {
         console.log('Attempting OpenAI API call...');
