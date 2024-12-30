@@ -18,6 +18,7 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
 
+    // Fetch API keys
     const { data: apiKeys, error: apiKeysError } = await supabaseClient
       .from('api_keys')
       .select('*')
@@ -29,12 +30,15 @@ serve(async (req) => {
       throw new Error('Failed to fetch API keys');
     }
 
+    // Validate API keys
     if (!apiKeys.openai_key && !apiKeys.openrouter_key) {
-      throw new Error('No API keys configured. Please configure either OpenAI or OpenRouter API key.');
+      throw new Error('No API keys configured. Please configure either OpenAI or OpenRouter API key in the API Keys page.');
     }
 
     const { messages } = await req.json();
     console.log('Processing chat request with messages:', messages);
+
+    let lastError = null;
 
     // Try OpenRouter first if key exists
     if (apiKeys.openrouter_key) {
@@ -64,7 +68,8 @@ serve(async (req) => {
             status: response.status,
             response: errorText
           });
-          throw new Error(`OpenRouter error: ${errorText}`);
+          lastError = new Error(`OpenRouter error: ${errorText}`);
+          throw lastError;
         }
 
         const data = await response.json();
@@ -76,6 +81,8 @@ serve(async (req) => {
         );
       } catch (error) {
         console.error('OpenRouter API failed:', error);
+        lastError = error;
+        // Only throw if OpenAI key is not available as fallback
         if (!apiKeys.openai_key) {
           throw error;
         }
@@ -104,7 +111,6 @@ serve(async (req) => {
           const error = await response.json();
           console.error('OpenAI API error:', error);
           
-          // Handle quota exceeded error specifically
           if (error.error?.code === 'insufficient_quota') {
             throw new Error('OpenAI quota exceeded. Please check your billing details or try using OpenRouter.');
           }
@@ -121,7 +127,11 @@ serve(async (req) => {
         );
       } catch (error) {
         console.error('OpenAI API failed:', error);
-        throw error;
+        // If we had a previous OpenRouter error, include it in the message
+        const errorMessage = lastError ? 
+          `Both services failed. OpenRouter: ${lastError.message}, OpenAI: ${error.message}` :
+          error.message;
+        throw new Error(errorMessage);
       }
     }
 
