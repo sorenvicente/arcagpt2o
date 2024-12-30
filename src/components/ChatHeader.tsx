@@ -1,5 +1,6 @@
-import { ChevronDown, Brain } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { useState } from "react";
+import HexLogo from "./HexLogo";
 
 interface ChatHeaderProps {
   isSidebarOpen?: boolean;
@@ -40,7 +41,7 @@ const ChatHeader = ({ isSidebarOpen = true, activePrompt, activeCategory }: Chat
           )}
         </div>
         <div className="gizmo-shadow-stroke relative flex h-8 w-8 items-center justify-center rounded-full bg-token-main-surface-primary text-token-text-primary">
-          <Brain className="h-5 w-5" />
+          <HexLogo size="24" className="text-white" />
         </div>
       </div>
     </div>
