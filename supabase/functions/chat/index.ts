@@ -83,7 +83,7 @@ serve(async (req) => {
       }
     }
 
-    // Try OpenAI as fallback
+    // Try OpenAI if OpenRouter failed or wasn't available
     if (apiKeys.openai_key) {
       try {
         console.log('Attempting OpenAI API call...');
@@ -103,6 +103,12 @@ serve(async (req) => {
         if (!response.ok) {
           const error = await response.json();
           console.error('OpenAI API error:', error);
+          
+          // Handle quota exceeded error specifically
+          if (error.error?.code === 'insufficient_quota') {
+            throw new Error('OpenAI quota exceeded. Please check your billing details or try using OpenRouter.');
+          }
+          
           throw new Error(error.error?.message || 'Error calling OpenAI API');
         }
 
