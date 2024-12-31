@@ -10,6 +10,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { FileUpload } from "./FileUpload";
+import { FileList } from "./FileList";
 
 export function PromptCreator() {
   const { toast } = useToast();
@@ -17,6 +19,7 @@ export function PromptCreator() {
   const [description, setDescription] = useState("");
   const [prompt, setPrompt] = useState("");
   const [category, setCategory] = useState("");
+  const [createdPromptId, setCreatedPromptId] = useState<string | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,11 +55,7 @@ export function PromptCreator() {
       description: "Prompt criado com sucesso!",
     });
 
-    // Limpar formulário
-    setName("");
-    setDescription("");
-    setPrompt("");
-    setCategory("");
+    setCreatedPromptId(newPrompt.id.toString());
   };
 
   const categories = [
@@ -108,6 +107,14 @@ export function PromptCreator() {
           </SelectContent>
         </Select>
       </div>
+
+      {createdPromptId && (
+        <div className="border-t pt-4">
+          <h3 className="text-sm font-medium mb-2">Arquivos de Treinamento</h3>
+          <FileUpload promptId={createdPromptId} />
+          <FileList promptId={createdPromptId} />
+        </div>
+      )}
 
       <Button type="submit" className="w-full">
         Criar Prompt

@@ -63,6 +63,47 @@ export type Database = {
         }
         Relationships: []
       }
+      prompt_training_files: {
+        Row: {
+          content_type: string | null
+          created_at: string
+          file_path: string
+          filename: string
+          id: string
+          prompt_id: string | null
+          size: number | null
+          updated_at: string
+        }
+        Insert: {
+          content_type?: string | null
+          created_at?: string
+          file_path: string
+          filename: string
+          id?: string
+          prompt_id?: string | null
+          size?: number | null
+          updated_at?: string
+        }
+        Update: {
+          content_type?: string | null
+          created_at?: string
+          file_path?: string
+          filename?: string
+          id?: string
+          prompt_id?: string | null
+          size?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prompt_training_files_prompt_id_fkey"
+            columns: ["prompt_id"]
+            isOneToOne: false
+            referencedRelation: "prompts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       prompts: {
         Row: {
           content: string
