@@ -12,20 +12,28 @@ const HexLogo = ({ className = "", size = "32" }: { className?: string; size?: s
       strokeLinecap="round"
       strokeLinejoin="round"
     >
-      {/* Outer hexagon */}
-      <path d="M32 4L60 20V44L32 60L4 44V20L32 4Z" />
+      {/* Círculo externo */}
+      <circle cx="32" cy="32" r="30" />
       
-      {/* Inner hexagon */}
-      <path d="M32 16L48 25V41L32 50L16 41V25L32 16Z" />
+      {/* Arca da Aliança - Base */}
+      <rect x="18" y="34" width="28" height="16" rx="2" />
       
-      {/* Connecting lines */}
-      <path d="M32 4V16M4 20L16 25M60 20L48 25M60 44L48 41M4 44L16 41M32 50V60" />
+      {/* Tampa da Arca */}
+      <rect x="16" y="30" width="32" height="4" rx="1" />
       
-      {/* Decorative triangles */}
-      <path d="M32 28L38 32L32 36L26 32L32 28Z" />
+      {/* Detalhes decorativos na tampa */}
+      <line x1="20" y1="32" x2="44" y2="32" />
       
-      {/* Center dot */}
-      <circle cx="32" cy="32" r="2" fill="currentColor" />
+      {/* Varas de transporte */}
+      <line x1="14" y1="36" x2="50" y2="36" />
+      <line x1="14" y1="40" x2="50" y2="40" />
+      
+      {/* Querubins estilizados */}
+      <path d="M24 30C24 22 32 22 32 26" />
+      <path d="M40 30C40 22 32 22 32 26" />
+      
+      {/* Decoração central */}
+      <rect x="28" y="38" width="8" height="8" rx="1" />
     </svg>
   );
 };
