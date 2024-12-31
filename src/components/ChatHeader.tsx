@@ -40,8 +40,8 @@ const ChatHeader = ({ isSidebarOpen = true, activePrompt, activeCategory }: Chat
             </div>
           )}
         </div>
-        <div className="gizmo-shadow-stroke relative flex h-8 w-8 items-center justify-center rounded-full bg-token-main-surface-primary text-token-text-primary">
-          <HexLogo size="24" className="text-white" />
+        <div className="gizmo-shadow-stroke relative flex h-12 w-12 items-center justify-center rounded-full bg-token-main-surface-primary text-token-text-primary">
+          <HexLogo size="40" className="text-white" />
         </div>
       </div>
     </div>
