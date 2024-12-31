@@ -4,9 +4,11 @@ import { PromptList } from "@/components/admin/PromptList";
 import { Button } from "@/components/ui/button";
 import { Home, Key } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useAuthRedirect } from "@/hooks/useAuthRedirect";
 
 const AdminPage = () => {
   const navigate = useNavigate();
+  useAuthRedirect();
 
   return (
     <div className="container mx-auto py-8 px-4">
