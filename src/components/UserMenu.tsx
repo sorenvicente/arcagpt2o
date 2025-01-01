@@ -1,5 +1,7 @@
 import { User, Settings, Key } from 'lucide-react';
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { supabase } from '@/integrations/supabase/client';
 import {
   Popover,
   PopoverContent,
@@ -8,6 +10,26 @@ import {
 
 export const UserMenu = () => {
   const navigate = useNavigate();
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [userEmail, setUserEmail] = useState('');
+  
+  useEffect(() => {
+    const checkUserRole = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role, email')
+          .eq('id', session.user.id)
+          .single();
+        
+        setIsAdmin(profile?.role === 'admin');
+        setUserEmail(profile?.email || '');
+      }
+    };
+    
+    checkUserRole();
+  }, []);
   
   return (
     <Popover>
@@ -19,8 +41,10 @@ export const UserMenu = () => {
                 <User className="h-4 w-4" />
               </span>
               <div className="flex flex-col">
-                <span>Administrador</span>
-                <span className="line-clamp-1 text-xs text-token-text-tertiary">Configurações e chaves</span>
+                <span>{isAdmin ? 'Administrador' : 'Usuário'}</span>
+                <span className="line-clamp-1 text-xs text-token-text-tertiary">
+                  {userEmail}
+                </span>
               </div>
             </div>
           </span>
@@ -28,20 +52,24 @@ export const UserMenu = () => {
       </PopoverTrigger>
       <PopoverContent className="w-48 p-2 bg-chatgpt-secondary border-chatgpt-border rounded-xl shadow-lg">
         <div className="flex flex-col divide-y divide-chatgpt-border">
-          <button
-            onClick={() => navigate('/admin')}
-            className="flex items-center gap-2 px-3 py-2.5 text-sm rounded-lg hover:bg-chatgpt-hover text-white transition-colors duration-200"
-          >
-            <Settings className="h-4 w-4" />
-            <span>Prompts</span>
-          </button>
-          <button
-            onClick={() => navigate('/api-keys')}
-            className="flex items-center gap-2 px-3 py-2.5 text-sm rounded-lg hover:bg-chatgpt-hover text-white transition-colors duration-200"
-          >
-            <Key className="h-4 w-4" />
-            <span>API Keys</span>
-          </button>
+          {isAdmin && (
+            <>
+              <button
+                onClick={() => navigate('/admin')}
+                className="flex items-center gap-2 px-3 py-2.5 text-sm rounded-lg hover:bg-chatgpt-hover text-white transition-colors duration-200"
+              >
+                <Settings className="h-4 w-4" />
+                <span>Prompts</span>
+              </button>
+              <button
+                onClick={() => navigate('/api-keys')}
+                className="flex items-center gap-2 px-3 py-2.5 text-sm rounded-lg hover:bg-chatgpt-hover text-white transition-colors duration-200"
+              >
+                <Key className="h-4 w-4" />
+                <span>API Keys</span>
+              </button>
+            </>
+          )}
         </div>
       </PopoverContent>
     </Popover>
