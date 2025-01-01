@@ -1,52 +1,20 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Toaster } from "@/components/ui/toaster";
-import Index from "@/pages/Index";
+import { Toaster } from "@/components/ui/toast";
+import IndexPage from "@/pages/Index";
+import LoginPage from "@/pages/Login";
 import AdminPage from "@/pages/admin/Index";
+import DashboardPage from "@/pages/admin/Dashboard";
 import ApiKeysPage from "@/pages/ApiKeys";
-import LoginPage from "@/pages/auth/Login";
-import { useAuth } from "@/hooks/useAuth";
-
-function ProtectedRoute({ children, role }: { children: React.ReactNode; role?: 'admin' | 'user' }) {
-  const { isLoading } = useAuth(role);
-  
-  if (isLoading) {
-    return <div className="flex items-center justify-center min-h-screen">
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
-    </div>;
-  }
-
-  return <>{children}</>;
-}
 
 function App() {
   return (
     <Router>
       <Routes>
+        <Route path="/" element={<IndexPage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route 
-          path="/" 
-          element={
-            <ProtectedRoute>
-              <Index />
-            </ProtectedRoute>
-          } 
-        />
-        <Route 
-          path="/admin" 
-          element={
-            <ProtectedRoute role="admin">
-              <AdminPage />
-            </ProtectedRoute>
-          } 
-        />
-        <Route 
-          path="/api-keys" 
-          element={
-            <ProtectedRoute role="admin">
-              <ApiKeysPage />
-            </ProtectedRoute>
-          } 
-        />
+        <Route path="/admin" element={<AdminPage />} />
+        <Route path="/admin/dashboard" element={<DashboardPage />} />
+        <Route path="/api-keys" element={<ApiKeysPage />} />
       </Routes>
       <Toaster />
     </Router>
