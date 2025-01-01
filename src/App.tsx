@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Toaster } from "@/components/ui/toast";
+import { Toaster } from "@/components/ui/toaster";
 import IndexPage from "@/pages/Index";
-import LoginPage from "@/pages/Login";
+import LoginPage from "@/pages/auth/Login";
 import AdminPage from "@/pages/admin/Index";
 import DashboardPage from "@/pages/admin/Dashboard";
 import ApiKeysPage from "@/pages/ApiKeys";
