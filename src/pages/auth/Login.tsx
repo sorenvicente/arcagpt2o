@@ -12,15 +12,37 @@ const LoginPage = () => {
     const checkSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
-        navigate("/");
+        // Buscar o role do usuário
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', session.user.id)
+          .single();
+
+        if (profile?.role === 'admin') {
+          navigate('/admin');
+        } else {
+          navigate('/');
+        }
       }
     };
 
     checkSession();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (session) {
-        navigate("/");
+        // Buscar o role do usuário após login
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', session.user.id)
+          .single();
+
+        if (profile?.role === 'admin') {
+          navigate('/admin');
+        } else {
+          navigate('/');
+        }
       }
     });
 
@@ -46,10 +68,6 @@ const LoginPage = () => {
                   colors: {
                     brand: '#2563eb',
                     brandAccent: '#1d4ed8',
-                  },
-                  borderRadii: {
-                    button: '1rem',
-                    input: '1rem',
                   },
                 },
               },
