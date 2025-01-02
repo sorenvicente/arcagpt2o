@@ -1,3 +1,11 @@
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[];
+
 export interface Tables {
   Tables: {
     api_keys: {
@@ -116,7 +124,7 @@ export interface Tables {
           isOneToOne: false;
           referencedRelation: "prompts";
           referencedColumns: ["id"];
-        },
+        }
       ];
     };
     prompts: {
@@ -231,10 +239,6 @@ export interface Tables {
       Relationships: [];
     };
   };
-  Views: {};
-  Functions: {};
-  Enums: {};
-  CompositeTypes: {};
 }
 
 export type TablesInsert<T extends keyof Tables['Tables']> = Tables['Tables'][T]['Insert'];
