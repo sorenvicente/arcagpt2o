@@ -58,26 +58,37 @@ export const useAuth = (requiredRole?: 'admin' | 'user') => {
 
   const signOut = async () => {
     try {
-      // Primeiro limpa o estado local
-      setUser(null);
+      // Primeiro verifica se existe uma sessão
+      const { data: { session } } = await supabase.auth.getSession();
       
-      // Tenta fazer o logout no Supabase
+      // Limpa o estado local primeiro
+      setUser(null);
+      localStorage.clear();
+      
+      // Se não houver sessão, apenas redireciona
+      if (!session) {
+        navigate('/login');
+        toast({
+          title: "Logout realizado",
+          description: "Você foi desconectado com sucesso."
+        });
+        return;
+      }
+      
+      // Se houver sessão, tenta fazer o logout no Supabase
       const { error } = await supabase.auth.signOut();
       
       if (error) {
         console.error('Logout error:', error);
+        // Mesmo com erro, vamos garantir que o usuário seja deslogado localmente
+        navigate('/login');
         toast({
-          title: "Erro ao fazer logout",
-          description: "Houve um problema ao desconectar sua conta.",
+          title: "Aviso no logout",
+          description: "Houve um problema ao desconectar sua conta, mas você foi deslogado localmente.",
           variant: "destructive"
         });
       } else {
-        // Limpa qualquer dado local se necessário
-        localStorage.clear();
-        
-        // Redireciona para a página de login
         navigate('/login');
-        
         toast({
           title: "Logout realizado",
           description: "Você foi desconectado com sucesso."
@@ -85,9 +96,11 @@ export const useAuth = (requiredRole?: 'admin' | 'user') => {
       }
     } catch (error) {
       console.error('Logout error:', error);
+      // Mesmo com erro, vamos garantir que o usuário seja deslogado localmente
+      navigate('/login');
       toast({
-        title: "Erro ao fazer logout",
-        description: "Houve um problema ao desconectar sua conta.",
+        title: "Aviso no logout",
+        description: "Houve um problema ao desconectar sua conta, mas você foi deslogado localmente.",
         variant: "destructive"
       });
     }
