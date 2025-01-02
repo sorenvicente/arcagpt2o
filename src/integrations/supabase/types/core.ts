@@ -1,4 +1,6 @@
-export interface Tables {
+import { Json, Tables as BaseTypes } from './common';
+
+export interface Tables extends BaseTypes {
   Tables: {
     api_keys: {
       Row: {
@@ -246,7 +248,7 @@ export interface Tables {
       Update: {
         created_at?: string;
         id?: string;
-        name?: string;
+        name: string;
         updated_at?: string;
       };
       Relationships: [];
@@ -255,3 +257,4 @@ export interface Tables {
 }
 
 export type { Tables as CoreTables };
+export type { TablesInsert, TablesUpdate } from './common';
