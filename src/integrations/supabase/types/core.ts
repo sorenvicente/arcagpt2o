@@ -1,11 +1,3 @@
-export type Json =
-  | string
-  | number
-  | boolean
-  | null
-  | { [key: string]: Json | undefined }
-  | Json[];
-
 export interface Tables {
   Tables: {
     api_keys: {
@@ -124,7 +116,7 @@ export interface Tables {
           isOneToOne: false;
           referencedRelation: "prompts";
           referencedColumns: ["id"];
-        }
+        },
       ];
     };
     prompts: {
@@ -187,6 +179,27 @@ export interface Tables {
       };
       Relationships: [];
     };
+    system_settings: {
+      Row: {
+        created_at: string;
+        id: string;
+        logo_url: string | null;
+        updated_at: string;
+      };
+      Insert: {
+        created_at?: string;
+        id?: string;
+        logo_url?: string | null;
+        updated_at?: string;
+      };
+      Update: {
+        created_at?: string;
+        id?: string;
+        logo_url?: string | null;
+        updated_at?: string;
+      };
+      Relationships: [];
+    };
     whiteboard_prompts: {
       Row: {
         ai_model: string;
@@ -241,5 +254,4 @@ export interface Tables {
   };
 }
 
-export type TablesInsert<T extends keyof Tables['Tables']> = Tables['Tables'][T]['Insert'];
-export type TablesUpdate<T extends keyof Tables['Tables']> = Tables['Tables'][T]['Update'];
+export type { Tables as CoreTables };
