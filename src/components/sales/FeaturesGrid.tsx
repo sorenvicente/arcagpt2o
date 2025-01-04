@@ -3,16 +3,16 @@ import { FeatureCard } from "./FeatureCard";
 export const FeaturesGrid = () => {
   const features = [
     {
-      title: "Respostas Instantâneas",
-      description: "IA avançada que fornece respostas precisas e contextualizadas em segundos"
+      title: "Propósito & Método",
+      description: "Desenvolva seu propósito claro e método único com ajuda da IA"
     },
     {
-      title: "Personalização Total",
-      description: "Adapte a IA ao seu negócio com prompts e configurações personalizadas"
+      title: "Mentoria & Curso",
+      description: "Estruture sua mentoria e crie cursos impactantes de forma inteligente"
     },
     {
-      title: "Análise Avançada",
-      description: "Insights detalhados sobre interações e performance do sistema"
+      title: "Conteúdo & Oferta",
+      description: "Gere conteúdo envolvente e ofertas irresistíveis automaticamente"
     }
   ];
 

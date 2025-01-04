@@ -8,10 +8,10 @@ export const HeroSection = () => {
   return (
     <div className="text-center mb-16 animate-fade-in">
       <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
-        Revolucione seu Atendimento com IA
+        Seu Assistente de Negócios com IA
       </h1>
       <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-        Uma plataforma inteligente que transforma a maneira como você interage com seus clientes
+        Crie propósito, método, mentoria, curso, conteúdo, oferta e página de vendas com a ajuda da inteligência artificial
       </p>
       <Button
         onClick={() => navigate("/login")}

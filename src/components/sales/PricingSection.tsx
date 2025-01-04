@@ -2,25 +2,25 @@ import { PricingCard } from "./PricingCard";
 
 export const PricingSection = () => {
   const basicFeatures = [
-    "Até 1000 interações mensais",
-    "3 prompts personalizados",
-    "Suporte por email",
-    "Análises básicas"
+    "Criação de propósito e método",
+    "Estruturação de mentoria",
+    "Geração de conteúdo básico",
+    "Suporte por email"
   ];
 
   const proFeatures = [
-    "Interações ilimitadas",
-    "Prompts ilimitados",
-    "Suporte prioritário 24/7",
-    "Análises avançadas",
-    "API personalizada",
-    "Treinamento exclusivo"
+    "Tudo do plano básico",
+    "Criação avançada de cursos",
+    "Geração ilimitada de conteúdo",
+    "Criação de ofertas otimizadas",
+    "Páginas de vendas personalizadas",
+    "Suporte prioritário 24/7"
   ];
 
   return (
     <div className="max-w-4xl mx-auto">
       <h2 className="text-3xl font-bold text-white text-center mb-12">
-        Planos que se Adaptam a Você
+        Escolha o Plano Ideal para Seu Negócio
       </h2>
       
       <div className="grid md:grid-cols-2 gap-8">

@@ -11,7 +11,7 @@ export const CTASection = () => {
         Pronto para Transformar seu Negócio?
       </h2>
       <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-        Junte-se a milhares de empresas que já estão usando nossa plataforma
+        Crie seu império digital com a ajuda da inteligência artificial
       </p>
       <Button
         onClick={() => navigate("/login")}
