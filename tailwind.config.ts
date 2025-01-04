@@ -33,18 +33,18 @@ export default {
           input: "#40414F"
         },
         light: {
-          background: "#FFFFFF",
+          background: "#F7F7F8",
           text: "#000000",
           primary: "#0056D2",
-          secondary: "#E0E0E0",
+          secondary: "#ECECF1",
           hover: "#F5F5F5",
-          border: "#E0E0E0",
+          border: "#E5E5E5",
           success: "#28A745",
           error: "#DC3545",
           warning: "#FFC107",
           highlight: "#007BFF",
           accent: "#6C757D",
-          sidebar: "#FFFFFF",
+          sidebar: "#F7F7F8",
           main: "#FFFFFF",
           input: "#FFFFFF"
         },

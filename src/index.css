@@ -42,7 +42,7 @@
 .select, 
 .textarea {
   @apply shadow-lg border border-light-border dark:border-[#4E4F60] 
-    bg-white dark:bg-[#40414F] text-light-text dark:text-white;
+    bg-light-main dark:bg-[#40414F] text-light-text dark:text-white;
 }
 
 /* Add hover effects to interactive elements */
@@ -103,7 +103,7 @@
 }
 
 .message-assistant {
-  @apply bg-light-hover dark:bg-chatgpt-secondary;
+  @apply bg-light-secondary dark:bg-chatgpt-secondary;
 }
 
 /* Input styles */
