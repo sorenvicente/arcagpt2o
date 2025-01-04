@@ -35,6 +35,7 @@ export const useApiKeys = () => {
       }
 
       if (data) {
+        console.log("Fetched API keys:", data); // Debug log
         setKeys({
           openai_key: data.openai_key || "",
           openrouter_key: data.openrouter_key || "",
@@ -55,6 +56,8 @@ export const useApiKeys = () => {
   const handleSaveKeys = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      console.log("Saving keys:", keys); // Debug log
+
       const { data: existingKeys } = await supabase
         .from("api_keys")
         .select("*")
@@ -68,6 +71,8 @@ export const useApiKeys = () => {
         selected_openrouter_model: keys.selected_openrouter_model,
         updated_at: new Date().toISOString(),
       };
+
+      console.log("Data to save:", dataToSave); // Debug log
 
       if (existingKeys) {
         const { error } = await supabase
