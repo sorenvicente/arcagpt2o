@@ -29,7 +29,7 @@ const Index = () => {
         activeCategory={activeAssistant}
       />
       
-      <main className={`flex-1 transition-all duration-300 relative ${isSidebarOpen ? 'ml-64' : 'ml-0'}`}>
+      <main className={`flex-1 transition-all duration-300 relative ${isSidebarOpen ? 'ml-[240px]' : 'ml-0'}`}>
         <ChatHeader 
           isSidebarOpen={isSidebarOpen}
           activeCategory={activeAssistant}
