@@ -2,19 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Dark mode (default) */
-.dark {
-  @apply bg-[#343541] text-white;
-}
-
-/* Light mode */
+/* Light mode (default) */
 :root {
   @apply bg-light-background text-light-text;
 }
 
+/* Dark mode */
+.dark {
+  @apply bg-[#343541] text-white;
+}
+
 /* Custom scrollbar styling */
 ::-webkit-scrollbar {
-  @apply w-1.5 sm:w-2; /* 6px on mobile (w-1.5), 8px on desktop (w-2) */
+  @apply w-1.5 sm:w-2;
 }
 
 ::-webkit-scrollbar-track {
@@ -67,14 +67,14 @@
 }
 
 /* Light mode specific styles */
-.light {
+:root {
   /* Buttons */
   .btn-primary {
-    @apply bg-light-primary text-white hover:bg-blue-700;
+    @apply bg-light-primary text-white hover:bg-light-highlight;
   }
   
   .btn-secondary {
-    @apply bg-light-secondary text-gray-700 hover:bg-gray-200;
+    @apply bg-light-secondary text-light-accent hover:bg-light-hover;
   }
   
   /* Alerts */
@@ -87,12 +87,12 @@
   }
   
   .alert-warning {
-    @apply bg-light-warning text-gray-900;
+    @apply bg-light-warning text-light-text;
   }
   
   /* Links */
   .link {
-    @apply text-light-primary hover:text-blue-700;
+    @apply text-light-highlight hover:text-light-primary;
   }
 }
 

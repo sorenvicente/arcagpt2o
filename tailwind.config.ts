@@ -41,7 +41,9 @@ export default {
           border: "#E0E0E0",
           success: "#28A745",
           error: "#DC3545",
-          warning: "#FFC107"
+          warning: "#FFC107",
+          highlight: "#007BFF",
+          accent: "#6C757D"
         },
         primary: {
           DEFAULT: "hsl(var(--primary))",
