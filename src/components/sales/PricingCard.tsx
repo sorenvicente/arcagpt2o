@@ -18,7 +18,7 @@ export const PricingCard = ({ title, price, features, isPro = false }: PricingCa
       isPro 
         ? "bg-gradient-to-br from-purple-600/20 to-blue-600/20 border-purple-400/50" 
         : "bg-gradient-to-br from-purple-900/30 to-blue-900/30 border-purple-500/20"
-      } backdrop-blur hover:border-purple-500/40 transition-all duration-300 relative`}
+      } backdrop-blur hover:border-purple-500/40 transition-all duration-300 relative min-h-[600px] flex flex-col`}
     >
       {isPro && (
         <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-purple-500 to-blue-500 text-white px-4 py-1 rounded-full text-sm font-medium">
@@ -31,10 +31,10 @@ export const PricingCard = ({ title, price, features, isPro = false }: PricingCa
         {price}<span className="text-lg font-normal text-gray-400">/mês</span>
       </div>
       
-      <ul className="space-y-4 mb-8">
+      <ul className="space-y-4 mb-8 flex-grow">
         {features.map((feature, index) => (
-          <li key={index} className="flex items-center text-gray-300">
-            <Check className="h-5 w-5 text-purple-400 mr-3 flex-shrink-0" />
+          <li key={index} className="flex items-start text-gray-300">
+            <Check className="h-5 w-5 text-purple-400 mr-3 flex-shrink-0 mt-1" />
             <span>{feature}</span>
           </li>
         ))}

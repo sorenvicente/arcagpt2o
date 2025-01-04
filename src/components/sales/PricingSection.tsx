@@ -6,6 +6,7 @@ export const PricingSection = () => {
     "Estruturação básica de mentoria",
     "Geração de conteúdo limitada",
     "1 VSL e 1 página de vendas por mês",
+    "1 CPL por mês",
     "Suporte por email"
   ];
 
@@ -14,13 +15,14 @@ export const PricingSection = () => {
     "Criação avançada de cursos",
     "Geração ilimitada de conteúdo",
     "VSLs e páginas de vendas ilimitadas",
-    "Criação de CPLs otimizadas",
+    "CPLs ilimitadas e otimizadas",
     "Ofertas personalizadas com IA",
+    "Funis de vendas otimizados",
     "Suporte prioritário 24/7"
   ];
 
   return (
-    <div className="max-w-5xl mx-auto mb-24">
+    <div className="max-w-4xl mx-auto mb-24">
       <div className="text-center mb-16">
         <h2 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-400 mb-4">
           Escolha o Plano Ideal

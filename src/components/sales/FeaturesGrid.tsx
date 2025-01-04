@@ -4,18 +4,33 @@ export const FeaturesGrid = () => {
   const features = [
     {
       icon: "brain" as const,
-      title: "Propósito & Método",
-      description: "Desenvolva sua missão e metodologia única com IA. Crie uma base sólida para seu negócio digital e destaque-se no mercado."
+      title: "Propósito",
+      description: "Desenvolva sua missão e visão com IA. Crie uma base sólida para seu negócio digital e destaque-se no mercado."
+    },
+    {
+      icon: "compass" as const,
+      title: "Método",
+      description: "Estruture sua metodologia única e processos com ajuda da IA. Transforme sua experiência em um sistema replicável."
+    },
+    {
+      icon: "users" as const,
+      title: "Mentoria",
+      description: "Crie programas de mentoria transformadores. Nossa IA ajuda a estruturar cada etapa do processo."
     },
     {
       icon: "book" as const,
-      title: "Mentorias & Cursos",
-      description: "Estruture programas de mentoria e cursos transformadores. Nossa IA ajuda a criar conteúdo educacional de alto impacto."
+      title: "Cursos",
+      description: "Desenvolva cursos de alto impacto. Gere conteúdo educacional otimizado automaticamente com IA."
+    },
+    {
+      icon: "pen-tool" as const,
+      title: "Conteúdo",
+      description: "Produza VSLs, CPLs e páginas de vendas persuasivas. Gere conteúdo envolvente de forma automática."
     },
     {
       icon: "rocket" as const,
-      title: "Marketing & Vendas",
-      description: "Gere VSLs, CPLs e páginas de vendas persuasivas. Crie ofertas irresistíveis e conteúdo otimizado automaticamente."
+      title: "Ofertas",
+      description: "Crie ofertas irresistíveis e funis de vendas otimizados. Maximize suas conversões com ajuda da IA."
     }
   ];
 
