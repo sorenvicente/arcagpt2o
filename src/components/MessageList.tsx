@@ -5,9 +5,10 @@ import { useEffect, useRef } from "react";
 type MessageListProps = {
   messages: MessageType[];
   onRegenerate?: () => void;
+  isRegenerating?: boolean;
 };
 
-const MessageList = ({ messages, onRegenerate }: MessageListProps) => {
+const MessageList = ({ messages, onRegenerate, isRegenerating }: MessageListProps) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -27,6 +28,7 @@ const MessageList = ({ messages, onRegenerate }: MessageListProps) => {
               key={index} 
               {...message} 
               onRegenerate={message.role === 'assistant' ? onRegenerate : undefined}
+              isRegenerating={message.role === 'assistant' && isRegenerating}
             />
           ))}
           <div ref={messagesEndRef} />

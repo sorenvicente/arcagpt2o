@@ -4,9 +4,10 @@ import { useToast } from "@/components/ui/use-toast";
 type MessageActionsProps = {
   content: string;
   onRegenerate?: () => void;
+  isRegenerating?: boolean;
 };
 
-const MessageActions = ({ content, onRegenerate }: MessageActionsProps) => {
+const MessageActions = ({ content, onRegenerate, isRegenerating }: MessageActionsProps) => {
   const { toast } = useToast();
 
   const handleCopy = async () => {
@@ -45,11 +46,12 @@ const MessageActions = ({ content, onRegenerate }: MessageActionsProps) => {
       </button>
       {onRegenerate && (
         <button 
-          className="p-1 hover:text-white transition-colors"
+          className={`p-1 transition-colors ${isRegenerating ? 'text-[#9b87f5]' : 'hover:text-white'}`}
           onClick={onRegenerate}
+          disabled={isRegenerating}
           title="Regenerar resposta"
         >
-          <RotateCcw className="h-4 w-4" />
+          <RotateCcw className={`h-4 w-4 ${isRegenerating ? 'animate-spin' : ''}`} />
         </button>
       )}
       <button className="p-1 hover:text-white transition-colors">
