@@ -16,7 +16,7 @@ const AdminIndex = () => {
           <Button 
             onClick={() => navigate("/admin/settings")}
             variant="outline"
-            className="flex items-center justify-center gap-2 w-full sm:w-auto"
+            className="flex items-center justify-center gap-2 w-full sm:w-auto rounded-xl transition-all duration-200 hover:bg-[#2A2B32]/70"
           >
             <Settings className="h-4 w-4" />
             <span className="whitespace-nowrap">Configurações</span>
@@ -24,7 +24,7 @@ const AdminIndex = () => {
           <Button 
             onClick={() => navigate("/")}
             variant="ghost"
-            className="flex items-center justify-center gap-2 w-full sm:w-auto"
+            className="flex items-center justify-center gap-2 w-full sm:w-auto rounded-xl"
           >
             <ArrowLeft className="h-4 w-4" />
             <span className="whitespace-nowrap">Voltar ao Chat</span>
