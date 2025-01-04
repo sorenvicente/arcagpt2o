@@ -26,11 +26,21 @@ export default {
         marqueeReverse: {
           '0%': { transform: 'translateX(-50%)' },
           '100%': { transform: 'translateX(0%)' },
+        },
+        sidebarSlideIn: {
+          '0%': { transform: 'translateX(-100%)', opacity: '0' },
+          '100%': { transform: 'translateX(0)', opacity: '1' },
+        },
+        sidebarSlideOut: {
+          '0%': { transform: 'translateX(0)', opacity: '1' },
+          '100%': { transform: 'translateX(-100%)', opacity: '0' },
         }
       },
       animation: {
         marquee: 'marquee 40s linear infinite',
         marqueeReverse: 'marqueeReverse 40s linear infinite',
+        sidebarIn: 'sidebarSlideIn 0.3s ease-out',
+        sidebarOut: 'sidebarSlideOut 0.3s ease-out'
       },
       colors: {
         border: "hsl(var(--border))",

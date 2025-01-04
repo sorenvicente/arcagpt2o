@@ -16,6 +16,7 @@ const HOVER_THRESHOLD = 50;
 
 const Sidebar = ({ isOpen, onToggle, onNewChat, onChatSelect, activeCategory }: SidebarProps) => {
   const [isHovering, setIsHovering] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
   const hoverTimeoutRef = useRef<NodeJS.Timeout>();
 
   useEffect(() => {
@@ -40,14 +41,24 @@ const Sidebar = ({ isOpen, onToggle, onNewChat, onChatSelect, activeCategory }: 
     };
   }, [isOpen, isHovering, onToggle]);
 
+  useEffect(() => {
+    setIsAnimating(true);
+    const timer = setTimeout(() => setIsAnimating(false), 300);
+    return () => clearTimeout(timer);
+  }, [isOpen]);
+
   return (
     <div className={cn(
       "fixed top-0 left-0 z-40 h-screen transition-all duration-300",
       "bg-chatgpt-sidebar dark:bg-chatgpt-sidebar",
       "border-r border-chatgpt-border dark:border-chatgpt-border",
-      isOpen ? "w-[240px]" : "w-0"
+      isOpen ? "w-[240px]" : "w-0",
+      isOpen ? "animate-sidebarIn" : isAnimating ? "animate-sidebarOut" : ""
     )}>
-      <nav className="flex h-full w-full flex-col px-3" aria-label="Chat history">
+      <nav className={cn(
+        "flex h-full w-full flex-col px-3",
+        !isOpen && "opacity-0"
+      )} aria-label="Chat history">
         <SidebarHeader 
           onToggle={onToggle}
           onNewChat={onNewChat}
