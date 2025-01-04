@@ -1,5 +1,4 @@
 import { supabase } from "@/integrations/supabase/client";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { useEffect } from "react";
@@ -21,7 +20,6 @@ export const LoginForm = ({ onLogout }: LoginFormProps) => {
       
       if (event === 'SIGNED_IN' && session) {
         try {
-          // Fetch user profile to check role
           const { data: profile, error: profileError } = await supabase
             .from('profiles')
             .select('role')
@@ -33,12 +31,11 @@ export const LoginForm = ({ onLogout }: LoginFormProps) => {
             throw profileError;
           }
 
-          // All users go to /app by default
           navigate('/app');
           
           toast({
             title: "Login realizado com sucesso",
-            description: "Bem-vindo de volta!"
+            description: "Bem-vindo de volta! Estamos felizes em ter você aqui."
           });
         } catch (error) {
           console.error('Error during login:', error);
@@ -60,10 +57,10 @@ export const LoginForm = ({ onLogout }: LoginFormProps) => {
 
   return (
     <div className="min-h-screen bg-chatgpt-main flex items-center justify-center p-4">
-      <Card className="w-full max-w-md bg-chatgpt-secondary border-chatgpt-border rounded-2xl shadow-lg">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl text-white">Login</CardTitle>
-          <CardDescription className="text-gray-400">
+      <Card className="w-full max-w-md bg-chatgpt-secondary border-chatgpt-border rounded-xl shadow-xl">
+        <CardHeader className="space-y-2">
+          <CardTitle className="text-2xl text-white text-center">Bem-vindo!</CardTitle>
+          <CardDescription className="text-gray-300 text-center">
             Entre com sua conta para continuar
           </CardDescription>
         </CardHeader>
@@ -76,10 +73,32 @@ export const LoginForm = ({ onLogout }: LoginFormProps) => {
                 variables: {
                   default: {
                     colors: {
-                      brand: '#202123',
-                      brandAccent: '#2A2B32',
+                      brand: '#9b87f5',
+                      brandAccent: '#8B5CF6',
+                      brandButtonText: "white",
+                      inputBackground: "#40414F",
+                      inputText: "white",
+                      inputPlaceholder: "#9CA3AF",
+                      messageText: "white",
+                      anchorTextColor: "#9b87f5",
+                      dividerBackground: "#4E4F60",
+                    },
+                    borderWidths: {
+                      buttonBorderWidth: '1px',
+                      inputBorderWidth: '1px',
+                    },
+                    radii: {
+                      borderRadiusButton: '0.75rem',
+                      buttonBorderRadius: '0.75rem',
+                      inputBorderRadius: '0.75rem',
                     },
                   },
+                },
+                className: {
+                  container: 'text-white',
+                  label: 'text-white',
+                  button: 'bg-primary hover:bg-primary/90 text-white',
+                  input: 'bg-chatgpt-input border-chatgpt-border text-white placeholder-gray-400',
                 },
               }}
               providers={[]}
@@ -104,6 +123,12 @@ export const LoginForm = ({ onLogout }: LoginFormProps) => {
                     loading_button_label: 'Criando conta...',
                     social_provider_text: 'Criar conta com {{provider}}',
                     link_text: 'Não tem uma conta? Cadastre-se',
+                  },
+                  forgotten_password: {
+                    link_text: 'Esqueceu sua senha?',
+                    button_label: 'Enviar instruções',
+                    loading_button_label: 'Enviando instruções...',
+                    confirmation_text: 'Verifique seu email para redefinir sua senha',
                   },
                 },
               }}
