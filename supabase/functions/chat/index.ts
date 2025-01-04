@@ -98,7 +98,7 @@ serve(async (req) => {
           'X-Title': 'Lovable Chat App',
         },
         body: JSON.stringify({
-          model: 'meta-llama/llama-2-70b-chat',
+          model: 'anthropic/claude-2',
           messages: messages,
           max_tokens: 1000,
           temperature: temperature,
