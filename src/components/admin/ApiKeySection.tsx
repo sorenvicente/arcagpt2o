@@ -32,7 +32,7 @@ const ApiKeySection = ({
   extraContent,
 }: ApiKeySectionProps) => {
   return (
-    <Card className="bg-chatgpt-secondary border-chatgpt-border">
+    <Card className="bg-chatgpt-secondary border-chatgpt-border rounded-xl overflow-hidden">
       <CardHeader>
         <CardTitle className="text-white text-lg">{title}</CardTitle>
         <CardDescription className="text-gray-400">

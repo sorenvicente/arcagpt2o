@@ -18,7 +18,7 @@ const ApiKeyInput = ({ value, onChange, placeholder = "sk-..." }: ApiKeyInputPro
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="w-full bg-chatgpt-main border-chatgpt-border text-white pr-10"
+        className="w-full bg-chatgpt-main border-chatgpt-border text-white pr-10 rounded-xl"
       />
       <button
         type="button"
