@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
   email: z.string().email("Email inválido"),
@@ -31,29 +32,42 @@ export const CreateUserForm = ({ onSuccess }: CreateUserFormProps) => {
 
   const createUser = useMutation({
     mutationFn: async (values: z.infer<typeof formSchema>) => {
-      const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/manage-users`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`,
-          },
-          body: JSON.stringify({
-            action: "create",
-            email: values.email,
-            password: values.password,
-            role: "user", // Ensure we're creating a regular user, not an admin
-          }),
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 segundos timeout
+
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/manage-users`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`,
+            },
+            body: JSON.stringify({
+              action: "create",
+              email: values.email,
+              password: values.password,
+              role: "user",
+            }),
+            signal: controller.signal,
+          }
+        );
+
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.error || "Erro ao criar usuário");
         }
-      );
 
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || "Erro ao criar usuário");
+        return response.json();
+      } catch (error) {
+        if (error.name === 'AbortError') {
+          throw new Error('A operação demorou muito tempo. Por favor, tente novamente.');
+        }
+        throw error;
       }
-
-      return response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
@@ -92,6 +106,7 @@ export const CreateUserForm = ({ onSuccess }: CreateUserFormProps) => {
                 <Input 
                   placeholder="email@exemplo.com" 
                   {...field} 
+                  disabled={createUser.isPending}
                   className="bg-[#40414F] border-[#4E4F60] text-white placeholder:text-gray-400 focus:ring-[#9b87f5] focus:border-[#9b87f5]"
                 />
               </FormControl>
@@ -110,6 +125,7 @@ export const CreateUserForm = ({ onSuccess }: CreateUserFormProps) => {
                   type="password" 
                   placeholder="******" 
                   {...field} 
+                  disabled={createUser.isPending}
                   className="bg-[#40414F] border-[#4E4F60] text-white placeholder:text-gray-400 focus:ring-[#9b87f5] focus:border-[#9b87f5]"
                 />
               </FormControl>
@@ -119,10 +135,17 @@ export const CreateUserForm = ({ onSuccess }: CreateUserFormProps) => {
         />
         <Button 
           type="submit" 
-          className="w-full bg-[#9b87f5] hover:bg-[#7E69AB] text-white transition-all duration-200 shadow-md hover:shadow-lg"
+          className="w-full bg-[#9b87f5] hover:bg-[#7E69AB] text-white transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
           disabled={createUser.isPending}
         >
-          {createUser.isPending ? "Criando..." : "Criar Usuário"}
+          {createUser.isPending ? (
+            <span className="flex items-center gap-2">
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Criando usuário...
+            </span>
+          ) : (
+            "Criar Usuário"
+          )}
         </Button>
       </form>
     </Form>
