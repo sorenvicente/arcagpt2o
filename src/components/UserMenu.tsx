@@ -31,49 +31,65 @@ export function UserMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-          <Avatar className="h-8 w-8">
-            <AvatarFallback>
+        <Button variant="ghost" className="relative h-8 w-8 rounded-full hover:bg-[#2A2F3C]">
+          <Avatar className="h-8 w-8 border border-[#3A3F4C]">
+            <AvatarFallback className="bg-[#1A1F2C] text-[#9b87f5]">
               {user?.email?.charAt(0).toUpperCase()}
             </AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56" align="end" forceMount>
-        <DropdownMenuLabel className="font-normal">
+      <DropdownMenuContent 
+        className="w-56 bg-[#1A1F2C] border border-[#2A2F3C] text-white rounded-lg shadow-lg" 
+        align="end" 
+        forceMount
+      >
+        <DropdownMenuLabel className="font-normal px-3 py-2">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">
+            <p className="text-sm font-medium leading-none text-[#9b87f5]">
               {isAdmin ? "Administrador" : "Usuário"}
             </p>
-            <p className="text-xs leading-none text-muted-foreground">
+            <p className="text-xs leading-none text-gray-400">
               {user?.email}
             </p>
           </div>
         </DropdownMenuLabel>
-        <DropdownMenuSeparator />
+        <DropdownMenuSeparator className="bg-[#2A2F3C]" />
         {isAdmin && (
           <>
-            <DropdownMenuItem onClick={() => navigate("/admin")}>
+            <DropdownMenuItem 
+              onClick={() => navigate("/admin")}
+              className="px-3 py-2 text-gray-200 hover:bg-[#2A2F3C] hover:text-white focus:bg-[#2A2F3C] cursor-pointer"
+            >
               <Settings className="mr-2 h-4 w-4" />
               <span>Prompts</span>
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate("/api-keys")}>
+            <DropdownMenuItem 
+              onClick={() => navigate("/api-keys")}
+              className="px-3 py-2 text-gray-200 hover:bg-[#2A2F3C] hover:text-white focus:bg-[#2A2F3C] cursor-pointer"
+            >
               <Key className="mr-2 h-4 w-4" />
               <span>API Keys</span>
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate("/admin/dashboard")}>
+            <DropdownMenuItem 
+              onClick={() => navigate("/admin/dashboard")}
+              className="px-3 py-2 text-gray-200 hover:bg-[#2A2F3C] hover:text-white focus:bg-[#2A2F3C] cursor-pointer"
+            >
               <LayoutDashboard className="mr-2 h-4 w-4" />
               <span>Dashboard</span>
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate("/admin/settings")}>
+            <DropdownMenuItem 
+              onClick={() => navigate("/admin/settings")}
+              className="px-3 py-2 text-gray-200 hover:bg-[#2A2F3C] hover:text-white focus:bg-[#2A2F3C] cursor-pointer"
+            >
               <Settings className="mr-2 h-4 w-4" />
               <span>Configurações</span>
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
+            <DropdownMenuSeparator className="bg-[#2A2F3C]" />
           </>
         )}
         <DropdownMenuItem
-          className="text-destructive focus:text-destructive"
+          className="px-3 py-2 text-red-400 hover:bg-[#2A2F3C] hover:text-red-300 focus:bg-[#2A2F3C] cursor-pointer"
           onClick={signOut}
         >
           <LogOut className="mr-2 h-4 w-4" />
