@@ -126,12 +126,10 @@ serve(async (req) => {
         content = await tryOpenAI();
       } catch (error) {
         console.error('Erro ao tentar OpenAI:', error);
-        if (error.message.includes('cota')) {
-          throw error; // Propaga o erro de cota para o usuário
-        }
+        throw error; // Propaga o erro para o usuário
       }
     }
-    // Se não tiver OpenAI ou deu erro (exceto cota), tenta OpenRouter se configurado
+    // Se não tiver OpenAI configurada, tenta OpenRouter se configurado
     else if (apiKeys.openrouter_key) {
       try {
         content = await tryOpenRouter();
