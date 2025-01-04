@@ -15,12 +15,31 @@ const ActionButtons = ({ onSelectPrompt, activeCategory }: ActionButtonsProps) =
   useEffect(() => {
     const loadPrompts = async () => {
       try {
+        const { data: apiKeys } = await supabase
+          .from('api_keys')
+          .select('*')
+          .single();
+
+        if (!apiKeys?.openai_key && !apiKeys?.openrouter_key) {
+          toast({
+            title: "Configuração necessária",
+            description: "Por favor, configure pelo menos uma chave API (OpenAI ou OpenRouter) na página de Chaves API.",
+            variant: "destructive",
+          });
+          return;
+        }
+
         const { data, error } = await supabase
           .from('prompt_blocks')
           .select('*');
         
         if (error) {
           console.error('Erro ao carregar prompts:', error);
+          toast({
+            title: "Erro",
+            description: "Não foi possível carregar os prompts. Por favor, tente novamente.",
+            variant: "destructive",
+          });
           return;
         }
 
@@ -30,6 +49,11 @@ const ActionButtons = ({ onSelectPrompt, activeCategory }: ActionButtonsProps) =
         }
       } catch (error) {
         console.error('Erro ao carregar prompts:', error);
+        toast({
+          title: "Erro",
+          description: "Ocorreu um erro ao carregar os prompts. Por favor, tente novamente.",
+          variant: "destructive",
+        });
       }
     };
 
@@ -54,7 +78,7 @@ const ActionButtons = ({ onSelectPrompt, activeCategory }: ActionButtonsProps) =
     return () => {
       channel.unsubscribe();
     };
-  }, []);
+  }, [toast]);
 
   const normalizeString = (str: string) => {
     return str.toLowerCase()
