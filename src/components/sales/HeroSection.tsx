@@ -31,8 +31,8 @@ export const HeroSection = () => {
       
       <div className="max-w-5xl mx-auto rounded-2xl overflow-hidden shadow-2xl">
         <img 
-          src="/lovable-uploads/ec9e6684-9808-4a55-9eca-6cdfbc21d5d5.png" 
-          alt="Interface Principal" 
+          src="/lovable-uploads/0eb06c14-1f1f-425b-acdb-928b48c9df0b.png" 
+          alt="Interface Principal do Sistema" 
           className="w-full h-auto object-cover"
         />
       </div>
