@@ -22,10 +22,15 @@ export default {
         marquee: {
           '0%': { transform: 'translateX(0%)' },
           '100%': { transform: 'translateX(-50%)' },
+        },
+        marqueeReverse: {
+          '0%': { transform: 'translateX(-50%)' },
+          '100%': { transform: 'translateX(0%)' },
         }
       },
       animation: {
         marquee: 'marquee 25s linear infinite',
+        marqueeReverse: 'marqueeReverse 25s linear infinite',
       },
       colors: {
         border: "hsl(var(--border))",
