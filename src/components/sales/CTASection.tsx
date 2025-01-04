@@ -1,31 +1,43 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Star } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 export const CTASection = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="text-center mb-16">
-      <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600/20 to-blue-600/20 px-4 py-2 rounded-full mb-8">
-        <Star className="h-4 w-4 text-purple-400" />
-        <span className="text-sm text-purple-400">Transforme seu Negócio Hoje</span>
-      </div>
-      <h2 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-400 mb-6">
-        Pronto para Revolucionar seu
-        <br />
-        Negócio Digital?
+    <div className="text-center py-24">
+      <h2 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-400 mb-8">
+        Pronto para Começar?
       </h2>
-      <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-        Junte-se aos empreendedores que já estão construindo seus impérios digitais com nossa IA
+      <p className="text-xl text-gray-300 mb-12 max-w-2xl mx-auto">
+        Junte-se a milhares de empreendedores que já estão revolucionando seus negócios com IA.
       </p>
       <Button
         onClick={() => navigate("/login")}
-        className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-8 py-6 rounded-xl text-lg font-semibold shadow-lg transition-all duration-300 hover:scale-105"
+        className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-8 py-6 rounded-xl text-lg font-semibold shadow-lg transition-all duration-300 hover:scale-105 mb-24"
       >
-        <span>Começar Gratuitamente</span>
+        <span>Começar Agora</span>
         <ArrowRight className="ml-2 h-5 w-5" />
       </Button>
+
+      <div className="max-w-4xl mx-auto">
+        <div className="flex flex-col items-center">
+          <div className="w-48 h-48 rounded-full overflow-hidden mb-6 border-4 border-gradient-to-r from-purple-400 to-blue-400">
+            <img
+              src="/lovable-uploads/d6ea02ca-d39e-4e43-b2fa-6d6af3d668a1.png"
+              alt="Criador do ArcaGPT"
+              className="w-full h-full object-cover"
+            />
+          </div>
+          <p className="text-lg text-gray-300 mb-4">
+            Criador do ArcaGPT que acelera para que sua mensagem chegue ao mundo
+          </p>
+          <p className="text-sm text-gray-400">
+            © 2024 ArcaGPT. Todos os direitos reservados.
+          </p>
+        </div>
+      </div>
     </div>
   );
 };
