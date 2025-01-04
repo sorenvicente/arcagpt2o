@@ -22,9 +22,19 @@ export const PartnersMarquee = () => {
       </div>
 
       <div className="relative flex flex-col gap-2 overflow-hidden">
-        {/* Gradientes laterais para suavizar as transições */}
-        <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#1A1A2E] via-[#151522]/70 to-transparent z-10"></div>
-        <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#1A1A2E] via-[#13131E]/70 to-transparent z-10"></div>
+        {/* Elementos 3D laterais */}
+        <div className="absolute inset-y-0 left-0 w-32 z-10 flex items-center">
+          <div className="h-full w-full bg-gradient-to-r from-[#1A1A2E] via-[#151522]/70 to-transparent"></div>
+          <div className="absolute inset-y-0 right-0 w-2">
+            <div className="h-full w-full bg-gradient-to-r from-purple-500/5 to-transparent backdrop-blur-[1px] rounded-l-full"></div>
+          </div>
+        </div>
+        <div className="absolute inset-y-0 right-0 w-32 z-10 flex items-center">
+          <div className="h-full w-full bg-gradient-to-l from-[#1A1A2E] via-[#13131E]/70 to-transparent"></div>
+          <div className="absolute inset-y-0 left-0 w-2">
+            <div className="h-full w-full bg-gradient-to-l from-purple-500/5 to-transparent backdrop-blur-[1px] rounded-r-full"></div>
+          </div>
+        </div>
 
         {/* First row - Left to right */}
         <div className="relative flex overflow-x-hidden">
