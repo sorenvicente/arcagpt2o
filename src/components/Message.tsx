@@ -55,9 +55,9 @@ const Message = ({ role, content, onRegenerate, isRegenerating }: MessageProps) 
             {role === 'user' && isHovered && !isEditing && (
               <button
                 onClick={handleEdit}
-                className="absolute -left-8 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity"
+                className="absolute -left-8 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1 rounded-md hover:bg-chatgpt-hover"
               >
-                <Pencil className="h-4 w-4 text-gray-400 hover:text-white" />
+                <Pencil className="h-4 w-4 text-[#8E9196] hover:text-white transition-colors" />
               </button>
             )}
             {role === 'user' && isEditing ? (
