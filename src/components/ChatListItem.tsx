@@ -29,7 +29,7 @@ export const ChatListItem = ({ chat, onDelete, onClick }: ChatListItemProps) => 
       onClick={onClick}
     >
       <MessageSquare className="h-4 w-4 flex-shrink-0" />
-      <div className="flex-1 min-w-0">
+      <div className="flex-1 truncate">
         <ChatItemTitle
           id={chat.id}
           title={chat.title}
