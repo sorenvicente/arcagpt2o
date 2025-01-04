@@ -1,29 +1,31 @@
-import { Card } from "@/components/ui/card";
-import { Brain, BookOpen, Rocket, Compass, Users, PenTool } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { ArrowRight } from "lucide-react";
 
 interface FeatureCardProps {
+  icon: React.ReactNode;
   title: string;
   description: string;
-  icon: "brain" | "book" | "rocket" | "compass" | "users" | "pen-tool";
 }
 
-export const FeatureCard = ({ title, description, icon }: FeatureCardProps) => {
-  const Icon = {
-    brain: Brain,
-    book: BookOpen,
-    rocket: Rocket,
-    compass: Compass,
-    users: Users,
-    "pen-tool": PenTool
-  }[icon];
+export const FeatureCard = ({ icon, title, description }: FeatureCardProps) => {
+  const navigate = useNavigate();
 
   return (
-    <Card className="p-6 bg-gradient-to-br from-purple-900/30 to-blue-900/30 border-purple-500/20 hover:border-purple-500/40 transition-all duration-300 rounded-[2rem]">
-      <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center mb-4">
-        <Icon className="h-6 w-6 text-white" />
+    <div className="p-8 rounded-3xl bg-gradient-to-br from-purple-900/30 to-blue-900/30 border border-purple-500/20 hover:border-purple-500/40 transition-all duration-300">
+      <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-purple-600/20 to-blue-600/20 flex items-center justify-center mb-6">
+        {icon}
       </div>
-      <h3 className="text-xl font-semibold text-white mb-2">{title}</h3>
-      <p className="text-gray-300">{description}</p>
-    </Card>
+      <h3 className="text-2xl font-bold text-white mb-4">{title}</h3>
+      <p className="text-gray-300 mb-6">{description}</p>
+      <Button
+        onClick={() => navigate("/login")}
+        variant="ghost"
+        className="text-purple-400 hover:text-white hover:bg-purple-900/50 group"
+      >
+        Começar Agora
+        <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+      </Button>
+    </div>
   );
 };

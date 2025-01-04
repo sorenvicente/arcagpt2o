@@ -1,25 +1,23 @@
-const partners = [
-  { name: "OpenAI" },
-  { name: "Anthropic" },
-  { name: "Google" },
-  { name: "Meta AI" },
-  { name: "Mistral AI" },
-  { name: "Cohere" },
-  { name: "Claude" },
-  { name: "Gemini" },
-  { name: "PaLM" },
-  { name: "Llama" }
-];
-
 export const PartnersMarquee = () => {
+  const partners = [
+    { name: "GPT-4" },
+    { name: "Claude 3" },
+    { name: "Gemini" },
+    { name: "Mistral" },
+    { name: "Llama 2" },
+    { name: "PaLM 2" },
+    { name: "DALL-E" },
+    { name: "Stable Diffusion" },
+  ];
+
   return (
-    <section className="py-16 overflow-hidden mb-32">
-      <div className="text-center mb-8">
-        <h2 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-400 mb-2">
+    <div className="py-16 bg-gradient-to-b from-transparent to-purple-950/10">
+      <div className="text-center mb-12">
+        <h2 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-400 mb-4">
           Integrado com as Melhores IAs
         </h2>
-        <p className="text-lg text-gray-400">
-          Acesse os modelos mais avançados de IA através de nossa plataforma
+        <p className="text-xl text-gray-300">
+          Potencialize seus resultados com as IAs mais avançadas do mercado
         </p>
       </div>
 
@@ -56,6 +54,6 @@ export const PartnersMarquee = () => {
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 };
