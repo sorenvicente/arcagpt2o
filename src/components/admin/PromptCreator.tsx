@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { PromptForm } from "./PromptForm";
-import { PromptList } from "./PromptList";
 
 export function PromptCreator() {
   const { user, isLoading } = useAuth();
@@ -24,10 +23,6 @@ export function PromptCreator() {
   return (
     <div className="space-y-8">
       <PromptForm />
-      <div className="mt-8">
-        <h2 className="text-xl font-semibold mb-4">Prompts Criados</h2>
-        <PromptList />
-      </div>
     </div>
   );
 }

@@ -39,8 +39,13 @@ const AdminPage = () => {
       </div>
 
       <div className="grid gap-8 md:grid-cols-[1fr_2fr]">
-        <PromptCreator />
-        <PromptList />
+        <div className="space-y-8">
+          <PromptCreator />
+        </div>
+        <div className="space-y-4">
+          <h2 className="text-xl font-semibold">Prompts Criados</h2>
+          <PromptList />
+        </div>
       </div>
     </div>
   );
