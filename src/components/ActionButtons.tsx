@@ -1,6 +1,7 @@
 import { Book, Brain, GraduationCap, School, Target } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface ActionButtonsProps {
   onSelectPrompt: (prompt: string, category: string) => void;
@@ -12,20 +13,53 @@ const ActionButtons = ({ onSelectPrompt, activeCategory }: ActionButtonsProps) =
   const { toast } = useToast();
 
   useEffect(() => {
-    const loadPrompts = () => {
-      const savedPrompts = localStorage.getItem('prompts');
-      if (savedPrompts) {
-        setPrompts(JSON.parse(savedPrompts));
-        console.log('Prompts carregados:', JSON.parse(savedPrompts));
-      } else {
-        console.log('Nenhum prompt encontrado no localStorage');
+    const loadPrompts = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('prompt_blocks')
+          .select('*');
+        
+        if (error) {
+          console.error('Erro ao carregar prompts:', error);
+          toast({
+            title: "Erro",
+            description: "Não foi possível carregar os prompts",
+            variant: "destructive",
+          });
+          return;
+        }
+
+        if (data) {
+          setPrompts(data);
+          console.log('Prompts carregados:', data);
+        }
+      } catch (error) {
+        console.error('Erro ao carregar prompts:', error);
       }
     };
 
     loadPrompts();
-    window.addEventListener('storage', loadPrompts);
-    return () => window.removeEventListener('storage', loadPrompts);
-  }, []);
+
+    // Subscribe to changes
+    const channel = supabase
+      .channel('prompt_blocks_changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'prompt_blocks'
+        },
+        () => {
+          loadPrompts();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      channel.unsubscribe();
+    };
+  }, [toast]);
 
   const normalizeString = (str: string) => {
     return str.toLowerCase()
