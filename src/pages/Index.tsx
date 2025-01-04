@@ -37,14 +37,16 @@ const Index = () => {
         
         <div className={`flex h-full flex-col pt-[60px] pb-4`}>
           {messages.length === 0 ? (
-            <div className="flex-1 flex flex-col items-center justify-center">
-              <div className="w-full max-w-3xl px-4 space-y-8">
-                <h1 className="text-4xl font-semibold text-center">Como posso ajudar?</h1>
-                <ActionButtons 
-                  onSelectPrompt={sendMessage}
-                  activeCategory={activeAssistant}
-                />
-                <ChatInput onSend={sendMessage} isLoading={isLoading} />
+            <div className="flex-1 flex flex-col">
+              <div className="flex-1 flex items-center justify-center">
+                <div className="w-full max-w-3xl px-4 space-y-8">
+                  <h1 className="text-4xl font-semibold text-center">Como posso ajudar?</h1>
+                  <ActionButtons 
+                    onSelectPrompt={sendMessage}
+                    activeCategory={activeAssistant}
+                  />
+                  <ChatInput onSend={sendMessage} isLoading={isLoading} />
+                </div>
               </div>
             </div>
           ) : (
