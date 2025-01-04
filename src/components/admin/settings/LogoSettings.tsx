@@ -5,11 +5,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
+import HexLogo from "@/components/HexLogo";
 
 export const LogoSettings = () => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [logoFile, setLogoFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const { data: settings } = useQuery({
     queryKey: ["settings"],
@@ -45,14 +47,17 @@ export const LogoSettings = () => {
         .eq("id", settings?.id);
 
       if (updateError) throw updateError;
+
+      return publicUrl.publicUrl;
     },
-    onSuccess: () => {
+    onSuccess: (newLogoUrl) => {
       queryClient.invalidateQueries({ queryKey: ["settings"] });
       toast({
         title: "Sucesso",
         description: "Logo atualizada com sucesso",
       });
       setLogoFile(null);
+      setPreviewUrl(null);
     },
     onError: (error) => {
       toast({
@@ -67,22 +72,53 @@ export const LogoSettings = () => {
     const file = event.target.files?.[0];
     if (file) {
       setLogoFile(file);
-      updateLogo.mutate(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewUrl(reader.result as string);
+      };
+      reader.readAsDataURL(file);
     }
+  };
+
+  const handleSave = () => {
+    if (logoFile) {
+      updateLogo.mutate(logoFile);
+    }
+  };
+
+  const handleCancel = () => {
+    setLogoFile(null);
+    setPreviewUrl(null);
   };
 
   return (
     <div className="space-y-4">
       <div>
         <Label>Logo</Label>
-        <div className="mt-2 flex items-center gap-4">
-          {settings?.logo_url && (
-            <img
-              src={settings.logo_url}
-              alt="Logo"
-              className="h-12 w-auto"
-            />
-          )}
+        <div className="mt-2 space-y-4">
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 p-4 border rounded-lg">
+              <div className="text-center">
+                <p className="text-sm text-gray-500 mb-2">Logo Atual</p>
+                <HexLogo
+                  size="64"
+                  className="text-gray-800"
+                  customLogoUrl={settings?.logo_url}
+                />
+              </div>
+              {previewUrl && (
+                <div className="text-center">
+                  <p className="text-sm text-gray-500 mb-2">Prévia</p>
+                  <HexLogo
+                    size="64"
+                    className="text-gray-800"
+                    customLogoUrl={previewUrl}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+          
           <div className="flex items-center gap-2">
             <Input
               type="file"
@@ -91,12 +127,21 @@ export const LogoSettings = () => {
               className="max-w-xs"
             />
             {logoFile && (
-              <Button
-                variant="outline"
-                onClick={() => setLogoFile(null)}
-              >
-                Cancelar
-              </Button>
+              <div className="flex gap-2">
+                <Button
+                  onClick={handleSave}
+                  disabled={updateLogo.isPending}
+                >
+                  {updateLogo.isPending ? "Salvando..." : "Salvar"}
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={handleCancel}
+                  disabled={updateLogo.isPending}
+                >
+                  Cancelar
+                </Button>
+              </div>
             )}
           </div>
         </div>

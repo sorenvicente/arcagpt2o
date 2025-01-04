@@ -1,6 +1,8 @@
 import { ChevronDown } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import HexLogo from "./HexLogo";
+import { supabase } from "@/integrations/supabase/client";
+import { useQuery } from "@tanstack/react-query";
 
 interface ChatHeaderProps {
   isSidebarOpen?: boolean;
@@ -10,6 +12,19 @@ interface ChatHeaderProps {
 
 const ChatHeader = ({ isSidebarOpen = true, activePrompt, activeCategory }: ChatHeaderProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const { data: settings } = useQuery({
+    queryKey: ["settings"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("system_settings")
+        .select("*")
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+  });
 
   return (
     <div className="fixed top-0 z-30 w-full border-b border-white/20 bg-chatgpt-main/95 backdrop-blur">
@@ -41,7 +56,7 @@ const ChatHeader = ({ isSidebarOpen = true, activePrompt, activeCategory }: Chat
           )}
         </div>
         <div className="gizmo-shadow-stroke relative flex h-12 w-12 items-center justify-center rounded-full bg-token-main-surface-primary text-token-text-primary">
-          <HexLogo size="40" className="text-white" />
+          <HexLogo size="40" className="text-white" customLogoUrl={settings?.logo_url} />
         </div>
       </div>
     </div>
