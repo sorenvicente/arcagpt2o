@@ -25,12 +25,12 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         chatgpt: {
-          sidebar: "#1A1F2C", // Dark Purple
-          main: "#221F26", // Dark Charcoal
-          secondary: "#403E43", // Charcoal Gray
-          hover: "#6E59A5", // Tertiary Purple
-          border: "#7E69AB", // Secondary Purple
-          input: "#9b87f5" // Primary Purple
+          sidebar: "#202123",
+          main: "#343541",
+          secondary: "#444654",
+          hover: "#2A2B32",
+          border: "#4E4F60",
+          input: "#40414F"
         },
         primary: {
           DEFAULT: "hsl(var(--primary))",

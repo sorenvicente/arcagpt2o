@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 import { UserMenu } from './UserMenu';
 import SidebarHeader from './sidebar/SidebarHeader';
 import ChatList from './sidebar/ChatList';
+import { useLocation } from 'react-router-dom';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -17,6 +18,7 @@ const HOVER_THRESHOLD = 50;
 const Sidebar = ({ isOpen, onToggle, onNewChat, onChatSelect, activeCategory }: SidebarProps) => {
   const [isHovering, setIsHovering] = useState(false);
   const hoverTimeoutRef = useRef<NodeJS.Timeout>();
+  const location = useLocation();
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -39,6 +41,11 @@ const Sidebar = ({ isOpen, onToggle, onNewChat, onChatSelect, activeCategory }: 
       clearTimeout(hoverTimeoutRef.current);
     };
   }, [isOpen, isHovering, onToggle]);
+
+  // Only hide sidebar on admin pages
+  if (location.pathname.startsWith('/admin')) {
+    return null;
+  }
 
   return (
     <div className={cn(
