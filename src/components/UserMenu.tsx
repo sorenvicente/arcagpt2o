@@ -26,15 +26,17 @@ export function UserMenu() {
   const isAdmin = profile?.role === "admin";
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <UserAvatar email={user?.email} />
-      </DropdownMenuTrigger>
-      <UserMenuContent 
-        email={user?.email} 
-        isAdmin={isAdmin} 
-        onSignOut={signOut}
-      />
-    </DropdownMenu>
+    <div className="relative">
+      <DropdownMenu modal={false}>
+        <DropdownMenuTrigger asChild>
+          <UserAvatar email={user?.email} />
+        </DropdownMenuTrigger>
+        <UserMenuContent 
+          email={user?.email} 
+          isAdmin={isAdmin} 
+          onSignOut={signOut}
+        />
+      </DropdownMenu>
+    </div>
   );
 }
