@@ -5,7 +5,7 @@ interface MousePosition {
   y: number;
 }
 
-export const useMouseTracker = (elementRef: RefObject<HTMLElement>, threshold: number = 718.2) => {
+export const useMouseTracker = (elementRef: RefObject<HTMLElement>, threshold: number = 100) => {
   const [isHovered, setIsHovered] = useState(false);
   const [mousePosition, setMousePosition] = useState<MousePosition>({ x: 0, y: 0 });
   const [shouldShowButton, setShouldShowButton] = useState(false);
