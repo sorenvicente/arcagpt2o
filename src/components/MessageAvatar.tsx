@@ -20,7 +20,7 @@ const MessageAvatar = ({ role }: MessageAvatarProps) => {
       return data;
     },
     staleTime: 1000 * 60, // 1 minuto
-    gcTime: 1000 * 60 * 5, // 5 minutos (anteriormente cacheTime)
+    gcTime: 1000 * 60 * 5, // 5 minutos
   });
 
   return (
@@ -28,7 +28,13 @@ const MessageAvatar = ({ role }: MessageAvatarProps) => {
       {role === "user" ? (
         <User className="h-5 w-5" />
       ) : (
-        <HexLogo size="32" className="text-white" customLogoUrl={settings?.logo_url} />
+        <div className="flex items-center justify-center">
+          <HexLogo 
+            size="32" 
+            className="text-white" 
+            customLogoUrl={settings?.logo_url} 
+          />
+        </div>
       )}
     </div>
   );
