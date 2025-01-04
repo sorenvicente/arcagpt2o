@@ -33,6 +33,7 @@ const Index = () => {
         onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
         onNewChat={handleNewChat}
         onChatSelect={loadChat}
+        activeCategory={activeAssistant}
       />
       
       <main className={`flex-1 transition-all duration-300 relative ${isSidebarOpen ? 'ml-64' : 'ml-0'}`}>

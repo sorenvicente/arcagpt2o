@@ -12,11 +12,12 @@ interface SidebarProps {
   onToggle: () => void;
   onNewChat: () => void;
   onChatSelect: (chatId: string) => void;
+  activeCategory?: string;
 }
 
 const HOVER_THRESHOLD = 50;
 
-const Sidebar = ({ isOpen, onToggle, onNewChat, onChatSelect }: SidebarProps) => {
+const Sidebar = ({ isOpen, onToggle, onNewChat, onChatSelect, activeCategory }: SidebarProps) => {
   const [savedChats, setSavedChats] = useState<SavedChat[]>([]);
   const [isHovering, setIsHovering] = useState(false);
   const hoverTimeoutRef = useRef<NodeJS.Timeout>();
@@ -112,16 +113,19 @@ const Sidebar = ({ isOpen, onToggle, onNewChat, onChatSelect }: SidebarProps) =>
         isOpen ? "w-64" : "w-0"
       )}>
         <nav className="flex h-full w-full flex-col px-3" aria-label="Chat history">
-          <div className="flex h-[60px] items-center">
+          <div className="flex h-[60px] items-center gap-3">
             <button 
               onClick={onToggle} 
               className="flex items-center justify-center h-10 w-10 rounded-lg hover:bg-chatgpt-hover transition-colors"
             >
               <Menu className="h-5 w-5 text-white" strokeWidth={1.5} />
             </button>
+            <span className="text-sm font-medium whitespace-nowrap">
+              ArcaGPT {activeCategory ? `(${activeCategory})` : ''}
+            </span>
             <button 
               onClick={onNewChat}
-              className="flex items-center justify-center h-10 w-10 ml-3 rounded-lg hover:bg-chatgpt-hover transition-colors"
+              className="flex items-center justify-center h-10 w-10 rounded-lg hover:bg-chatgpt-hover transition-colors ml-auto"
             >
               <Plus className="h-5 w-5 text-white" strokeWidth={1.5} />
             </button>
