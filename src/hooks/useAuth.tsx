@@ -13,29 +13,60 @@ export const useAuth = (requiredRole?: 'admin' | 'user') => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const { data: { session } } = await supabase.auth.getSession();
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
         
+        if (sessionError) {
+          throw sessionError;
+        }
+
         if (!session) {
           navigate('/login');
           return;
         }
 
-        setUser(session.user);
+        // Check if token is expired
+        const tokenExpiryTime = new Date(session.expires_at! * 1000);
+        const now = new Date();
+        
+        if (tokenExpiryTime < now) {
+          const { data: { session: refreshedSession }, error: refreshError } = 
+            await supabase.auth.refreshSession();
+          
+          if (refreshError || !refreshedSession) {
+            throw new Error('Failed to refresh session');
+          }
+          
+          setUser(refreshedSession.user);
+        } else {
+          setUser(session.user);
+        }
 
         if (requiredRole === 'admin') {
-          const { data: profile } = await supabase
+          const { data: profile, error: profileError } = await supabase
             .from('profiles')
             .select('role')
             .eq('id', session.user.id)
             .single();
 
+          if (profileError) throw profileError;
+
           if (!profile || profile.role !== 'admin') {
+            toast({
+              title: "Acesso negado",
+              description: "Você não tem permissão para acessar esta área.",
+              variant: "destructive"
+            });
             navigate('/');
             return;
           }
         }
       } catch (error) {
         console.error('Auth error:', error);
+        toast({
+          title: "Erro de autenticação",
+          description: "Por favor, faça login novamente.",
+          variant: "destructive"
+        });
         navigate('/login');
       } finally {
         setIsLoading(false);
@@ -44,59 +75,37 @@ export const useAuth = (requiredRole?: 'admin' | 'user') => {
 
     checkAuth();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_OUT') {
-        setUser(null);
-        navigate('/login');
-      } else if (session) {
-        setUser(session.user);
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'SIGNED_OUT' || event === 'TOKEN_REFRESHED') {
+        if (!session) {
+          setUser(null);
+          navigate('/login');
+        } else {
+          setUser(session.user);
+        }
       }
     });
 
     return () => subscription.unsubscribe();
-  }, [navigate, requiredRole]);
+  }, [navigate, requiredRole, toast]);
 
   const signOut = async () => {
     try {
-      // Primeiro verifica se existe uma sessão
-      const { data: { session } } = await supabase.auth.getSession();
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
       
-      // Limpa o estado local primeiro
       setUser(null);
       localStorage.clear();
-      
-      // Se não houver sessão, apenas redireciona
-      if (!session) {
-        navigate('/login');
-        toast({
-          title: "Logout realizado",
-          description: "Você foi desconectado com sucesso."
-        });
-        return;
-      }
-      
-      // Se houver sessão, tenta fazer o logout no Supabase
-      const { error } = await supabase.auth.signOut();
-      
-      if (error) {
-        console.error('Logout error:', error);
-        // Mesmo com erro, vamos garantir que o usuário seja deslogado localmente
-        navigate('/login');
-        toast({
-          title: "Aviso no logout",
-          description: "Houve um problema ao desconectar sua conta, mas você foi deslogado localmente.",
-          variant: "destructive"
-        });
-      } else {
-        navigate('/login');
-        toast({
-          title: "Logout realizado",
-          description: "Você foi desconectado com sucesso."
-        });
-      }
+      navigate('/login');
+      toast({
+        title: "Logout realizado",
+        description: "Você foi desconectado com sucesso."
+      });
     } catch (error) {
       console.error('Logout error:', error);
-      // Mesmo com erro, vamos garantir que o usuário seja deslogado localmente
+      // Even if there's an error, ensure the user is logged out locally
+      setUser(null);
+      localStorage.clear();
       navigate('/login');
       toast({
         title: "Aviso no logout",
