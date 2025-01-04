@@ -33,7 +33,7 @@ export const CreateUserForm = ({ onSuccess }: CreateUserFormProps) => {
   const createUser = useMutation({
     mutationFn: async (values: z.infer<typeof formSchema>) => {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 segundos timeout
+      const timeoutId = setTimeout(() => controller.abort(), 30000);
 
       try {
         const { data: { session } } = await supabase.auth.getSession();
@@ -41,8 +41,23 @@ export const CreateUserForm = ({ onSuccess }: CreateUserFormProps) => {
           throw new Error('Não autorizado: Faça login novamente');
         }
 
+        // Verificar se o usuário atual é admin
+        const { data: profile, error: profileError } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', session.user.id)
+          .single();
+
+        if (profileError) {
+          throw new Error('Erro ao verificar permissões');
+        }
+
+        if (profile?.role !== 'admin') {
+          throw new Error('Apenas administradores podem criar novos usuários');
+        }
+
         const response = await fetch(
-          `${process.env.VITE_SUPABASE_URL}/functions/v1/manage-users`,
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/manage-users`,
           {
             method: "POST",
             headers: {
