@@ -14,8 +14,8 @@ export const UserAvatar = forwardRef<HTMLButtonElement, UserAvatarProps>(
         variant="ghost"
         className="relative h-8 w-8 rounded-full hover:bg-chatgpt-hover"
       >
-        <Avatar className="h-8 w-8 border border-chatgpt-border">
-          <AvatarFallback className="bg-chatgpt-main text-[#9b87f5]">
+        <Avatar className="h-8 w-8">
+          <AvatarFallback className="bg-chatgpt-main text-[#9b87f5] border border-chatgpt-border">
             {email?.charAt(0).toUpperCase()}
           </AvatarFallback>
         </Avatar>

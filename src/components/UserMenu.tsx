@@ -27,7 +27,7 @@ export function UserMenu() {
 
   return (
     <div className="relative">
-      <DropdownMenu modal={false}>
+      <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <UserAvatar email={user?.email} />
         </DropdownMenuTrigger>

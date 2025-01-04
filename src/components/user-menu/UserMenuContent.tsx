@@ -11,10 +11,9 @@ interface UserMenuContentProps {
 export function UserMenuContent({ email, isAdmin, onSignOut }: UserMenuContentProps) {
   return (
     <DropdownMenuContent 
-      className="w-56 bg-chatgpt-main border border-chatgpt-border text-white rounded-md shadow-lg z-[9999] fixed" 
+      className="w-56 bg-chatgpt-main border border-chatgpt-border text-white rounded-md shadow-lg" 
       align="end" 
       sideOffset={5}
-      forceMount
     >
       <DropdownMenuLabel className="font-normal px-3 py-2">
         <div className="flex flex-col space-y-1">
