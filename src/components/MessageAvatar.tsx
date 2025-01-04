@@ -26,7 +26,7 @@ const MessageAvatar = ({ role }: MessageAvatarProps) => {
       {role === "user" ? (
         <User className="h-5 w-5" />
       ) : (
-        <HexLogo size="20" className="text-white" customLogoUrl={settings?.logo_url} />
+        <HexLogo size="32" className="text-white" customLogoUrl={settings?.logo_url} />
       )}
     </div>
   );
