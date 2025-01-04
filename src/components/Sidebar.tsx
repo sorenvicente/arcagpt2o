@@ -18,6 +18,7 @@ const Sidebar = ({ isOpen, onToggle, onNewChat, onChatSelect, activeCategory }: 
   const [isHovering, setIsHovering] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const hoverTimeoutRef = useRef<NodeJS.Timeout>();
+  const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -43,22 +44,29 @@ const Sidebar = ({ isOpen, onToggle, onNewChat, onChatSelect, activeCategory }: 
 
   useEffect(() => {
     setIsAnimating(true);
-    const timer = setTimeout(() => setIsAnimating(false), 300);
+    const timer = setTimeout(() => setIsAnimating(false), 500);
     return () => clearTimeout(timer);
   }, [isOpen]);
 
   return (
-    <div className={cn(
-      "fixed top-0 left-0 z-40 h-screen transition-all duration-300",
-      "bg-chatgpt-sidebar dark:bg-chatgpt-sidebar",
-      "border-r border-chatgpt-border dark:border-chatgpt-border",
-      isOpen ? "w-[240px]" : "w-0",
-      isOpen ? "animate-sidebarIn" : isAnimating ? "animate-sidebarOut" : ""
-    )}>
-      <nav className={cn(
-        "flex h-full w-full flex-col px-3",
-        !isOpen && "opacity-0"
-      )} aria-label="Chat history">
+    <div 
+      className={cn(
+        "fixed top-0 left-0 z-40 h-screen",
+        "bg-chatgpt-sidebar dark:bg-chatgpt-sidebar",
+        "border-r border-chatgpt-border dark:border-chatgpt-border",
+        "transition-[width,opacity] duration-500 ease-in-out",
+        isOpen ? "w-[240px]" : "w-0",
+        isOpen ? "animate-sidebarIn" : isAnimating ? "animate-sidebarOut" : ""
+      )}
+    >
+      <div 
+        ref={contentRef}
+        className={cn(
+          "flex h-full w-full flex-col px-3",
+          "transition-opacity duration-500 ease-in-out",
+          !isOpen && "opacity-0"
+        )}
+      >
         <SidebarHeader 
           onToggle={onToggle}
           onNewChat={onNewChat}
@@ -72,7 +80,7 @@ const Sidebar = ({ isOpen, onToggle, onNewChat, onChatSelect, activeCategory }: 
             <UserMenu />
           </div>
         )}
-      </nav>
+      </div>
     </div>
   );
 };
