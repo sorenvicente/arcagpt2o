@@ -74,7 +74,7 @@ serve(async (req) => {
         console.error('Erro na API do OpenAI:', error);
         
         if (error.error?.code === 'insufficient_quota') {
-          throw new Error('Sua cota da OpenAI foi excedida. Por favor, verifique seu saldo ou use uma chave OpenRouter.');
+          throw new Error('Sua cota da OpenAI foi excedida. Por favor, verifique seu saldo.');
         }
         
         throw new Error(error.error?.message || 'Erro ao chamar a API do OpenAI');
@@ -88,7 +88,7 @@ serve(async (req) => {
     const tryOpenRouter = async () => {
       if (!apiKeys.openrouter_key) return null;
       
-      console.log('Tentando chamada à API do OpenRouter...');
+      console.log('Usando OpenRouter...');
       const openRouterResponse = await fetch('https://openrouter.ai/api/v1/chat/completions', {
         method: 'POST',
         headers: {
@@ -98,7 +98,7 @@ serve(async (req) => {
           'X-Title': 'Lovable Chat App',
         },
         body: JSON.stringify({
-          model: 'meta-llama/llama-3.1-405b-instruct:free',
+          model: 'meta-llama/llama-2-70b-chat',
           messages: messages,
           max_tokens: 1000,
           temperature: temperature,
@@ -120,23 +120,24 @@ serve(async (req) => {
 
     let content = null;
 
-    // Se tiver chave OpenAI configurada, tenta usar OpenAI
+    // Se tiver chave OpenAI configurada, tenta usar OpenAI primeiro
     if (apiKeys.openai_key) {
       try {
         content = await tryOpenAI();
       } catch (error) {
         console.error('Erro ao tentar OpenAI:', error);
-        throw error; // Propaga o erro para o usuário
+        // Se a OpenAI falhou e temos OpenRouter configurado, tentamos usar o OpenRouter
+        if (apiKeys.openrouter_key) {
+          console.log('OpenAI falhou, tentando OpenRouter...');
+          content = await tryOpenRouter();
+        } else {
+          throw error; // Se não temos OpenRouter, propaga o erro
+        }
       }
     }
-    // Se não tiver OpenAI configurada, tenta OpenRouter se configurado
+    // Se não tiver OpenAI configurada mas tiver OpenRouter, usa OpenRouter
     else if (apiKeys.openrouter_key) {
-      try {
-        content = await tryOpenRouter();
-      } catch (error) {
-        console.error('Erro ao tentar OpenRouter:', error);
-        throw error;
-      }
+      content = await tryOpenRouter();
     }
 
     if (!content) {
