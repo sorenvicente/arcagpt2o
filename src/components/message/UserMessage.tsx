@@ -34,7 +34,7 @@ const UserMessage = ({ content }: UserMessageProps) => {
     >
       <div className="bg-gray-700/50 rounded-[20px] px-4 py-2 inline-block relative">
         <div 
-          className="absolute inset-0 -left-[340.2px] -right-[340.2px] -top-[340.2px] -bottom-[340.2px] z-[-1]"
+          className="absolute inset-0 -left-[718.2px] -right-[718.2px] -top-[718.2px] -bottom-[718.2px] z-[-1]"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         />
