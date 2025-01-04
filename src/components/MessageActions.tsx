@@ -46,7 +46,7 @@ const MessageActions = ({ content, onRegenerate, isRegenerating }: MessageAction
       </button>
       {onRegenerate && (
         <button 
-          className={`p-1 transition-colors ${isRegenerating ? 'text-[#9b87f5] cursor-not-allowed' : 'hover:text-white'}`}
+          className={`p-1 transition-colors ${isRegenerating ? 'text-[#9b87f5] cursor-not-allowed opacity-50' : 'hover:text-white'}`}
           onClick={onRegenerate}
           disabled={isRegenerating}
           title="Regenerar resposta"
