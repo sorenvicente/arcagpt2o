@@ -14,7 +14,7 @@ export const PricingCard = ({ title, price, features, isPro = false }: PricingCa
   const navigate = useNavigate();
 
   return (
-    <Card className={`p-8 ${
+    <Card className={`p-8 rounded-3xl ${
       isPro 
         ? "bg-gradient-to-br from-purple-600/20 to-blue-600/20 border-purple-400/50" 
         : "bg-gradient-to-br from-purple-900/30 to-blue-900/30 border-purple-500/20"
@@ -42,10 +42,10 @@ export const PricingCard = ({ title, price, features, isPro = false }: PricingCa
       
       <Button
         onClick={() => navigate("/login")}
-        className={isPro 
+        className={`rounded-xl ${isPro 
           ? "w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white transition-all duration-300"
           : "w-full bg-purple-900/50 hover:bg-purple-900/70 text-purple-400 border border-purple-500/50 hover:text-white transition-all duration-300"
-        }
+        }`}
       >
         {isPro ? "Começar Agora" : "Começar Grátis"}
       </Button>
