@@ -21,10 +21,12 @@ export const useAuthRedirect = () => {
         .eq('id', session.user.id)
         .single();
 
+      // Se for admin, redireciona para o painel admin
       if (profile?.role === 'admin') {
         navigate('/admin');
       } else {
-        navigate('/');
+        // Se for usuário comum, redireciona para a interface principal
+        navigate('/app');
       }
     };
 
