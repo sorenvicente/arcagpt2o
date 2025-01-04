@@ -28,7 +28,7 @@ const UserMessage = ({ content }: UserMessageProps) => {
 
   return (
     <div
-      className="relative group px-16"
+      className="relative group"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -39,7 +39,7 @@ const UserMessage = ({ content }: UserMessageProps) => {
               <TooltipTrigger asChild>
                 <button
                   onClick={handleEdit}
-                  className="absolute -left-12 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-2.5 rounded-full hover:bg-[#202123] bg-black/20"
+                  className="absolute -left-10 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-2.5 rounded-full hover:bg-[#202123] bg-black/20"
                 >
                   <Pencil className="h-4 w-4 text-[#8E9196] hover:text-white transition-colors" />
                 </button>
