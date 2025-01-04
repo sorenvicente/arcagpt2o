@@ -12,11 +12,32 @@ export const useChatPersistence = (
 ) => {
   const { toast } = useToast();
 
+  const generateTitle = (messages: Message[]): string => {
+    // Find first user message for title
+    const firstUserMessage = messages.find(msg => msg.role === 'user');
+    if (!firstUserMessage) return 'Nova conversa';
+    
+    // Get first 50 characters of user message, ending at last complete word
+    const maxLength = 50;
+    let title = firstUserMessage.content;
+    
+    if (title.length > maxLength) {
+      title = title.substring(0, maxLength);
+      const lastSpace = title.lastIndexOf(' ');
+      if (lastSpace > 0) {
+        title = title.substring(0, lastSpace);
+      }
+      title += '...';
+    }
+    
+    return title;
+  };
+
   const saveChat = useCallback(async () => {
     if (messages.length === 0) return;
 
     try {
-      const title = messages[0].content.substring(0, 50) + '...';
+      const title = generateTitle(messages);
       
       if (chatId) {
         const { error } = await supabase

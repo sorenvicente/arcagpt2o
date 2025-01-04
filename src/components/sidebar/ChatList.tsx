@@ -40,7 +40,7 @@ const ChatList = ({ onChatSelect }: ChatListProps) => {
       const { data, error } = await supabase
         .from('saved_chats')
         .select('id, title, category, created_at')
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false }); // Changed to false to show newest first
 
       if (error) throw error;
       setSavedChats(data || []);
