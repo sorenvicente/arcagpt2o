@@ -15,7 +15,9 @@ interface PromptGridProps {
   onDelete: (id: string) => void;
 }
 
-export function PromptGrid({ prompts, onEdit, onDelete }: PromptGridProps) {
+export function PromptGrid({ prompts = [], onEdit, onDelete }: PromptGridProps) {
+  if (!prompts) return null;
+  
   return (
     <div className="grid grid-cols-3 gap-1.5 max-w-6xl mx-auto px-4">
       {prompts.map((prompt) => (

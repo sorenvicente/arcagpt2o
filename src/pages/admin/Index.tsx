@@ -1,14 +1,12 @@
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { PromptCreator } from "@/components/admin/PromptCreator";
-import { PromptGrid } from "@/components/admin/PromptGrid";
+import { PromptList } from "@/components/admin/PromptList";
 
 const AdminPage = () => {
   const navigate = useNavigate();
-  const [selectedPromptId, setSelectedPromptId] = useState<string | null>(null);
   const { isLoading } = useAuth("admin");
 
   if (isLoading) {
@@ -30,8 +28,8 @@ const AdminPage = () => {
       </div>
 
       <div className="grid gap-8 md:grid-cols-[1fr_2fr]">
-        <PromptCreator selectedPromptId={selectedPromptId} />
-        <PromptGrid onPromptSelect={setSelectedPromptId} />
+        <PromptCreator />
+        <PromptList />
       </div>
     </div>
   );
