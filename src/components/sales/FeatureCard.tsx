@@ -1,17 +1,20 @@
 import { Card } from "@/components/ui/card";
-import { Brain, BookOpen, Rocket } from "lucide-react";
+import { Brain, BookOpen, Rocket, Compass, Users, PenTool } from "lucide-react";
 
 interface FeatureCardProps {
   title: string;
   description: string;
-  icon: "brain" | "book" | "rocket";
+  icon: "brain" | "book" | "rocket" | "compass" | "users" | "pen-tool";
 }
 
 export const FeatureCard = ({ title, description, icon }: FeatureCardProps) => {
   const Icon = {
     brain: Brain,
     book: BookOpen,
-    rocket: Rocket
+    rocket: Rocket,
+    compass: Compass,
+    users: Users,
+    "pen-tool": PenTool
   }[icon];
 
   return (
