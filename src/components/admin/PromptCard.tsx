@@ -18,7 +18,7 @@ interface PromptCardProps {
 
 export function PromptCard({ prompt, onEdit, onDelete }: PromptCardProps) {
   return (
-    <div className="flex flex-col justify-between p-1.5 bg-chatgpt-secondary rounded-lg border border-chatgpt-border hover:bg-chatgpt-hover transition-colors">
+    <div className="flex flex-col justify-between p-1 bg-chatgpt-secondary rounded-lg border border-chatgpt-border hover:bg-chatgpt-hover transition-colors">
       <div className="flex-1 min-w-0 space-y-0.5">
         <h3 className="font-medium text-white text-xs truncate">{prompt.name}</h3>
         {prompt.description && (
@@ -33,17 +33,17 @@ export function PromptCard({ prompt, onEdit, onDelete }: PromptCardProps) {
           variant="ghost"
           size="icon"
           onClick={() => onEdit(prompt)}
-          className="h-5 w-5 text-gray-400 hover:text-white hover:bg-chatgpt-hover"
+          className="h-4 w-4 text-gray-400 hover:text-white hover:bg-chatgpt-hover"
         >
-          <Edit className="h-3 w-3" />
+          <Edit className="h-2.5 w-2.5" />
         </Button>
         <Button
           variant="ghost"
           size="icon"
           onClick={() => onDelete(prompt.id)}
-          className="h-5 w-5 text-gray-400 hover:text-red-400 hover:bg-chatgpt-hover"
+          className="h-4 w-4 text-gray-400 hover:text-red-400 hover:bg-chatgpt-hover"
         >
-          <Trash2 className="h-3 w-3" />
+          <Trash2 className="h-2.5 w-2.5" />
         </Button>
       </div>
     </div>
