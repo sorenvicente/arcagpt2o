@@ -5,18 +5,18 @@ import { UserManagement } from "./settings/UserManagement";
 
 export const SystemSettings = () => {
   return (
-    <Card className="p-6">
+    <Card className="w-full max-w-4xl mx-auto p-4 sm:p-6">
       <Tabs defaultValue="users" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="users">Usuários</TabsTrigger>
-          <TabsTrigger value="appearance">Aparência</TabsTrigger>
+        <TabsList className="w-full grid grid-cols-2 gap-2">
+          <TabsTrigger value="users" className="w-full">Usuários</TabsTrigger>
+          <TabsTrigger value="appearance" className="w-full">Aparência</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="users">
+        <TabsContent value="users" className="mt-2 sm:mt-4">
           <UserManagement />
         </TabsContent>
 
-        <TabsContent value="appearance">
+        <TabsContent value="appearance" className="mt-2 sm:mt-4">
           <LogoSettings />
         </TabsContent>
       </Tabs>

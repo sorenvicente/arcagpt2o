@@ -9,13 +9,13 @@ const SystemSettingsPage = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Configurações do Sistema</h1>
+    <div className="container mx-auto px-4 py-4 sm:p-6 space-y-4 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+        <h1 className="text-xl sm:text-2xl font-bold">Configurações do Sistema</h1>
         <Button 
           onClick={() => navigate("/admin")}
           variant="ghost"
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 w-full sm:w-auto justify-center"
         >
           <ArrowLeft className="h-4 w-4" />
           Voltar
