@@ -61,28 +61,25 @@ export const useApiKeys = () => {
         .limit(1)
         .single();
 
+      const dataToSave = {
+        openai_key: keys.openai_key.trim(),
+        openrouter_key: keys.openrouter_key.trim(),
+        selected_openai_model: keys.selected_openai_model,
+        selected_openrouter_model: keys.selected_openrouter_model,
+        updated_at: new Date().toISOString(),
+      };
+
       if (existingKeys) {
         const { error } = await supabase
           .from("api_keys")
-          .update({
-            openai_key: keys.openai_key.trim(),
-            openrouter_key: keys.openrouter_key.trim(),
-            selected_openai_model: keys.selected_openai_model,
-            selected_openrouter_model: keys.selected_openrouter_model,
-            updated_at: new Date().toISOString(),
-          })
+          .update(dataToSave)
           .eq("id", existingKeys.id);
 
         if (error) throw error;
       } else {
-        const { error } = await supabase.from("api_keys").insert([
-          {
-            openai_key: keys.openai_key.trim(),
-            openrouter_key: keys.openrouter_key.trim(),
-            selected_openai_model: keys.selected_openai_model,
-            selected_openrouter_model: keys.selected_openrouter_model,
-          },
-        ]);
+        const { error } = await supabase
+          .from("api_keys")
+          .insert([dataToSave]);
 
         if (error) throw error;
       }
