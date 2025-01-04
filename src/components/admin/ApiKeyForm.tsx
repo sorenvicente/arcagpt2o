@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import ApiKeySection from "./ApiKeySection";
-import { openAiModels, openRouterModels } from "@/config/aiModels";
+import { openAiModels, openRouterModels, OpenAIModel, OpenRouterModel, ModelOption } from "@/config/aiModels";
 
 interface ApiKeyFormProps {
   keys: {
@@ -17,8 +17,8 @@ interface ApiKeyFormProps {
 }
 
 const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
-  const [selectedOpenAIModel, setSelectedOpenAIModel] = useState(openAiModels[0].value);
-  const [selectedOpenRouterModel, setSelectedOpenRouterModel] = useState(openRouterModels[0].value);
+  const [selectedOpenAIModel, setSelectedOpenAIModel] = useState<OpenAIModel>(openAiModels[0].value);
+  const [selectedOpenRouterModel, setSelectedOpenRouterModel] = useState<OpenRouterModel>(openRouterModels[0].value);
   const { toast } = useToast();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -43,6 +43,14 @@ const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
     </div>
   );
 
+  const handleOpenAIModelChange = (value: string) => {
+    setSelectedOpenAIModel(value as OpenAIModel);
+  };
+
+  const handleOpenRouterModelChange = (value: string) => {
+    setSelectedOpenRouterModel(value as OpenRouterModel);
+  };
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <ApiKeySection
@@ -51,8 +59,8 @@ const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
         apiKey={keys.openai_key}
         onApiKeyChange={(value) => setKeys({ ...keys, openai_key: value })}
         selectedModel={selectedOpenAIModel}
-        onModelChange={setSelectedOpenAIModel}
-        models={openAiModels}
+        onModelChange={handleOpenAIModelChange}
+        models={openAiModels as ModelOption[]}
         modelSelectorLabel="Selecione o Modelo OpenAI"
         modelListTitle="Modelos Disponíveis"
       />
@@ -63,8 +71,8 @@ const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
         apiKey={keys.openrouter_key}
         onApiKeyChange={(value) => setKeys({ ...keys, openrouter_key: value })}
         selectedModel={selectedOpenRouterModel}
-        onModelChange={setSelectedOpenRouterModel}
-        models={openRouterModels}
+        onModelChange={handleOpenRouterModelChange}
+        models={openRouterModels as ModelOption[]}
         modelSelectorLabel="Selecione o Modelo OpenRouter"
         modelListTitle="Modelos Disponíveis (Gratuitos e Pagos)"
         extraContent={openRouterExtraContent}

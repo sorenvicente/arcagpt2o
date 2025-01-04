@@ -1,3 +1,35 @@
+export type OpenAIModelValue = 
+  | "gpt-4-turbo"
+  | "gpt-4"
+  | "gpt-4-vision"
+  | "gpt-3.5-turbo"
+  | "gpt-3.5-turbo-16k";
+
+export type OpenRouterModelValue = 
+  | "meta-llama/llama-3.1-405b-instruct:free"
+  | "meta-llama/llama-2-70b-chat"
+  | "meta-llama/llama-2-13b-chat"
+  | "meta-llama/llama-2-7b-chat"
+  | "meta-llama/codellama-34b-instruct"
+  | "meta-llama/codellama-70b-instruct"
+  | "meta-llama/llama-2-13b-code-instruct"
+  | "google/gemini-pro"
+  | "anthropic/claude-2"
+  | "mistral/mistral-7b"
+  | "mistral/mixtral-8x7b"
+  | "openai/gpt-4-1106-preview"
+  | "openai/gpt-4-vision-preview"
+  | "openai/gpt-4"
+  | "openai/gpt-3.5-turbo"
+  | "anthropic/claude-3-opus"
+  | "anthropic/claude-3-sonnet"
+  | "anthropic/claude-3-haiku"
+  | "google/gemini-pro-vision"
+  | "google/gemini-ultra"
+  | "mistral/mistral-large"
+  | "mistral/mistral-medium"
+  | "mistral/mistral-small";
+
 export const openAiModels = [
   { value: "gpt-4-turbo", label: "GPT-4 Turbo" },
   { value: "gpt-4", label: "GPT-4" },
@@ -37,5 +69,10 @@ export const openRouterModels = [
   { value: "mistral/mistral-small", label: "Mistral Small (Paid)" },
 ] as const;
 
-export type OpenAIModel = typeof openAiModels[number]["value"];
-export type OpenRouterModel = typeof openRouterModels[number]["value"];
+export type OpenAIModel = (typeof openAiModels)[number]["value"];
+export type OpenRouterModel = (typeof openRouterModels)[number]["value"];
+
+export type ModelOption = {
+  value: string;
+  label: string;
+};

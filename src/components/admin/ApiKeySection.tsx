@@ -2,6 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import ApiKeyInput from "./ApiKeyInput";
 import ModelSelector from "./ModelSelector";
 import ModelList from "./ModelList";
+import { ModelOption } from "@/config/aiModels";
 
 interface ApiKeySectionProps {
   title: string;
@@ -10,7 +11,7 @@ interface ApiKeySectionProps {
   onApiKeyChange: (value: string) => void;
   selectedModel: string;
   onModelChange: (value: string) => void;
-  models: { value: string; label: string }[];
+  models: ModelOption[];
   modelSelectorLabel: string;
   modelListTitle: string;
   showModelSelector?: boolean;
