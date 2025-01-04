@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Trash2, Edit } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { EditPromptDialog } from "./EditPromptDialog";
+import { PromptCard } from "./PromptCard";
+import { PromptListLoading } from "./PromptListLoading";
+import { PromptListEmpty } from "./PromptListEmpty";
 import { supabase } from "@/integrations/supabase/client";
 
 interface Prompt {
@@ -44,13 +45,11 @@ export function PromptList() {
   useEffect(() => {
     loadPrompts();
 
-    // Listen for prompt creation events
     const handlePromptCreated = () => {
       loadPrompts();
     };
     window.addEventListener('promptCreated', handlePromptCreated);
 
-    // Subscribe to Supabase changes
     const channel = supabase
       .channel('prompt_blocks_changes')
       .on('postgres_changes', 
@@ -97,56 +96,22 @@ export function PromptList() {
   };
 
   if (isLoading) {
-    return (
-      <div className="text-center py-8 text-gray-400">
-        Carregando prompts...
-      </div>
-    );
+    return <PromptListLoading />;
   }
 
   if (prompts.length === 0) {
-    return (
-      <div className="text-center py-8 text-gray-400">
-        Nenhum prompt criado ainda.
-      </div>
-    );
+    return <PromptListEmpty />;
   }
 
   return (
     <div className="grid grid-cols-3 gap-2 max-w-6xl mx-auto px-4">
       {prompts.map((prompt) => (
-        <div
+        <PromptCard
           key={prompt.id}
-          className="flex flex-col justify-between p-2 bg-chatgpt-secondary rounded-lg border border-chatgpt-border hover:bg-chatgpt-hover transition-colors"
-        >
-          <div className="flex-1 min-w-0">
-            <h3 className="font-medium text-white text-sm truncate">{prompt.name}</h3>
-            {prompt.description && (
-              <p className="text-xs text-gray-400 truncate">{prompt.description}</p>
-            )}
-            <span className="text-xs text-gray-500 block truncate">
-              Categoria: {prompt.category}
-            </span>
-          </div>
-          <div className="flex gap-1 justify-end mt-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setEditingPrompt(prompt)}
-              className="h-7 w-7 text-gray-400 hover:text-white hover:bg-chatgpt-hover"
-            >
-              <Edit className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => handleDelete(prompt.id)}
-              className="h-7 w-7 text-gray-400 hover:text-red-400 hover:bg-chatgpt-hover"
-            >
-              <Trash2 className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
+          prompt={prompt}
+          onEdit={setEditingPrompt}
+          onDelete={handleDelete}
+        />
       ))}
       
       {editingPrompt && (
