@@ -3,6 +3,8 @@ import { useChatCore } from './chat/useChatCore';
 import { useChatMessages } from './chat/useChatMessages';
 import { useChatPersistence } from './chat/useChatPersistence';
 import { useToast } from '@/components/ui/use-toast';
+import { supabase } from '@/integrations/supabase/client';
+import { Message } from '@/types/chat';
 
 export const useChat = () => {
   const [chatId, setChatId] = useState<string | null>(null);
@@ -98,7 +100,7 @@ export const useChat = () => {
         }
 
         // Adiciona a nova resposta do assistente
-        const newAssistantMessage = {
+        const newAssistantMessage: Message = {
           role: 'assistant',
           content: data.content,
         };
