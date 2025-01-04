@@ -31,16 +31,16 @@ export function UserMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="relative h-8 w-8 rounded-full hover:bg-[#2A2F3C]">
-          <Avatar className="h-8 w-8 border border-[#3A3F4C]">
-            <AvatarFallback className="bg-[#1A1F2C] text-[#9b87f5]">
+        <Button variant="ghost" className="relative h-8 w-8 rounded-full hover:bg-chatgpt-hover">
+          <Avatar className="h-8 w-8 border border-chatgpt-border">
+            <AvatarFallback className="bg-chatgpt-main text-[#9b87f5]">
               {user?.email?.charAt(0).toUpperCase()}
             </AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent 
-        className="w-56 bg-[#1A1F2C] border border-[#2A2F3C] text-white rounded-lg shadow-lg" 
+        className="w-56 bg-chatgpt-main border border-chatgpt-border text-white rounded-md shadow-lg" 
         align="end" 
         forceMount
       >
@@ -54,42 +54,42 @@ export function UserMenu() {
             </p>
           </div>
         </DropdownMenuLabel>
-        <DropdownMenuSeparator className="bg-[#2A2F3C]" />
+        <DropdownMenuSeparator className="bg-chatgpt-border" />
         {isAdmin && (
           <>
             <DropdownMenuItem 
               onClick={() => navigate("/admin")}
-              className="px-3 py-2 text-gray-200 hover:bg-[#2A2F3C] hover:text-white focus:bg-[#2A2F3C] cursor-pointer"
+              className="px-3 py-2 text-gray-200 hover:bg-chatgpt-hover hover:text-white focus:bg-chatgpt-hover cursor-pointer"
             >
               <Settings className="mr-2 h-4 w-4" />
               <span>Prompts</span>
             </DropdownMenuItem>
             <DropdownMenuItem 
               onClick={() => navigate("/api-keys")}
-              className="px-3 py-2 text-gray-200 hover:bg-[#2A2F3C] hover:text-white focus:bg-[#2A2F3C] cursor-pointer"
+              className="px-3 py-2 text-gray-200 hover:bg-chatgpt-hover hover:text-white focus:bg-chatgpt-hover cursor-pointer"
             >
               <Key className="mr-2 h-4 w-4" />
               <span>API Keys</span>
             </DropdownMenuItem>
             <DropdownMenuItem 
               onClick={() => navigate("/admin/dashboard")}
-              className="px-3 py-2 text-gray-200 hover:bg-[#2A2F3C] hover:text-white focus:bg-[#2A2F3C] cursor-pointer"
+              className="px-3 py-2 text-gray-200 hover:bg-chatgpt-hover hover:text-white focus:bg-chatgpt-hover cursor-pointer"
             >
               <LayoutDashboard className="mr-2 h-4 w-4" />
               <span>Dashboard</span>
             </DropdownMenuItem>
             <DropdownMenuItem 
               onClick={() => navigate("/admin/settings")}
-              className="px-3 py-2 text-gray-200 hover:bg-[#2A2F3C] hover:text-white focus:bg-[#2A2F3C] cursor-pointer"
+              className="px-3 py-2 text-gray-200 hover:bg-chatgpt-hover hover:text-white focus:bg-chatgpt-hover cursor-pointer"
             >
               <Settings className="mr-2 h-4 w-4" />
               <span>Configurações</span>
             </DropdownMenuItem>
-            <DropdownMenuSeparator className="bg-[#2A2F3C]" />
+            <DropdownMenuSeparator className="bg-chatgpt-border" />
           </>
         )}
         <DropdownMenuItem
-          className="px-3 py-2 text-red-400 hover:bg-[#2A2F3C] hover:text-red-300 focus:bg-[#2A2F3C] cursor-pointer"
+          className="px-3 py-2 text-red-400 hover:bg-chatgpt-hover hover:text-red-300 focus:bg-chatgpt-hover cursor-pointer"
           onClick={signOut}
         >
           <LogOut className="mr-2 h-4 w-4" />
