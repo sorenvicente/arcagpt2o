@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Pencil } from 'lucide-react';
+import { Grip } from 'lucide-react';
 import EditableMessage from './EditableMessage';
 import {
   Tooltip,
@@ -86,7 +86,7 @@ const UserMessage = ({ content }: UserMessageProps) => {
                   onClick={handleEdit}
                   className="absolute -left-10 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-2.5 rounded-full hover:bg-[#202123] bg-black/20"
                 >
-                  <Pencil className="h-4 w-4 text-[#8E9196] hover:text-white transition-colors" />
+                  <Grip className="h-4 w-4 text-[#8E9196] hover:text-white transition-colors rotate-90" />
                 </button>
               </TooltipTrigger>
               <TooltipContent className="bg-white text-black text-xs px-2 py-1 rounded-xl">
