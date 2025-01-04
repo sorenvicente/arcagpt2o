@@ -30,28 +30,23 @@ const UserMessage = ({ content }: UserMessageProps) => {
         y: rect.top + rect.height / 2
       };
 
-      // Calculate the angle between mouse position and message center
       const angle = Math.atan2(
         e.clientY - messageCenter.y,
         e.clientX - messageCenter.x
       );
 
-      // Calculate distance from mouse to message center
       const distance = Math.sqrt(
         Math.pow(e.clientX - messageCenter.x, 2) +
         Math.pow(e.clientY - messageCenter.y, 2)
       );
 
-      // Check if mouse is moving towards the message
       const prevDistance = Math.sqrt(
         Math.pow(mousePosition.x - messageCenter.x, 2) +
         Math.pow(mousePosition.y - messageCenter.y, 2)
       );
 
-      // Update mouse position
       setMousePosition({ x: e.clientX, y: e.clientY });
 
-      // Show pencil if mouse is moving towards message and within range
       if (distance < prevDistance && distance < 718.2) {
         setShouldShowPencil(true);
       } else if (distance > 718.2) {
@@ -94,8 +89,8 @@ const UserMessage = ({ content }: UserMessageProps) => {
                   <Pencil className="h-4 w-4 text-[#8E9196] hover:text-white transition-colors" />
                 </button>
               </TooltipTrigger>
-              <TooltipContent>
-                <p>Edit text</p>
+              <TooltipContent className="bg-white text-black text-xs px-2 py-1 rounded-xl">
+                <p>Editar texto</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
