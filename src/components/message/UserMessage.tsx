@@ -32,7 +32,7 @@ const UserMessage = ({ content }: UserMessageProps) => {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="bg-gray-700/50 rounded-[20px] px-4 py-2 inline-block before:content-[''] before:absolute before:inset-0 before:-left-[340.2px] before:-right-[340.2px] before:-top-[340.2px] before:-bottom-[340.2px] before:z-[-1]">
+      <div className="bg-gray-700/50 rounded-[20px] px-4 py-2 inline-block before:content-[''] before:absolute before:rounded-full before:inset-0 before:-left-[340.2px] before:-right-[340.2px] before:-top-[340.2px] before:-bottom-[340.2px] before:z-[-1]">
         {isHovered && !isEditing && (
           <TooltipProvider>
             <Tooltip>
