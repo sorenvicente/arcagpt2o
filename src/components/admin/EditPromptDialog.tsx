@@ -94,55 +94,67 @@ export function EditPromptDialog({ open, onOpenChange, prompt, onUpdate }: EditP
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-chatgpt-secondary border-chatgpt-border">
+      <DialogContent className="max-w-md bg-[#1A1F2C] border border-[#2A2F3C] text-white">
         <DialogHeader>
-          <DialogTitle className="text-white">Editar Prompt</DialogTitle>
+          <DialogTitle className="text-xl font-semibold text-white">Editar Prompt</DialogTitle>
           <DialogDescription className="text-gray-400">
             Faça as alterações necessárias no prompt abaixo.
           </DialogDescription>
         </DialogHeader>
-        <div className="space-y-4">
-          <Input
-            placeholder="Nome do Prompt"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="bg-chatgpt-input border-chatgpt-border text-white"
-          />
+        <div className="space-y-4 mt-4">
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-300">Nome do Prompt</label>
+            <Input
+              placeholder="Nome do Prompt"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="bg-[#2A2F3C] border-[#3A3F4C] text-white placeholder-gray-400 focus:border-[#9b87f5] focus:ring-[#9b87f5]"
+            />
+          </div>
           
-          <Input
-            placeholder="Descrição"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            className="bg-chatgpt-input border-chatgpt-border text-white"
-          />
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-300">Descrição</label>
+            <Input
+              placeholder="Descrição"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className="bg-[#2A2F3C] border-[#3A3F4C] text-white placeholder-gray-400 focus:border-[#9b87f5] focus:ring-[#9b87f5]"
+            />
+          </div>
           
-          <Textarea
-            placeholder="Prompt"
-            value={promptText}
-            onChange={(e) => setPromptText(e.target.value)}
-            className="min-h-[100px] bg-chatgpt-input border-chatgpt-border text-white"
-          />
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-300">Prompt</label>
+            <Textarea
+              placeholder="Prompt"
+              value={promptText}
+              onChange={(e) => setPromptText(e.target.value)}
+              className="min-h-[100px] bg-[#2A2F3C] border-[#3A3F4C] text-white placeholder-gray-400 focus:border-[#9b87f5] focus:ring-[#9b87f5]"
+            />
+          </div>
           
-          <Select value={category} onValueChange={setCategory}>
-            <SelectTrigger className="bg-chatgpt-input border-chatgpt-border text-white">
-              <SelectValue placeholder="Selecione uma categoria" />
-            </SelectTrigger>
-            <SelectContent className="bg-chatgpt-secondary border-chatgpt-border">
-              {categories.map((cat) => (
-                <SelectItem 
-                  key={cat.value} 
-                  value={cat.value}
-                  className="text-white hover:bg-chatgpt-hover cursor-pointer"
-                >
-                  {cat.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-300">Categoria</label>
+            <Select value={category} onValueChange={setCategory}>
+              <SelectTrigger className="bg-[#2A2F3C] border-[#3A3F4C] text-white">
+                <SelectValue placeholder="Selecione uma categoria" />
+              </SelectTrigger>
+              <SelectContent className="bg-[#1A1F2C] border-[#2A2F3C]">
+                {categories.map((cat) => (
+                  <SelectItem 
+                    key={cat.value} 
+                    value={cat.value}
+                    className="text-white hover:bg-[#2A2F3C] cursor-pointer"
+                  >
+                    {cat.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
 
           <Button 
             onClick={handleSave} 
-            className="w-full bg-chatgpt-input hover:bg-chatgpt-hover text-white border border-chatgpt-border"
+            className="w-full bg-[#9b87f5] hover:bg-[#7E69AB] text-white transition-colors"
             disabled={isSubmitting}
           >
             {isSubmitting ? "Salvando..." : "Salvar Alterações"}
