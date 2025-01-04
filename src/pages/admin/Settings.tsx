@@ -16,12 +16,12 @@ const SystemSettingsPage = () => {
             Configurações do Sistema
           </h1>
           <Button 
-            onClick={() => navigate("/admin")}
+            onClick={() => navigate("/app")}
             variant="outline"
             className="flex items-center gap-2 w-full sm:w-auto justify-center bg-[#40414F] hover:bg-[#2A2B32] text-white transition-all duration-200 border-0 shadow text-sm rounded-xl"
           >
             <ArrowLeft className="h-4 w-4" />
-            Voltar
+            Voltar à Interface
           </Button>
         </div>
       </div>

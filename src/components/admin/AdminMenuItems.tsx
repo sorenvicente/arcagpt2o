@@ -1,4 +1,4 @@
-import { Key, LayoutDashboard, Settings } from "lucide-react";
+import { Key, LayoutDashboard, Settings, MessageSquare } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 
@@ -8,11 +8,18 @@ export function AdminMenuItems() {
   return (
     <>
       <DropdownMenuItem 
+        onClick={() => navigate("/app")}
+        className="px-3 py-2 text-gray-200 hover:bg-chatgpt-hover hover:text-white focus:bg-chatgpt-hover cursor-pointer rounded-lg mx-1"
+      >
+        <MessageSquare className="mr-2 h-4 w-4" />
+        <span>Interface Principal</span>
+      </DropdownMenuItem>
+      <DropdownMenuItem 
         onClick={() => navigate("/admin")}
         className="px-3 py-2 text-gray-200 hover:bg-chatgpt-hover hover:text-white focus:bg-chatgpt-hover cursor-pointer rounded-lg mx-1"
       >
         <Settings className="mr-2 h-4 w-4" />
-        <span>Prompts</span>
+        <span>Gerenciar Prompts</span>
       </DropdownMenuItem>
       <DropdownMenuItem 
         onClick={() => navigate("/api-keys")}
@@ -20,13 +27,6 @@ export function AdminMenuItems() {
       >
         <Key className="mr-2 h-4 w-4" />
         <span>API Keys</span>
-      </DropdownMenuItem>
-      <DropdownMenuItem 
-        onClick={() => navigate("/admin/dashboard")}
-        className="px-3 py-2 text-gray-200 hover:bg-chatgpt-hover hover:text-white focus:bg-chatgpt-hover cursor-pointer rounded-lg mx-1"
-      >
-        <LayoutDashboard className="mr-2 h-4 w-4" />
-        <span>Dashboard</span>
       </DropdownMenuItem>
       <DropdownMenuItem 
         onClick={() => navigate("/admin/settings")}

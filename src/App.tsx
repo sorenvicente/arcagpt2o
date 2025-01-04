@@ -23,8 +23,10 @@ function App() {
           {/* Página de login */}
           <Route path="/login" element={<LoginPage />} />
           
-          {/* Rotas protegidas que requerem autenticação */}
+          {/* Interface principal para todos os usuários */}
           <Route path="/app" element={<IndexPage />} />
+          
+          {/* Rotas administrativas (protegidas) */}
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/admin/dashboard" element={<DashboardPage />} />
           <Route path="/admin/settings" element={<SystemSettingsPage />} />
