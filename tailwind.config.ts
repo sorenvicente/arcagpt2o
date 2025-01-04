@@ -32,27 +32,6 @@ export default {
           border: "#4E4F60",
           input: "#40414F"
         },
-        light: {
-          background: "#F7F7F8",
-          text: "#000000",
-          primary: "#0056D2",
-          secondary: "#ECECF1",
-          hover: "#F5F5F5",
-          border: "#DADADA",
-          success: "#28A745",
-          error: "#DC3545",
-          warning: "#FFC107",
-          highlight: "#007BFF",
-          accent: "#6C757D",
-          sidebar: "#FFFFFF",
-          main: "#FFFFFF",
-          input: "#F9F9F9",
-          placeholder: "#B0B0B0",
-          icons: "#333333",
-          selectedBg: "#E7F3FF",
-          selectedText: "#0056D2",
-          selectedBorder: "#007BFF"
-        },
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",

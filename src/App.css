@@ -37,10 +37,9 @@
 
 .card {
   padding: 2em;
-  @apply bg-light-main dark:bg-[#343541] text-light-text dark:text-white 
-    border border-light-border dark:border-chatgpt-border rounded-xl shadow-lg;
+  @apply bg-[#343541] text-white border border-chatgpt-border rounded-xl shadow-lg;
 }
 
 .read-the-docs {
-  @apply text-light-accent dark:text-gray-400;
+  @apply text-gray-400;
 }
