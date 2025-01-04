@@ -66,13 +66,25 @@ export default {
           '100%': { 
             opacity: '0'
           }
+        },
+        gradientFlow: {
+          '0%': { 
+            backgroundPosition: '0% 50%'
+          },
+          '50%': {
+            backgroundPosition: '100% 50%'
+          },
+          '100%': {
+            backgroundPosition: '0% 50%'
+          }
         }
       },
       animation: {
         marquee: 'marquee 40s linear infinite',
         marqueeReverse: 'marqueeReverse 40s linear infinite',
         sidebarIn: 'sidebarSlideIn 0.5s ease-in-out',
-        sidebarOut: 'sidebarSlideOut 0.5s ease-in-out'
+        sidebarOut: 'sidebarSlideOut 0.5s ease-in-out',
+        gradient: 'gradientFlow 15s ease infinite'
       },
       colors: {
         border: "hsl(var(--border))",
