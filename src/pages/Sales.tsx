@@ -1,6 +1,7 @@
 import { HeroSection } from "@/components/sales/HeroSection";
 import { FeaturesGrid } from "@/components/sales/FeaturesGrid";
 import { StepsSection } from "@/components/sales/StepsSection";
+import { PartnersMarquee } from "@/components/sales/PartnersMarquee";
 import { PricingSection } from "@/components/sales/PricingSection";
 import { GuaranteeSection } from "@/components/sales/GuaranteeSection";
 import { FAQSection } from "@/components/sales/FAQSection";
@@ -13,6 +14,7 @@ const SalesPage = () => {
         <HeroSection />
         <FeaturesGrid />
         <StepsSection />
+        <PartnersMarquee />
         <PricingSection />
         <GuaranteeSection />
         <FAQSection />
