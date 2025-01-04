@@ -87,7 +87,7 @@ export default {
         marqueeReverse: 'marqueeReverse 40s linear infinite',
         sidebarIn: 'sidebarSlideIn 0.5s ease-in-out',
         sidebarOut: 'sidebarSlideOut 0.5s ease-in-out',
-        gradient: 'gradientFlow 15s ease infinite'
+        gradient: 'gradientFlow 10s ease infinite'
       },
       colors: {
         border: "hsl(var(--border))",
