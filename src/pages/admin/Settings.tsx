@@ -11,7 +11,7 @@ const SystemSettingsPage = () => {
   return (
     <div className="container mx-auto py-2 space-y-4">
       <div className="w-full max-w-4xl mx-auto">
-        <div className="flex flex-col sm:flex-row sm:items-center gap-2 bg-[#444654] p-2 rounded-xl shadow-lg border border-[#4E4F60]">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 bg-[#444654] p-2 rounded-xl shadow-lg border border-[#4E4F60]">
           <h1 className="text-xl font-semibold text-white">
             Configurações do Sistema
           </h1>
