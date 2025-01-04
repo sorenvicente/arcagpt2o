@@ -4,6 +4,12 @@ import { Message as MessageType } from '@/types/chat';
 import ReactMarkdown from 'react-markdown';
 import { Pencil } from 'lucide-react';
 import { useState } from 'react';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 type MessageProps = Pick<MessageType, 'role' | 'content'> & {
   onRegenerate?: () => void;
@@ -53,12 +59,21 @@ const Message = ({ role, content, onRegenerate, isRegenerating }: MessageProps) 
             onMouseLeave={() => role === 'user' && setIsHovered(false)}
           >
             {role === 'user' && isHovered && !isEditing && (
-              <button
-                onClick={handleEdit}
-                className="absolute -left-12 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-2.5 rounded-md hover:bg-[#202123] bg-black/20"
-              >
-                <Pencil className="h-4 w-4 text-[#8E9196] hover:text-white transition-colors" />
-              </button>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      onClick={handleEdit}
+                      className="absolute -left-12 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-2.5 rounded-full hover:bg-[#202123] bg-black/20"
+                    >
+                      <Pencil className="h-4 w-4 text-[#8E9196] hover:text-white transition-colors" />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Edit text</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             )}
             {role === 'user' && isEditing ? (
               <textarea
