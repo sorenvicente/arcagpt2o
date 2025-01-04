@@ -15,12 +15,19 @@ const ActionButtons = ({ onSelectPrompt, activeCategory }: ActionButtonsProps) =
   useEffect(() => {
     const loadPrompts = async () => {
       try {
-        const { data: apiKeys } = await supabase
+        // Fetch most recent API key
+        const { data: apiKeys, error: apiKeysError } = await supabase
           .from('api_keys')
           .select('*')
-          .single();
+          .order('created_at', { ascending: false })
+          .limit(1);
 
-        if (!apiKeys?.openai_key && !apiKeys?.openrouter_key) {
+        if (apiKeysError) {
+          console.error('Erro ao buscar chaves API:', apiKeysError);
+          throw new Error('Falha ao buscar chaves API');
+        }
+
+        if (!apiKeys?.length || (!apiKeys[0].openai_key && !apiKeys[0].openrouter_key)) {
           toast({
             title: "Configuração necessária",
             description: "Por favor, configure pelo menos uma chave API (OpenAI ou OpenRouter) na página de Chaves API.",

@@ -33,7 +33,7 @@ serve(async (req) => {
       throw new Error('Autenticação inválida');
     }
 
-    // Fetch most recent API keys
+    // Fetch most recent API key
     const { data: apiKeys, error: apiKeysError } = await supabaseClient
       .from('api_keys')
       .select('*')
@@ -45,47 +45,59 @@ serve(async (req) => {
       throw new Error('Falha ao buscar chaves API');
     }
 
-    if (!apiKeys?.length || (!apiKeys[0].openai_key && !apiKeys[0].openrouter_key)) {
-      throw new Error('Por favor, configure pelo menos uma chave API (OpenAI ou OpenRouter) na página de Chaves API.');
+    if (!apiKeys?.length) {
+      throw new Error('Nenhuma chave API configurada');
     }
 
     const apiKey = apiKeys[0];
+    
+    if (!apiKey.openai_key && !apiKey.openrouter_key) {
+      throw new Error('Por favor, configure pelo menos uma chave API (OpenAI ou OpenRouter) na página de Chaves API.');
+    }
+
     const { messages, temperature = 0.7 } = await req.json();
     console.log('Processando requisição de chat com mensagens:', messages);
 
     // Try OpenRouter first if configured
     if (apiKey.openrouter_key) {
-      console.log('Usando OpenRouter...');
-      const openRouterResponse = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${apiKey.openrouter_key}`,
-          'Content-Type': 'application/json',
-          'HTTP-Referer': Deno.env.get('SUPABASE_URL') || 'http://localhost:5173',
-          'X-Title': 'Lovable Chat App',
-        },
-        body: JSON.stringify({
-          model: apiKey.selected_openrouter_model || 'anthropic/claude-2',
-          messages: messages,
-          max_tokens: 1000,
-          temperature: temperature,
-        }),
-      });
+      console.log('Tentando usar OpenRouter...');
+      try {
+        const openRouterResponse = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${apiKey.openrouter_key}`,
+            'Content-Type': 'application/json',
+            'HTTP-Referer': Deno.env.get('SUPABASE_URL') || 'http://localhost:5173',
+            'X-Title': 'Lovable Chat App',
+          },
+          body: JSON.stringify({
+            model: apiKey.selected_openrouter_model || 'anthropic/claude-2',
+            messages: messages,
+            max_tokens: 1000,
+            temperature: temperature,
+          }),
+        });
 
-      if (openRouterResponse.ok) {
-        const data = await openRouterResponse.json();
-        return new Response(
-          JSON.stringify({ content: data.choices[0].message.content }),
-          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
+        if (openRouterResponse.ok) {
+          const data = await openRouterResponse.json();
+          return new Response(
+            JSON.stringify({ content: data.choices[0].message.content }),
+            { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          );
+        }
+        console.error('OpenRouter falhou, tentando OpenAI...');
+      } catch (error) {
+        console.error('Erro ao chamar OpenRouter:', error);
       }
-      
-      console.error('OpenRouter falhou, tentando OpenAI...');
     }
 
     // Try OpenAI if configured
     if (apiKey.openai_key) {
-      console.log('Usando OpenAI...');
+      console.log('Tentando usar OpenAI...');
+      if (!apiKey.openai_key.startsWith('sk-')) {
+        throw new Error('Chave OpenAI inválida. A chave deve começar com "sk-"');
+      }
+
       const openAIResponse = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {
