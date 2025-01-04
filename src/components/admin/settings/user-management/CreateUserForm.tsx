@@ -120,8 +120,9 @@ export const CreateUserForm = ({ onSuccess }: CreateUserFormProps) => {
         <Button 
           type="submit" 
           className="w-full bg-[#9b87f5] hover:bg-[#7E69AB] text-white transition-all duration-200 shadow-md hover:shadow-lg"
+          disabled={createUser.isPending}
         >
-          Criar Usuário
+          {createUser.isPending ? "Criando..." : "Criar Usuário"}
         </Button>
       </form>
     </Form>

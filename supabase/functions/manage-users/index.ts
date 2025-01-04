@@ -16,7 +16,7 @@ Deno.serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
-    const { action, email, password, userId } = await req.json()
+    const { action, email, password, role } = await req.json()
 
     // Check if the requesting user is an admin
     const authHeader = req.headers.get('Authorization')!
@@ -46,14 +46,14 @@ Deno.serve(async (req) => {
         })
         if (createError) throw createError
 
-        // Create profile with default role 'user'
+        // Create profile with role 'user'
         const { error: profileError } = await supabaseClient
           .from('profiles')
           .insert([
             {
               id: newUser.user.id,
               email,
-              role: 'user',
+              role: role || 'user', // Default to 'user' if no role is specified
             },
           ])
         if (profileError) throw profileError
