@@ -23,6 +23,7 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
 
+    // Verify user authentication
     const { data: { user }, error: authError } = await supabaseClient.auth.getUser(
       authHeader.replace('Bearer ', '')
     );
@@ -32,6 +33,7 @@ serve(async (req) => {
       throw new Error('Autenticação inválida');
     }
 
+    // Fetch API keys
     const { data: apiKeys, error: apiKeysError } = await supabaseClient
       .from('api_keys')
       .select('*')
