@@ -16,7 +16,7 @@ const Message = ({ role, content, onRegenerate, isRegenerating }: MessageProps) 
 
   return (
     <div className="py-6">
-      <div className={`flex gap-4 ${role === 'user' ? 'flex-row-reverse' : ''}`}>
+      <div className={`flex gap-2 ${role === 'user' ? 'flex-row-reverse' : ''}`}>
         <div className="flex-shrink-0">
           <MessageAvatar role={role} />
         </div>

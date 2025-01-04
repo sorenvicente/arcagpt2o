@@ -30,7 +30,7 @@ const UserMessage = ({ content }: UserMessageProps) => {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="bg-gray-700/50 rounded-[20px] px-4 py-2 inline-block relative">
+      <div className="bg-gray-700/50 rounded-[20px] px-3 py-2 inline-block relative">
         <EditButton 
           onEdit={handleEdit}
           visible={shouldShowButton || isHovered}
