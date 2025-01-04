@@ -18,7 +18,7 @@ const SystemSettingsPage = () => {
           <Button 
             onClick={() => navigate("/admin")}
             variant="outline"
-            className="flex items-center gap-2 w-full sm:w-auto justify-center bg-[#40414F] hover:bg-[#2A2B32] text-white transition-all duration-200 border-[#4E4F60] shadow text-sm rounded-xl"
+            className="flex items-center gap-2 w-full sm:w-auto justify-center bg-[#40414F] hover:bg-[#2A2B32] text-white transition-all duration-200 border-0 shadow text-sm rounded-xl"
           >
             <ArrowLeft className="h-4 w-4" />
             Voltar
