@@ -46,10 +46,10 @@ const MessageActions = ({ content, onRegenerate, isRegenerating }: MessageAction
       </button>
       {onRegenerate && (
         <button 
-          className={`p-1 transition-colors ${isRegenerating ? 'text-[#9b87f5]' : 'hover:text-white'}`}
+          className={`p-1 transition-colors ${isRegenerating ? 'text-purple-400' : 'hover:text-white'}`}
           onClick={onRegenerate}
           disabled={isRegenerating}
-          title="Regenerar resposta"
+          title="Tentar novamente"
         >
           <RotateCcw className={`h-4 w-4 ${isRegenerating ? 'animate-spin' : ''}`} />
         </button>

@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Message } from '@/types/chat';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
@@ -34,8 +33,6 @@ export const useChatRegeneration = (
         return;
       }
 
-      // Atualiza o estado removendo apenas a última resposta
-      setMessages(conversationHistory);
       setIsLoading(true);
 
       try {
@@ -53,8 +50,8 @@ export const useChatRegeneration = (
         const { data, error } = await supabase.functions.invoke('chat', {
           body: { 
             messages: conversationHistory,
-            timestamp, // Adiciona timestamp para evitar cache
-            temperature: 0.9 // Aumenta a temperatura para mais variabilidade
+            timestamp,
+            temperature: 0.9
           },
           headers: {
             Authorization: `Bearer ${session.access_token}`
