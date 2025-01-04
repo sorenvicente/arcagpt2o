@@ -11,7 +11,7 @@ interface UserMenuContentProps {
 export function UserMenuContent({ email, isAdmin, onSignOut }: UserMenuContentProps) {
   return (
     <DropdownMenuContent 
-      className="w-56 bg-chatgpt-main border border-chatgpt-border text-white rounded-md shadow-lg" 
+      className="w-56 bg-chatgpt-main border border-chatgpt-border text-white rounded-md shadow-lg z-[100]" 
       align="end" 
       sideOffset={5}
     >
