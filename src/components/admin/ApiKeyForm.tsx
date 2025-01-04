@@ -60,7 +60,7 @@ const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
         onApiKeyChange={(value) => setKeys({ ...keys, openai_key: value })}
         selectedModel={selectedOpenAIModel}
         onModelChange={handleOpenAIModelChange}
-        models={openAiModels as ModelOption[]}
+        models={[...openAiModels] as ModelOption[]}
         modelSelectorLabel="Selecione o Modelo OpenAI"
         modelListTitle="Modelos Disponíveis"
       />
@@ -72,7 +72,7 @@ const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
         onApiKeyChange={(value) => setKeys({ ...keys, openrouter_key: value })}
         selectedModel={selectedOpenRouterModel}
         onModelChange={handleOpenRouterModelChange}
-        models={openRouterModels as ModelOption[]}
+        models={[...openRouterModels] as ModelOption[]}
         modelSelectorLabel="Selecione o Modelo OpenRouter"
         modelListTitle="Modelos Disponíveis (Gratuitos e Pagos)"
         extraContent={openRouterExtraContent}
