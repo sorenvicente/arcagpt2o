@@ -19,7 +19,7 @@ const SystemSettingsPage = () => {
         <h1 className="text-2xl font-bold">Configurações do Sistema</h1>
         <Button
           variant="outline"
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 rounded-xl border-chatgpt-border hover:bg-chatgpt-hover text-white"
           onClick={() => navigate("/app")}
         >
           <ArrowLeft className="h-4 w-4" />
