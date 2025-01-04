@@ -5,7 +5,9 @@ interface Prompt {
   id: string;
   name: string;
   description: string;
+  prompt: string;
   category: string;
+  created_at: string;
 }
 
 interface PromptCardProps {
