@@ -10,6 +10,17 @@ export const useAuth = (requiredRole?: 'admin' | 'user') => {
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState<User | null>(null);
 
+  const refreshSession = async () => {
+    try {
+      const { data: { session }, error } = await supabase.auth.refreshSession();
+      if (error) throw error;
+      return session;
+    } catch (error) {
+      console.error('Error refreshing session:', error);
+      return null;
+    }
+  };
+
   useEffect(() => {
     const checkAuth = async () => {
       try {
@@ -31,11 +42,9 @@ export const useAuth = (requiredRole?: 'admin' | 'user') => {
         
         if (tokenExpiryTime < fiveMinutesFromNow) {
           console.log('Token expired or expiring soon, refreshing...');
-          const { data: { session: refreshedSession }, error: refreshError } = 
-            await supabase.auth.refreshSession();
+          const refreshedSession = await refreshSession();
           
-          if (refreshError || !refreshedSession) {
-            console.error('Failed to refresh session:', refreshError);
+          if (!refreshedSession) {
             throw new Error('Failed to refresh session');
           }
           
