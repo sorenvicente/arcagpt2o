@@ -22,12 +22,12 @@ const AdminIndex = () => {
             <span className="whitespace-nowrap">Configurações</span>
           </Button>
           <Button 
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/admin/dashboard")}
             variant="ghost"
             className="flex items-center justify-center gap-2 w-full sm:w-auto rounded-xl"
           >
             <ArrowLeft className="h-4 w-4" />
-            <span className="whitespace-nowrap">Voltar ao Chat</span>
+            <span className="whitespace-nowrap">Voltar ao Dashboard</span>
           </Button>
         </div>
       </div>
