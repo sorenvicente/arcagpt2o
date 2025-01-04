@@ -27,7 +27,12 @@ const Message = ({ role, content, onRegenerate, isRegenerating }: MessageProps) 
               messageContent
             ) : (
               <>
-                {!isRegenerating && (
+                {isRegenerating ? (
+                  <div className="flex items-center gap-3 p-4">
+                    <Loader className="h-5 w-5 animate-spin text-[#9b87f5]" />
+                    <span className="text-[#9b87f5] font-medium">Regenerando resposta...</span>
+                  </div>
+                ) : (
                   <ReactMarkdown
                     components={{
                       p: ({ children }) => <p className="mb-4">{children}</p>,
@@ -47,12 +52,6 @@ const Message = ({ role, content, onRegenerate, isRegenerating }: MessageProps) 
                   >
                     {messageContent}
                   </ReactMarkdown>
-                )}
-                {isRegenerating && (
-                  <div className="flex items-center gap-3 p-4">
-                    <Loader className="h-5 w-5 animate-spin text-[#9b87f5]" />
-                    <span className="text-[#9b87f5] font-medium">Regenerando resposta...</span>
-                  </div>
                 )}
               </>
             )}

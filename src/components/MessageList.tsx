@@ -38,14 +38,13 @@ const MessageList = ({ messages, onRegenerate, isLoading }: MessageListProps) =>
                   ? onRegenerate
                   : undefined
               }
+              isRegenerating={
+                index === messages.length - 1 && 
+                message.role === "assistant" && 
+                isLoading
+              }
             />
           ))}
-          {isLoading && (
-            <div className="flex items-center gap-3 text-gray-400 px-4">
-              <Loader2 className="h-4 w-4 animate-spin" />
-              <span className="text-sm">Gerando resposta...</span>
-            </div>
-          )}
           <div ref={messagesEndRef} />
         </div>
       </div>
