@@ -111,7 +111,7 @@ export const CreateUserForm = ({ onSuccess }: CreateUserFormProps) => {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-[#9b87f5]">Email</FormLabel>
+              <FormLabel className="text-white">Email</FormLabel>
               <FormControl>
                 <Input 
                   placeholder="email@exemplo.com" 
@@ -129,7 +129,7 @@ export const CreateUserForm = ({ onSuccess }: CreateUserFormProps) => {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-[#9b87f5]">Senha</FormLabel>
+              <FormLabel className="text-white">Senha</FormLabel>
               <FormControl>
                 <Input 
                   type="password" 

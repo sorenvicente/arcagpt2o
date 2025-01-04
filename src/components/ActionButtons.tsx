@@ -126,7 +126,7 @@ const ActionButtons = ({ onSelectPrompt, activeCategory }: ActionButtonsProps) =
         <button 
           key={action.label} 
           onClick={() => handlePromptSelect(action.category)}
-          className={`relative flex h-[42px] items-center gap-1.5 rounded-full border px-3 py-2 text-start text-[13px] transition enabled:hover:bg-chatgpt-secondary disabled:cursor-not-allowed xl:gap-2 xl:text-[14px] cursor-pointer ${
+          className={`relative flex h-[42px] items-center gap-1.5 rounded-full border px-3 py-2 text-start text-[13px] text-white transition enabled:hover:bg-chatgpt-secondary disabled:cursor-not-allowed xl:gap-2 xl:text-[14px] cursor-pointer ${
             normalizeString(activeCategory || '') === normalizeString(action.category)
               ? 'bg-chatgpt-secondary border-chatgpt-border' 
               : 'border-[#383737] hover:bg-chatgpt-hover'
