@@ -13,8 +13,8 @@ interface CategorySelectProps {
 
 export function CategorySelect({ value, onValueChange }: CategorySelectProps) {
   const categories = [
-    { value: "propósito", label: "Propósito" },
-    { value: "método", label: "Método" },
+    { value: "proposito", label: "Propósito" },
+    { value: "metodo", label: "Método" },
     { value: "mentoria", label: "Mentoria" },
     { value: "curso", label: "Curso" },
     { value: "conteudo", label: "Conteúdo" },

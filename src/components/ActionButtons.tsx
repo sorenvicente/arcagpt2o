@@ -39,7 +39,6 @@ const ActionButtons = ({ onSelectPrompt, activeCategory }: ActionButtonsProps) =
     );
     
     if (selectedPrompt) {
-      // Instead of sending the prompt directly, we'll send a system message
       const systemMessage = `Você está agora atuando como um assistente especializado em ${category}. Seu objetivo é: ${selectedPrompt.prompt}`;
       onSelectPrompt(systemMessage, category);
       console.log('Prompt selecionado:', selectedPrompt.prompt, 'Categoria:', category);
@@ -58,8 +57,8 @@ const ActionButtons = ({ onSelectPrompt, activeCategory }: ActionButtonsProps) =
   };
 
   const actions = [
-    { icon: <Target className="h-4 w-4 text-purple-400" />, label: "Propósito", category: "propósito" },
-    { icon: <Brain className="h-4 w-4 text-blue-400" />, label: "Método", category: "método" },
+    { icon: <Target className="h-4 w-4 text-purple-400" />, label: "Propósito", category: "proposito" },
+    { icon: <Brain className="h-4 w-4 text-blue-400" />, label: "Método", category: "metodo" },
     { icon: <School className="h-4 w-4 text-green-400" />, label: "Mentoria", category: "mentoria" },
     { icon: <GraduationCap className="h-4 w-4 text-yellow-400" />, label: "Curso", category: "curso" },
     { icon: <Book className="h-4 w-4 text-red-400" />, label: "Conteúdo", category: "conteudo" },
