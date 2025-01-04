@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  @apply bg-chatgpt-main text-white;
+  @apply bg-[#343541] text-white;
 }
 
 /* Custom scrollbar styling */
@@ -12,17 +12,46 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-chatgpt-main;
+  @apply bg-[#343541];
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-chatgpt-border rounded-full hover:bg-chatgpt-hover transition-colors duration-200;
+  @apply bg-[#4E4F60] rounded-full hover:bg-[#2A2B32] transition-colors duration-200;
 }
 
 .sidebar-item {
-  @apply flex items-center gap-3 rounded-md px-3 py-3 text-sm transition-colors duration-200 hover:bg-chatgpt-hover cursor-pointer;
+  @apply flex items-center gap-3 rounded-md px-3 py-3 text-sm transition-colors duration-200 hover:bg-[#2A2B32] cursor-pointer;
 }
 
 .action-button {
-  @apply flex items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-chatgpt-hover/50 border border-transparent hover:border-chatgpt-border transition-all duration-200;
+  @apply flex items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-[#2A2B32]/50 border border-transparent hover:border-[#4E4F60] transition-all duration-200;
+}
+
+/* Add depth to cards and inputs */
+.card, 
+.input, 
+.select, 
+.textarea {
+  @apply shadow-lg border border-[#4E4F60] bg-[#40414F];
+}
+
+/* Add hover effects to interactive elements */
+.button, 
+.link {
+  @apply transition-all duration-200 hover:shadow-md;
+}
+
+/* Mobile optimizations */
+@media (max-width: 640px) {
+  .container {
+    @apply px-2;
+  }
+  
+  .card {
+    @apply rounded-lg;
+  }
+  
+  .button {
+    @apply w-full;
+  }
 }

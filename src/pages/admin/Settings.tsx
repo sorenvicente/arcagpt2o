@@ -10,14 +10,14 @@ const SystemSettingsPage = () => {
 
   return (
     <div className="container mx-auto px-4 py-4 sm:p-6 space-y-4 sm:space-y-6">
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 bg-chatgpt-secondary p-4 rounded-lg shadow-lg border border-chatgpt-border">
-        <h1 className="text-xl sm:text-2xl font-semibold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 bg-[#444654] p-4 rounded-lg shadow-lg border border-[#4E4F60]">
+        <h1 className="text-xl sm:text-2xl font-semibold text-white">
           Configurações do Sistema
         </h1>
         <Button 
           onClick={() => navigate("/admin")}
           variant="outline"
-          className="flex items-center gap-2 w-full sm:w-auto justify-center bg-chatgpt-main hover:bg-chatgpt-hover text-white transition-all duration-200 border-chatgpt-border shadow-md hover:shadow-lg"
+          className="flex items-center gap-2 w-full sm:w-auto justify-center bg-[#40414F] hover:bg-[#2A2B32] text-white transition-all duration-200 border-[#4E4F60] shadow-md hover:shadow-lg text-sm"
         >
           <ArrowLeft className="h-4 w-4" />
           Voltar
