@@ -1,6 +1,8 @@
 import { HeroSection } from "@/components/sales/HeroSection";
 import { FeaturesGrid } from "@/components/sales/FeaturesGrid";
 import { PricingSection } from "@/components/sales/PricingSection";
+import { GuaranteeSection } from "@/components/sales/GuaranteeSection";
+import { FAQSection } from "@/components/sales/FAQSection";
 import { CTASection } from "@/components/sales/CTASection";
 
 const SalesPage = () => {
@@ -10,6 +12,8 @@ const SalesPage = () => {
         <HeroSection />
         <FeaturesGrid />
         <PricingSection />
+        <GuaranteeSection />
+        <FAQSection />
         <CTASection />
       </div>
     </div>

@@ -23,11 +23,19 @@ export const HeroSection = () => {
       </p>
       <Button
         onClick={() => navigate("/login")}
-        className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-8 py-6 rounded-xl text-lg font-semibold shadow-lg transition-all duration-300 hover:scale-105"
+        className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-8 py-6 rounded-xl text-lg font-semibold shadow-lg transition-all duration-300 hover:scale-105 mb-16"
       >
         <span>Começar Agora</span>
         <ArrowRight className="ml-2 h-5 w-5" />
       </Button>
+      
+      <div className="max-w-5xl mx-auto rounded-2xl overflow-hidden shadow-2xl">
+        <img 
+          src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d" 
+          alt="Interface Principal" 
+          className="w-full h-auto object-cover"
+        />
+      </div>
     </div>
   );
 };
