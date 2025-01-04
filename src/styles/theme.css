@@ -1,58 +1,23 @@
-/* Light mode specific styles */
-:root {
-  /* Buttons */
-  .btn-primary {
-    @apply bg-light-primary text-white hover:bg-light-highlight;
-  }
-  
-  .btn-secondary {
-    @apply bg-light-secondary text-light-accent hover:bg-light-hover;
-  }
-  
-  /* Alerts */
-  .alert-success {
-    @apply bg-light-success text-white;
-  }
-  
-  .alert-error {
-    @apply bg-light-error text-white;
-  }
-  
-  .alert-warning {
-    @apply bg-light-warning text-light-text;
-  }
-  
-  /* Links */
-  .link {
-    @apply text-light-highlight hover:text-light-primary;
-  }
-}
-
 /* Message styles */
 .message {
-  @apply bg-light-main dark:bg-[#343541] text-light-text dark:text-white 
-    border-b border-light-border dark:border-chatgpt-border;
+  @apply bg-[#343541] text-white border-b border-chatgpt-border;
 }
 
 .message-assistant {
-  @apply bg-light-secondary dark:bg-chatgpt-secondary;
+  @apply bg-chatgpt-secondary;
 }
 
 /* Input styles */
 .chat-input {
-  @apply bg-light-input dark:bg-[#40414F] text-light-text dark:text-white 
-    border-light-border dark:border-chatgpt-border;
+  @apply bg-[#40414F] text-white border-chatgpt-border;
 }
 
 /* Sidebar styles */
 .sidebar {
-  @apply bg-light-sidebar dark:bg-chatgpt-sidebar 
-    border-r border-light-border dark:border-chatgpt-border;
+  @apply bg-chatgpt-sidebar border-r border-chatgpt-border;
 }
 
 /* Selected item styles */
 .selected-item {
-  @apply bg-light-selectedBg dark:bg-chatgpt-secondary
-    text-light-selectedText dark:text-white
-    border-l-4 border-light-selectedBorder dark:border-chatgpt-border;
+  @apply bg-chatgpt-secondary text-white border-l-4 border-chatgpt-border;
 }

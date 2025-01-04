@@ -2,13 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Light mode (default) */
+/* Dark mode (default) */
 :root {
-  @apply bg-light-background text-light-text;
-}
-
-/* Dark mode */
-.dark {
   @apply bg-[#343541] text-white;
 }
 
@@ -18,9 +13,9 @@
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-light-background dark:bg-[#343541];
+  @apply bg-[#343541];
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-light-border hover:bg-light-hover dark:bg-[#4E4F60] dark:hover:bg-[#2A2B32] transition-colors duration-200;
+  @apply bg-[#4E4F60] hover:bg-[#2A2B32] transition-colors duration-200;
 }
