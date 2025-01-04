@@ -25,7 +25,7 @@ export const ChatListItem = ({ chat, onDelete, onClick }: ChatListItemProps) => 
 
   return (
     <div 
-      className="group flex h-10 items-center gap-2.5 rounded-lg px-4 hover:bg-chatgpt-hover cursor-pointer relative mt-2 transition-all duration-200 border border-transparent hover:border-chatgpt-border"
+      className="group flex h-11 items-center gap-2.5 rounded-xl px-4 hover:bg-chatgpt-hover cursor-pointer relative mt-2 transition-all duration-200 border border-transparent hover:border-chatgpt-border"
       onClick={onClick}
     >
       <MessageSquare className="h-4 w-4 flex-shrink-0" />
