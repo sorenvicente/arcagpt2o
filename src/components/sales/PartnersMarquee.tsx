@@ -24,15 +24,40 @@ export const PartnersMarquee = () => {
       <div className="relative flex flex-col gap-2 overflow-hidden">
         {/* Elementos 3D laterais */}
         <div className="absolute inset-y-0 left-0 w-32 z-10 flex items-center">
+          {/* Gradiente base */}
           <div className="h-full w-full bg-gradient-to-r from-[#1A1A2E] via-[#151522]/70 to-transparent"></div>
-          <div className="absolute inset-y-0 right-0 w-2">
-            <div className="h-full w-full bg-gradient-to-r from-purple-500/5 to-transparent backdrop-blur-[1px] rounded-l-full"></div>
+          
+          {/* Elemento 3D - Portal de Entrada */}
+          <div className="absolute inset-y-0 right-0 flex items-center">
+            <div className="relative h-[140%] w-3">
+              {/* Borda luminosa */}
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-transparent rounded-l-full"></div>
+              {/* Efeito de profundidade */}
+              <div className="absolute inset-0 bg-gradient-to-b from-purple-400/5 via-blue-500/5 to-purple-400/5 rounded-l-full backdrop-blur-[2px]"></div>
+              {/* Brilho central */}
+              <div className="absolute inset-0 flex items-center">
+                <div className="h-[60%] w-full bg-gradient-to-r from-purple-400/10 to-transparent rounded-l-full blur-[1px]"></div>
+              </div>
+            </div>
           </div>
         </div>
+
         <div className="absolute inset-y-0 right-0 w-32 z-10 flex items-center">
+          {/* Gradiente base */}
           <div className="h-full w-full bg-gradient-to-l from-[#1A1A2E] via-[#13131E]/70 to-transparent"></div>
-          <div className="absolute inset-y-0 left-0 w-2">
-            <div className="h-full w-full bg-gradient-to-l from-purple-500/5 to-transparent backdrop-blur-[1px] rounded-r-full"></div>
+          
+          {/* Elemento 3D - Portal de Saída */}
+          <div className="absolute inset-y-0 left-0 flex items-center">
+            <div className="relative h-[140%] w-3">
+              {/* Borda luminosa */}
+              <div className="absolute inset-0 bg-gradient-to-l from-purple-500/10 to-transparent rounded-r-full"></div>
+              {/* Efeito de profundidade */}
+              <div className="absolute inset-0 bg-gradient-to-b from-purple-400/5 via-blue-500/5 to-purple-400/5 rounded-r-full backdrop-blur-[2px]"></div>
+              {/* Brilho central */}
+              <div className="absolute inset-0 flex items-center">
+                <div className="h-[60%] w-full bg-gradient-to-l from-purple-400/10 to-transparent rounded-r-full blur-[1px]"></div>
+              </div>
+            </div>
           </div>
         </div>
 
