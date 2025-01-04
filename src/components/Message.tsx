@@ -27,11 +27,6 @@ const Message = ({ role, content, onRegenerate, isRegenerating }: MessageProps) 
               messageContent
             ) : (
               <>
-                {isRegenerating && (
-                  <div className="absolute top-0 right-0 p-2">
-                    <Loader className="h-4 w-4 animate-spin text-[#9b87f5]" />
-                  </div>
-                )}
                 <ReactMarkdown
                   components={{
                     p: ({ children }) => <p className="mb-4">{children}</p>,
