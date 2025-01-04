@@ -113,22 +113,22 @@ export function PromptList() {
   }
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 max-w-3xl mx-auto">
       {prompts.map((prompt) => (
         <div
           key={prompt.id}
-          className="flex items-center justify-between p-4 bg-chatgpt-secondary rounded-lg border border-chatgpt-border hover:bg-chatgpt-hover transition-colors"
+          className="flex items-center justify-between p-3 bg-chatgpt-secondary rounded-lg border border-chatgpt-border hover:bg-chatgpt-hover transition-colors"
         >
-          <div className="flex-1">
-            <h3 className="font-medium text-white">{prompt.name}</h3>
+          <div className="flex-1 min-w-0">
+            <h3 className="font-medium text-white truncate">{prompt.name}</h3>
             {prompt.description && (
-              <p className="text-sm text-gray-400 mt-1">{prompt.description}</p>
+              <p className="text-sm text-gray-400 mt-1 truncate">{prompt.description}</p>
             )}
             <span className="text-xs text-gray-500 mt-1 block">
               Categoria: {prompt.category}
             </span>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 ml-2 flex-shrink-0">
             <Button
               variant="ghost"
               size="icon"
