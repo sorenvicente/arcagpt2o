@@ -106,7 +106,7 @@ export const UserTable = ({ users }: UserTableProps) => {
             <TableCell>{user.email}</TableCell>
             <TableCell>
               <select
-                className="bg-[#40414F] text-[#9b87f5] border border-[#4E4F60] rounded p-1 focus:ring-[#9b87f5] focus:border-[#9b87f5]"
+                className="bg-[#40414F] text-[#9b87f5] border border-[#4E4F60] rounded-xl p-1 focus:ring-[#9b87f5] focus:border-[#9b87f5]"
                 value={user.role}
                 onChange={(e) =>
                   updateUserRole.mutate({
@@ -124,6 +124,7 @@ export const UserTable = ({ users }: UserTableProps) => {
                 variant="destructive"
                 size="sm"
                 onClick={() => deleteUser.mutate(user.id)}
+                className="rounded-xl"
               >
                 <Trash2 className="h-4 w-4" />
               </Button>
