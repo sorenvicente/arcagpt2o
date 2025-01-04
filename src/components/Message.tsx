@@ -8,6 +8,11 @@ type MessageProps = Pick<MessageType, 'role' | 'content'> & {
 };
 
 const Message = ({ role, content, onRegenerate }: MessageProps) => {
+  // Ensure content is a string
+  const messageContent = typeof content === 'string' 
+    ? content 
+    : JSON.stringify(content);
+
   return (
     <div className="py-6">
       <div className={`flex gap-4 ${role === 'user' ? 'flex-row-reverse' : ''}`}>
@@ -15,7 +20,7 @@ const Message = ({ role, content, onRegenerate }: MessageProps) => {
         <div className={`flex-1 space-y-2 ${role === 'user' ? 'flex justify-end' : ''}`}>
           <div className={`${role === 'user' ? 'bg-gray-700/50 rounded-[20px] px-4 py-2 inline-block' : 'prose prose-invert max-w-none'}`}>
             {role === 'user' ? (
-              content
+              messageContent
             ) : (
               <ReactMarkdown
                 components={{
@@ -34,13 +39,13 @@ const Message = ({ role, content, onRegenerate }: MessageProps) => {
                   ),
                 }}
               >
-                {content}
+                {messageContent}
               </ReactMarkdown>
             )}
           </div>
           {role === 'assistant' && (
             <MessageActions 
-              content={content} 
+              content={messageContent} 
               onRegenerate={onRegenerate}
             />
           )}
