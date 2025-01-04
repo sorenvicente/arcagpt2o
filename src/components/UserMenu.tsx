@@ -1,14 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
-import { LayoutDashboard, Key, LogOut, Settings } from "lucide-react";
+import { LogOut } from "lucide-react";
+import { AdminMenuItems } from "./admin/AdminMenuItems";
+import { UserProfileLabel } from "./user/UserProfileLabel";
 
 export function UserMenu() {
-  const navigate = useNavigate();
   const { user, signOut } = useAuth();
   const { data: profile } = useQuery({
     queryKey: ["profile", user?.id],
@@ -44,50 +44,9 @@ export function UserMenu() {
         align="end" 
         forceMount
       >
-        <DropdownMenuLabel className="font-normal px-3 py-2">
-          <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none text-[#9b87f5]">
-              {isAdmin ? "Administrador" : "Usuário"}
-            </p>
-            <p className="text-xs leading-none text-gray-400">
-              {user?.email}
-            </p>
-          </div>
-        </DropdownMenuLabel>
+        <UserProfileLabel user={user} isAdmin={isAdmin} />
         <DropdownMenuSeparator className="bg-chatgpt-border" />
-        {isAdmin && (
-          <>
-            <DropdownMenuItem 
-              onClick={() => navigate("/admin")}
-              className="px-3 py-2 text-gray-200 hover:bg-chatgpt-hover hover:text-white focus:bg-chatgpt-hover cursor-pointer rounded-lg mx-1"
-            >
-              <Settings className="mr-2 h-4 w-4" />
-              <span>Prompts</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem 
-              onClick={() => navigate("/api-keys")}
-              className="px-3 py-2 text-gray-200 hover:bg-chatgpt-hover hover:text-white focus:bg-chatgpt-hover cursor-pointer rounded-lg mx-1"
-            >
-              <Key className="mr-2 h-4 w-4" />
-              <span>API Keys</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem 
-              onClick={() => navigate("/admin/dashboard")}
-              className="px-3 py-2 text-gray-200 hover:bg-chatgpt-hover hover:text-white focus:bg-chatgpt-hover cursor-pointer rounded-lg mx-1"
-            >
-              <LayoutDashboard className="mr-2 h-4 w-4" />
-              <span>Dashboard</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem 
-              onClick={() => navigate("/admin/settings")}
-              className="px-3 py-2 text-gray-200 hover:bg-chatgpt-hover hover:text-white focus:bg-chatgpt-hover cursor-pointer rounded-lg mx-1"
-            >
-              <Settings className="mr-2 h-4 w-4" />
-              <span>Configurações</span>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator className="bg-chatgpt-border" />
-          </>
-        )}
+        {isAdmin && <AdminMenuItems />}
         <DropdownMenuItem
           className="px-3 py-2 text-red-400 hover:bg-chatgpt-hover hover:text-red-300 focus:bg-chatgpt-hover cursor-pointer rounded-lg mx-1"
           onClick={signOut}
