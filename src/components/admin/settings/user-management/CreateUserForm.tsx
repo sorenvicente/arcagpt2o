@@ -36,13 +36,18 @@ export const CreateUserForm = ({ onSuccess }: CreateUserFormProps) => {
       const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 segundos timeout
 
       try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session?.access_token) {
+          throw new Error('Não autorizado: Faça login novamente');
+        }
+
         const response = await fetch(
-          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/manage-users`,
+          `${supabase.supabaseUrl}/functions/v1/manage-users`,
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`,
+              Authorization: `Bearer ${session.access_token}`,
             },
             body: JSON.stringify({
               action: "create",

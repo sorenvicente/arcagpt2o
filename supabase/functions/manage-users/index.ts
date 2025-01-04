@@ -16,7 +16,7 @@ Deno.serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
-    const { action, email, password, role } = await req.json()
+    const { action, email, password, role, userId } = await req.json()
 
     // Check if the requesting user is an admin
     const authHeader = req.headers.get('Authorization')!
