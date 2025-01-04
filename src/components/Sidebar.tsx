@@ -24,7 +24,7 @@ const Sidebar = ({ isOpen, onToggle, onNewChat, onChatSelect, activeCategory }: 
         clearTimeout(hoverTimeoutRef.current);
         setIsHovering(true);
         onToggle();
-      } else if (e.clientX > 256 && isOpen && isHovering) {
+      } else if (e.clientX > 280 && isOpen && isHovering) { // Adjusted from 256 to 280 to match new width
         clearTimeout(hoverTimeoutRef.current);
         hoverTimeoutRef.current = setTimeout(() => {
           setIsHovering(false);
@@ -43,7 +43,7 @@ const Sidebar = ({ isOpen, onToggle, onNewChat, onChatSelect, activeCategory }: 
   return (
     <div className={cn(
       "fixed top-0 left-0 z-40 h-screen bg-chatgpt-sidebar transition-all duration-300",
-      isOpen ? "w-64" : "w-0"
+      isOpen ? "w-[280px]" : "w-0" // Adjusted from w-64 (256px) to w-[280px]
     )}>
       <nav className="flex h-full w-full flex-col px-3" aria-label="Chat history">
         <SidebarHeader 

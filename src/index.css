@@ -8,7 +8,7 @@ body {
 
 /* Custom scrollbar styling */
 ::-webkit-scrollbar {
-  @apply w-2 sm:w-3; /* Thinner on mobile (8px), wider on desktop (12px) */
+  @apply w-1.5 sm:w-3; /* Even thinner on mobile (6px), wider on desktop (12px) */
 }
 
 ::-webkit-scrollbar-track {
