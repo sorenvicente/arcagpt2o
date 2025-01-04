@@ -22,8 +22,8 @@ const Sidebar = ({ isOpen, onToggle, onNewChat, onChatSelect, activeCategory }: 
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      // Não ativar o hover na página de admin
-      if (location.pathname.startsWith('/admin')) {
+      // Não ativar o hover em páginas administrativas
+      if (location.pathname.includes('admin')) {
         return;
       }
 
@@ -48,7 +48,7 @@ const Sidebar = ({ isOpen, onToggle, onNewChat, onChatSelect, activeCategory }: 
   }, [isOpen, isHovering, onToggle, location]);
 
   // Não renderizar o sidebar nas páginas admin
-  if (location.pathname.startsWith('/admin')) {
+  if (location.pathname.includes('admin')) {
     return null;
   }
 

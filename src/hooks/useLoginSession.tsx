@@ -9,25 +9,16 @@ export const useLoginSession = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    let mounted = true;
-
     const checkSession = async () => {
       try {
         const { data: { session } } = await supabase.auth.getSession();
         
-        if (!mounted) return;
-
         if (session) {
-          const { data: profile, error: profileError } = await supabase
+          const { data: profile } = await supabase
             .from('profiles')
             .select('role')
             .eq('id', session.user.id)
             .single();
-
-          if (profileError) {
-            console.error('Error fetching profile:', profileError);
-            throw profileError;
-          }
 
           if (profile?.role === 'admin') {
             navigate('/admin');
@@ -37,36 +28,28 @@ export const useLoginSession = () => {
         }
       } catch (error) {
         console.error('Error checking session:', error);
-        if (mounted) {
-          toast({
-            title: "Erro ao verificar sessão",
-            description: "Por favor, tente fazer login novamente.",
-            variant: "destructive"
-          });
-        }
+        toast({
+          title: "Erro ao verificar sessão",
+          description: "Por favor, tente fazer login novamente.",
+          variant: "destructive"
+        });
       } finally {
-        if (mounted) {
-          setIsLoading(false);
-        }
+        setIsLoading(false);
       }
     };
 
     checkSession();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (!mounted) return;
-
       if (event === 'SIGNED_OUT') {
         setIsLoading(false);
       } else if (session) {
         try {
-          const { data: profile, error: profileError } = await supabase
+          const { data: profile } = await supabase
             .from('profiles')
             .select('role')
             .eq('id', session.user.id)
             .single();
-
-          if (profileError) throw profileError;
 
           if (profile?.role === 'admin') {
             navigate('/admin');
@@ -85,7 +68,6 @@ export const useLoginSession = () => {
     });
 
     return () => {
-      mounted = false;
       subscription.unsubscribe();
     };
   }, [navigate, toast]);
@@ -97,6 +79,7 @@ export const useLoginSession = () => {
         title: "Logout realizado",
         description: "Você foi desconectado com sucesso."
       });
+      navigate('/login');
     } catch (error) {
       console.error('Error signing out:', error);
       toast({
