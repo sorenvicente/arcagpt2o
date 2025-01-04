@@ -2,7 +2,6 @@ import MessageAvatar from './MessageAvatar';
 import MessageActions from './MessageActions';
 import { Message as MessageType } from '@/types/chat';
 import ReactMarkdown from 'react-markdown';
-import { Loader } from 'lucide-react';
 
 type MessageProps = Pick<MessageType, 'role' | 'content'> & {
   onRegenerate?: () => void;
