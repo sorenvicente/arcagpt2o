@@ -29,12 +29,8 @@ export default {
         },
         sidebarSlideIn: {
           '0%': { 
-            transform: 'translateX(-100%)',
+            transform: 'translateX(-20px)',
             opacity: '0'
-          },
-          '50%': {
-            transform: 'translateX(-50%)',
-            opacity: '0.5'
           },
           '100%': { 
             transform: 'translateX(0)',
@@ -46,12 +42,8 @@ export default {
             transform: 'translateX(0)',
             opacity: '1'
           },
-          '50%': {
-            transform: 'translateX(-50%)',
-            opacity: '0.5'
-          },
           '100%': { 
-            transform: 'translateX(-100%)',
+            transform: 'translateX(-20px)',
             opacity: '0'
           }
         }
@@ -59,8 +51,8 @@ export default {
       animation: {
         marquee: 'marquee 40s linear infinite',
         marqueeReverse: 'marqueeReverse 40s linear infinite',
-        sidebarIn: 'sidebarSlideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
-        sidebarOut: 'sidebarSlideOut 0.5s cubic-bezier(0.4, 0, 0.2, 1)'
+        sidebarIn: 'sidebarSlideIn 0.3s ease-in-out',
+        sidebarOut: 'sidebarSlideOut 0.3s ease-in-out'
       },
       colors: {
         border: "hsl(var(--border))",

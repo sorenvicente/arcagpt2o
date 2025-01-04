@@ -44,44 +44,56 @@ const Sidebar = ({ isOpen, onToggle, onNewChat, onChatSelect, activeCategory }: 
 
   useEffect(() => {
     setIsAnimating(true);
-    const timer = setTimeout(() => setIsAnimating(false), 500);
+    const timer = setTimeout(() => setIsAnimating(false), 300);
     return () => clearTimeout(timer);
   }, [isOpen]);
 
   return (
-    <div 
-      className={cn(
-        "fixed top-0 left-0 z-40 h-screen",
-        "bg-chatgpt-sidebar dark:bg-chatgpt-sidebar",
-        "border-r border-chatgpt-border dark:border-chatgpt-border",
-        "transition-[width,opacity] duration-500 ease-in-out",
-        isOpen ? "w-[240px]" : "w-0",
-        isOpen ? "animate-sidebarIn" : isAnimating ? "animate-sidebarOut" : ""
-      )}
-    >
+    <>
+      {/* Background overlay */}
       <div 
-        ref={contentRef}
         className={cn(
-          "flex h-full w-full flex-col px-3",
-          "transition-opacity duration-500 ease-in-out",
-          !isOpen && "opacity-0"
+          "fixed inset-0 bg-black/20 transition-opacity duration-300",
+          isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+        )}
+        onClick={() => onToggle()}
+      />
+      
+      {/* Sidebar */}
+      <div 
+        className={cn(
+          "fixed top-0 left-0 z-40 h-screen",
+          "bg-chatgpt-sidebar dark:bg-chatgpt-sidebar",
+          "border-r border-chatgpt-border dark:border-chatgpt-border",
+          "transition-all duration-300 ease-in-out",
+          isOpen ? "w-[240px] translate-x-0" : "w-[240px] -translate-x-full",
+          isOpen ? "animate-sidebarIn" : isAnimating ? "animate-sidebarOut" : ""
         )}
       >
-        <SidebarHeader 
-          onToggle={onToggle}
-          onNewChat={onNewChat}
-          activeCategory={activeCategory}
-        />
-        
-        <ChatList onChatSelect={onChatSelect} />
+        <div 
+          ref={contentRef}
+          className={cn(
+            "flex h-full w-full flex-col px-3",
+            "transition-all duration-300 ease-in-out",
+            isOpen ? "opacity-100" : "opacity-0"
+          )}
+        >
+          <SidebarHeader 
+            onToggle={onToggle}
+            onNewChat={onNewChat}
+            activeCategory={activeCategory}
+          />
+          
+          <ChatList onChatSelect={onChatSelect} />
 
-        {isOpen && (
-          <div className="flex flex-col py-2 border-t border-chatgpt-border">
-            <UserMenu />
-          </div>
-        )}
+          {isOpen && (
+            <div className="flex flex-col py-2 border-t border-chatgpt-border">
+              <UserMenu />
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
