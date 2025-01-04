@@ -50,15 +50,15 @@ export const keyframes = {
   gradientFlow: {
     '0%': { 
       backgroundPosition: '0% 50%',
-      backgroundSize: '200% 200%'
+      backgroundSize: '400% 400%'
     },
     '50%': {
       backgroundPosition: '100% 50%',
-      backgroundSize: '200% 200%'
+      backgroundSize: '400% 400%'
     },
     '100%': {
       backgroundPosition: '0% 50%',
-      backgroundSize: '200% 200%'
+      backgroundSize: '400% 400%'
     }
   }
 };
@@ -68,5 +68,5 @@ export const animation = {
   marqueeReverse: 'marqueeReverse 40s linear infinite',
   sidebarIn: 'sidebarSlideIn 0.5s ease-in-out',
   sidebarOut: 'sidebarSlideOut 0.5s ease-in-out',
-  gradient: 'gradientFlow 10s ease infinite'
+  gradient: 'gradientFlow 8s ease infinite'
 };

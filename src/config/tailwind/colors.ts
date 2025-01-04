@@ -5,11 +5,11 @@ export const colors = {
   background: "hsl(var(--background))",
   foreground: "hsl(var(--foreground))",
   chatgpt: {
-    sidebar: "#202123",
-    main: "#343541",
-    secondary: "#444654",
+    sidebar: "#1A1F2C",
+    main: "#222222",
+    secondary: "#2A2B32",
     hover: "#2A2B32",
-    border: "#4E4F60",
+    border: "#333333",
     input: "#40414F"
   },
   primary: {
