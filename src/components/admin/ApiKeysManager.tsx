@@ -1,6 +1,6 @@
-import { useEffect } from "react";
-import { Shield } from "lucide-react";
-import { useApiKeys } from "./hooks/useApiKeys";
+import { Button } from "@/components/ui/button";
+import { useState, useEffect } from "react";
+import { useToast } from "@/hooks/use-toast";
 import ApiKeyForm from "./ApiKeyForm";
 import {
   Card,
@@ -9,12 +9,27 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Shield } from "lucide-react";
+import { useApiKeys } from "./hooks/useApiKeys";
 
 const ApiKeysManager = () => {
   const { keys, setKeys, fetchApiKeys, handleSaveKeys } = useApiKeys();
+  const { toast } = useToast();
 
   useEffect(() => {
-    fetchApiKeys();
+    const loadKeys = async () => {
+      await fetchApiKeys();
+      if (!keys.openai_key && !keys.openrouter_key) {
+        toast({
+          title: "Atenção",
+          description: "Configure pelo menos uma chave API (OpenAI ou OpenRouter) para usar o chat.",
+          variant: "destructive",
+          duration: 5000,
+        });
+      }
+    };
+
+    loadKeys();
   }, []);
 
   return (
