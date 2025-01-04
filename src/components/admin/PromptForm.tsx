@@ -75,7 +75,7 @@ export function PromptForm() {
           placeholder="Nome do Prompt"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="bg-chatgpt-input border-chatgpt-border text-white"
+          className="bg-chatgpt-input border-chatgpt-border text-white rounded-xl"
         />
       </div>
       
@@ -84,7 +84,7 @@ export function PromptForm() {
           placeholder="Descrição"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          className="bg-chatgpt-input border-chatgpt-border text-white"
+          className="bg-chatgpt-input border-chatgpt-border text-white rounded-xl"
         />
       </div>
       
@@ -93,7 +93,7 @@ export function PromptForm() {
           placeholder="Prompt"
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
-          className="min-h-[100px] bg-chatgpt-input border-chatgpt-border text-white"
+          className="min-h-[100px] bg-chatgpt-input border-chatgpt-border text-white rounded-xl"
         />
       </div>
       
@@ -101,7 +101,7 @@ export function PromptForm() {
 
       <Button 
         type="submit" 
-        className="w-full bg-chatgpt-input hover:bg-chatgpt-hover text-white border border-chatgpt-border"
+        className="w-full bg-chatgpt-input hover:bg-chatgpt-hover text-white border border-chatgpt-border rounded-xl"
         disabled={isSubmitting}
       >
         {isSubmitting ? "Criando..." : "Criar Prompt"}

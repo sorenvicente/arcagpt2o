@@ -22,15 +22,15 @@ export function CategorySelect({ value, onValueChange }: CategorySelectProps) {
 
   return (
     <Select value={value} onValueChange={onValueChange}>
-      <SelectTrigger className="bg-chatgpt-input border-chatgpt-border text-white">
+      <SelectTrigger className="bg-chatgpt-input border-chatgpt-border text-white rounded-xl">
         <SelectValue placeholder="Selecione uma categoria" />
       </SelectTrigger>
-      <SelectContent className="bg-chatgpt-secondary border-chatgpt-border">
+      <SelectContent className="bg-chatgpt-secondary border-chatgpt-border rounded-xl">
         {categories.map((cat) => (
           <SelectItem 
             key={cat.value} 
             value={cat.value}
-            className="text-white hover:bg-chatgpt-hover cursor-pointer"
+            className="text-white hover:bg-chatgpt-hover cursor-pointer rounded-lg mx-1"
           >
             {cat.label}
           </SelectItem>

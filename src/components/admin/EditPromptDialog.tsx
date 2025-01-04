@@ -94,7 +94,7 @@ export function EditPromptDialog({ open, onOpenChange, prompt, onUpdate }: EditP
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md bg-[#1A1F2C] border border-[#2A2F3C] text-white">
+      <DialogContent className="max-w-md bg-[#1A1F2C] border border-[#2A2F3C] text-white rounded-xl">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold text-white">Editar Prompt</DialogTitle>
           <DialogDescription className="text-gray-400">
@@ -108,7 +108,7 @@ export function EditPromptDialog({ open, onOpenChange, prompt, onUpdate }: EditP
               placeholder="Nome do Prompt"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="bg-[#2A2F3C] border-[#3A3F4C] text-white placeholder-gray-400 focus:border-[#9b87f5] focus:ring-[#9b87f5]"
+              className="bg-[#2A2F3C] border-[#3A3F4C] text-white placeholder-gray-400 focus:border-[#9b87f5] focus:ring-[#9b87f5] rounded-xl"
             />
           </div>
           
@@ -118,7 +118,7 @@ export function EditPromptDialog({ open, onOpenChange, prompt, onUpdate }: EditP
               placeholder="Descrição"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="bg-[#2A2F3C] border-[#3A3F4C] text-white placeholder-gray-400 focus:border-[#9b87f5] focus:ring-[#9b87f5]"
+              className="bg-[#2A2F3C] border-[#3A3F4C] text-white placeholder-gray-400 focus:border-[#9b87f5] focus:ring-[#9b87f5] rounded-xl"
             />
           </div>
           
@@ -128,22 +128,22 @@ export function EditPromptDialog({ open, onOpenChange, prompt, onUpdate }: EditP
               placeholder="Prompt"
               value={promptText}
               onChange={(e) => setPromptText(e.target.value)}
-              className="min-h-[100px] bg-[#2A2F3C] border-[#3A3F4C] text-white placeholder-gray-400 focus:border-[#9b87f5] focus:ring-[#9b87f5]"
+              className="min-h-[100px] bg-[#2A2F3C] border-[#3A3F4C] text-white placeholder-gray-400 focus:border-[#9b87f5] focus:ring-[#9b87f5] rounded-xl"
             />
           </div>
           
           <div className="space-y-2">
             <label className="text-sm font-medium text-gray-300">Categoria</label>
             <Select value={category} onValueChange={setCategory}>
-              <SelectTrigger className="bg-[#2A2F3C] border-[#3A3F4C] text-white">
+              <SelectTrigger className="bg-[#2A2F3C] border-[#3A2F3C] text-white rounded-xl">
                 <SelectValue placeholder="Selecione uma categoria" />
               </SelectTrigger>
-              <SelectContent className="bg-[#1A1F2C] border-[#2A2F3C]">
+              <SelectContent className="bg-[#1A1F2C] border-[#2A2F3C] rounded-xl">
                 {categories.map((cat) => (
                   <SelectItem 
                     key={cat.value} 
                     value={cat.value}
-                    className="text-white hover:bg-[#2A2F3C] cursor-pointer"
+                    className="text-white hover:bg-[#2A2F3C] cursor-pointer rounded-lg mx-1"
                   >
                     {cat.label}
                   </SelectItem>
@@ -154,7 +154,7 @@ export function EditPromptDialog({ open, onOpenChange, prompt, onUpdate }: EditP
 
           <Button 
             onClick={handleSave} 
-            className="w-full bg-[#9b87f5] hover:bg-[#7E69AB] text-white transition-colors"
+            className="w-full bg-[#9b87f5] hover:bg-[#7E69AB] text-white transition-colors rounded-xl"
             disabled={isSubmitting}
           >
             {isSubmitting ? "Salvando..." : "Salvar Alterações"}
