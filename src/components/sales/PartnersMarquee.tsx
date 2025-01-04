@@ -21,7 +21,7 @@ export const PartnersMarquee = () => {
         </p>
       </div>
 
-      <div className="relative flex flex-col gap-2">
+      <div className="relative flex flex-col gap-2 overflow-hidden">
         {/* First row - Left to right */}
         <div className="relative flex overflow-x-hidden">
           <div className="animate-marquee whitespace-nowrap flex items-center">

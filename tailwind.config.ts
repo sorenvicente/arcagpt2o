@@ -20,12 +20,36 @@ export default {
     extend: {
       keyframes: {
         marquee: {
-          '0%': { transform: 'translateX(0%)' },
-          '100%': { transform: 'translateX(-50%)' },
+          '0%': { 
+            transform: 'translateX(0%)',
+            opacity: '0'
+          },
+          '10%': {
+            opacity: '1'
+          },
+          '90%': {
+            opacity: '1'
+          },
+          '100%': { 
+            transform: 'translateX(-50%)',
+            opacity: '0'
+          },
         },
         marqueeReverse: {
-          '0%': { transform: 'translateX(-50%)' },
-          '100%': { transform: 'translateX(0%)' },
+          '0%': { 
+            transform: 'translateX(-50%)',
+            opacity: '0'
+          },
+          '10%': {
+            opacity: '1'
+          },
+          '90%': {
+            opacity: '1'
+          },
+          '100%': { 
+            transform: 'translateX(0%)',
+            opacity: '0'
+          },
         },
         sidebarSlideIn: {
           '0%': { 
