@@ -50,104 +50,109 @@ serve(async (req) => {
     const { messages, temperature = 0.7 } = await req.json();
     console.log('Processando requisição de chat com mensagens:', messages);
 
-    // Tenta primeiro o OpenRouter se a chave existir
-    if (apiKeys.openrouter_key) {
-      try {
-        console.log('Tentando chamada à API do OpenRouter...');
+    // Função auxiliar para tentar a chamada OpenAI
+    const tryOpenAI = async () => {
+      if (!apiKeys.openai_key) return null;
+      
+      console.log('Tentando chamada à API do OpenAI...');
+      const openAIResponse = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${apiKeys.openai_key}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'gpt-4-1106-preview',
+          messages: messages,
+          max_tokens: 1024,
+          temperature: temperature,
+        }),
+      });
+
+      if (!openAIResponse.ok) {
+        const error = await openAIResponse.json();
+        console.error('Erro na API do OpenAI:', error);
         
-        const openRouterResponse = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${apiKeys.openrouter_key}`,
-            'Content-Type': 'application/json',
-            'HTTP-Referer': Deno.env.get('SUPABASE_URL') || 'http://localhost:5173',
-            'X-Title': 'Lovable Chat App',
-          },
-          body: JSON.stringify({
-            model: 'meta-llama/llama-3.1-405b-instruct:free',
-            messages: messages,
-            max_tokens: 1000,
-            temperature: temperature, // Usa a temperatura fornecida
-          }),
-        });
-
-        if (!openRouterResponse.ok) {
-          const errorText = await openRouterResponse.text();
-          console.error('Erro na API do OpenRouter:', {
-            status: openRouterResponse.status,
-            response: errorText
-          });
-          throw new Error(`Erro na API do OpenRouter: ${errorText}`);
+        if (error.error?.code === 'insufficient_quota') {
+          return { error: 'insufficient_quota' };
         }
-
-        const data = await openRouterResponse.json();
         
-        if (!data.choices?.[0]?.message?.content) {
-          throw new Error('Resposta inválida do OpenRouter');
-        }
-
-        console.log('OpenRouter API respondeu com sucesso');
-        return new Response(
-          JSON.stringify({ content: data.choices[0].message.content }),
-          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      } catch (error) {
-        console.error('OpenRouter API falhou:', error);
-        // Só lança erro se a chave OpenAI não estiver disponível como fallback
-        if (!apiKeys.openai_key) {
-          throw error;
-        }
-        console.log('Falha no OpenRouter, tentando OpenAI...');
+        throw new Error(error.error?.message || 'Erro ao chamar a API do OpenAI');
       }
-    }
 
-    // Tenta OpenAI se OpenRouter falhou ou não estava disponível
+      const data = await openAIResponse.json();
+      return data.choices?.[0]?.message?.content;
+    };
+
+    // Função auxiliar para tentar a chamada OpenRouter
+    const tryOpenRouter = async () => {
+      if (!apiKeys.openrouter_key) return null;
+      
+      console.log('Tentando chamada à API do OpenRouter...');
+      const openRouterResponse = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${apiKeys.openrouter_key}`,
+          'Content-Type': 'application/json',
+          'HTTP-Referer': Deno.env.get('SUPABASE_URL') || 'http://localhost:5173',
+          'X-Title': 'Lovable Chat App',
+        },
+        body: JSON.stringify({
+          model: 'meta-llama/llama-3.1-405b-instruct:free',
+          messages: messages,
+          max_tokens: 1000,
+          temperature: temperature,
+        }),
+      });
+
+      if (!openRouterResponse.ok) {
+        const errorText = await openRouterResponse.text();
+        console.error('Erro na API do OpenRouter:', {
+          status: openRouterResponse.status,
+          response: errorText
+        });
+        throw new Error(`Erro na API do OpenRouter: ${errorText}`);
+      }
+
+      const data = await openRouterResponse.json();
+      return data.choices?.[0]?.message?.content;
+    };
+
+    // Tenta primeiro OpenAI, se falhar por cota, tenta OpenRouter
+    let content = null;
+    let openAIResult = null;
+
     if (apiKeys.openai_key) {
       try {
-        console.log('Tentando chamada à API do OpenAI...');
-        const openAIResponse = await fetch('https://api.openai.com/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${apiKeys.openai_key}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            model: 'gpt-4-1106-preview',
-            messages: messages,
-            max_tokens: 1024,
-            temperature: temperature, // Usa a temperatura fornecida
-          }),
-        });
-
-        if (!openAIResponse.ok) {
-          const error = await openAIResponse.json();
-          console.error('Erro na API do OpenAI:', error);
-          
-          if (error.error?.code === 'insufficient_quota') {
-            throw new Error('Cota do OpenAI excedida. Por favor, verifique seus detalhes de faturamento ou tente usar o OpenRouter.');
-          }
-          
-          throw new Error(error.error?.message || 'Erro ao chamar a API do OpenAI');
+        openAIResult = await tryOpenAI();
+        if (openAIResult && openAIResult !== 'insufficient_quota') {
+          content = openAIResult;
         }
-
-        const data = await openAIResponse.json();
-        
-        if (!data.choices?.[0]?.message?.content) {
-          throw new Error('Resposta inválida do OpenAI');
-        }
-
-        console.log('OpenAI API respondeu com sucesso');
-        return new Response(
-          JSON.stringify({ content: data.choices[0].message.content }),
-          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
       } catch (error) {
-        console.error('OpenAI API falhou:', error);
-        throw error;
+        console.error('Erro ao tentar OpenAI:', error);
       }
     }
 
-    throw new Error('Nenhum serviço de API disponível');
+    // Se OpenAI falhou ou retornou erro de cota, tenta OpenRouter
+    if (!content && apiKeys.openrouter_key) {
+      try {
+        content = await tryOpenRouter();
+      } catch (error) {
+        console.error('Erro ao tentar OpenRouter:', error);
+        if (!content) {
+          throw error;
+        }
+      }
+    }
+
+    if (!content) {
+      throw new Error('Nenhum serviço de API disponível ou todas as tentativas falharam');
+    }
+
+    return new Response(
+      JSON.stringify({ content }),
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    );
 
   } catch (error) {
     console.error('Erro na função de chat:', error);
