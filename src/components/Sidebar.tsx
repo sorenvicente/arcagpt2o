@@ -14,7 +14,7 @@ interface SidebarProps {
   onChatSelect: (chatId: string) => void;
 }
 
-const HOVER_THRESHOLD = 50; // pixels from the left edge to trigger hover
+const HOVER_THRESHOLD = 50;
 
 const Sidebar = ({ isOpen, onToggle, onNewChat, onChatSelect }: SidebarProps) => {
   const [savedChats, setSavedChats] = useState<SavedChat[]>([]);
@@ -106,48 +106,56 @@ const Sidebar = ({ isOpen, onToggle, onNewChat, onChatSelect }: SidebarProps) =>
   };
 
   return (
-    <div 
-      className={cn(
+    <>
+      <div className={cn(
         "fixed top-0 left-0 z-40 h-screen bg-chatgpt-sidebar transition-all duration-300",
         isOpen ? "w-64" : "w-0"
-      )}
-    >
-      <nav className="flex h-full w-full flex-col px-3" aria-label="Chat history">
-        <div className="flex justify-between h-[60px] items-center">
-          <button 
-            onClick={onToggle} 
-            className="flex items-center justify-center h-10 w-10 rounded-lg hover:bg-chatgpt-hover transition-colors mr-3"
-          >
-            <Menu className="h-5 w-5 text-white" strokeWidth={1.5} />
-          </button>
-          <button 
-            onClick={onNewChat}
-            className="flex items-center justify-center h-10 w-10 rounded-lg hover:bg-chatgpt-hover transition-colors ml-3"
-          >
-            <Plus className="h-5 w-5 text-white" strokeWidth={1.5} />
-          </button>
-        </div>
-
-        <div className="flex-col flex-1 transition-opacity duration-500 relative -mr-2 pr-2 overflow-y-auto">
-          <div className="bg-token-sidebar-surface-primary pt-0">
-            {savedChats.map((chat) => (
-              <ChatListItem
-                key={chat.id}
-                chat={chat}
-                onDelete={handleDelete}
-                onClick={() => onChatSelect(chat.id)}
-              />
-            ))}
+      )}>
+        <nav className="flex h-full w-full flex-col px-3" aria-label="Chat history">
+          <div className="flex justify-between h-[60px] items-center">
+            <button 
+              onClick={onToggle} 
+              className="flex items-center justify-center h-10 w-10 rounded-lg hover:bg-chatgpt-hover transition-colors mr-3"
+            >
+              <Menu className="h-5 w-5 text-white" strokeWidth={1.5} />
+            </button>
+            <button 
+              onClick={onNewChat}
+              className="flex items-center justify-center h-10 w-10 rounded-lg hover:bg-chatgpt-hover transition-colors ml-3"
+            >
+              <Plus className="h-5 w-5 text-white" strokeWidth={1.5} />
+            </button>
           </div>
-        </div>
 
-        {isOpen && (
-          <div className="flex flex-col py-2 border-t border-white/20">
-            <UserMenu />
+          <div className="flex-col flex-1 transition-opacity duration-500 relative -mr-2 pr-2 overflow-y-auto">
+            <div className="bg-token-sidebar-surface-primary pt-0">
+              {savedChats.map((chat) => (
+                <ChatListItem
+                  key={chat.id}
+                  chat={chat}
+                  onDelete={handleDelete}
+                  onClick={() => onChatSelect(chat.id)}
+                />
+              ))}
+            </div>
           </div>
+
+          {isOpen && (
+            <div className="flex flex-col py-2 border-t border-white/20">
+              <UserMenu />
+            </div>
+          )}
+        </nav>
+      </div>
+      <div 
+        className={cn(
+          "fixed top-0 left-0 z-50 h-[60px] flex items-center transition-all duration-300",
+          isOpen ? "left-[272px]" : "left-16"
         )}
-      </nav>
-    </div>
+      >
+        <span className="text-lg font-semibold text-white">ArcaGPT</span>
+      </div>
+    </>
   );
 };
 
