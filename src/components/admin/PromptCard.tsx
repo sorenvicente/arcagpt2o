@@ -20,11 +20,11 @@ export function PromptCard({ prompt, onEdit, onDelete }: PromptCardProps) {
   return (
     <div className="flex flex-col justify-between p-1 bg-chatgpt-secondary rounded-xl border border-chatgpt-border hover:bg-chatgpt-hover transition-colors">
       <div className="flex-1 min-w-0 space-y-0.5">
-        <h3 className="font-medium text-white text-xs truncate">{prompt.name}</h3>
+        <h3 className="font-medium text-white text-sm truncate">{prompt.name}</h3>
         {prompt.description && (
-          <p className="text-[10px] text-gray-400 truncate">{prompt.description}</p>
+          <p className="text-xs text-gray-400 truncate">{prompt.description}</p>
         )}
-        <span className="text-[10px] text-gray-500 block truncate">
+        <span className="text-xs text-gray-500 block truncate">
           {prompt.category}
         </span>
       </div>
