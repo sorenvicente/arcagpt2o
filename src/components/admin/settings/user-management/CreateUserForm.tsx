@@ -56,32 +56,22 @@ export const CreateUserForm = ({ onSuccess }: CreateUserFormProps) => {
           throw new Error('Apenas administradores podem criar novos usuários');
         }
 
-        const response = await fetch(
-          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/manage-users`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${session.access_token}`,
-            },
-            body: JSON.stringify({
-              action: "create",
-              email: values.email,
-              password: values.password,
-              role: "user",
-            }),
-            signal: controller.signal,
+        const { data, error } = await supabase.functions.invoke('manage-users', {
+          body: {
+            action: "create",
+            email: values.email,
+            password: values.password,
+            role: "user",
           }
-        );
+        });
 
         clearTimeout(timeoutId);
 
-        if (!response.ok) {
-          const error = await response.json();
-          throw new Error(error.error || "Erro ao criar usuário");
+        if (error) {
+          throw new Error(error.message || "Erro ao criar usuário");
         }
 
-        return response.json();
+        return data;
       } catch (error) {
         if (error.name === 'AbortError') {
           throw new Error('A operação demorou muito tempo. Por favor, tente novamente.');
