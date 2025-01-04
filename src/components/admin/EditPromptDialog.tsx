@@ -18,27 +18,30 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import { FileUpload } from "./FileUpload";
 import { FileList } from "./FileList";
+import { supabase } from "@/integrations/supabase/client";
 
 interface EditPromptDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   prompt: {
-    id: number;
+    id: string;
     name: string;
     description: string;
     prompt: string;
     category: string;
   };
+  onUpdate: () => void;
 }
 
-export function EditPromptDialog({ open, onOpenChange, prompt }: EditPromptDialogProps) {
+export function EditPromptDialog({ open, onOpenChange, prompt, onUpdate }: EditPromptDialogProps) {
   const { toast } = useToast();
   const [name, setName] = useState(prompt.name);
   const [description, setDescription] = useState(prompt.description);
   const [promptText, setPromptText] = useState(prompt.prompt);
   const [category, setCategory] = useState(prompt.category);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!name || !description || !promptText || !category) {
       toast({
         title: "Erro",
@@ -48,24 +51,38 @@ export function EditPromptDialog({ open, onOpenChange, prompt }: EditPromptDialo
       return;
     }
 
-    const savedPrompts = localStorage.getItem('prompts');
-    const prompts = savedPrompts ? JSON.parse(savedPrompts) : [];
-    
-    const updatedPrompts = prompts.map((p: any) => 
-      p.id === prompt.id 
-        ? { ...p, name, description, prompt: promptText, category }
-        : p
-    );
+    setIsSubmitting(true);
 
-    localStorage.setItem('prompts', JSON.stringify(updatedPrompts));
-    window.dispatchEvent(new Event('storage'));
+    try {
+      const { error } = await supabase
+        .from('prompt_blocks')
+        .update({
+          name,
+          description,
+          prompt: promptText,
+          category,
+        })
+        .eq('id', prompt.id);
 
-    toast({
-      title: "Sucesso",
-      description: "Prompt atualizado com sucesso!",
-    });
+      if (error) throw error;
 
-    onOpenChange(false);
+      toast({
+        title: "Sucesso",
+        description: "Prompt atualizado com sucesso!",
+      });
+
+      onUpdate();
+      onOpenChange(false);
+    } catch (error) {
+      console.error('Error updating prompt:', error);
+      toast({
+        title: "Erro",
+        description: "Não foi possível atualizar o prompt.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const categories = [
@@ -123,15 +140,16 @@ export function EditPromptDialog({ open, onOpenChange, prompt }: EditPromptDialo
 
           <div className="border-t border-chatgpt-border pt-4">
             <h3 className="text-sm font-medium text-white mb-2">Arquivos de Treinamento</h3>
-            <FileUpload promptId={prompt.id.toString()} />
-            <FileList promptId={prompt.id.toString()} />
+            <FileUpload promptId={prompt.id} />
+            <FileList promptId={prompt.id} />
           </div>
 
           <Button 
             onClick={handleSave} 
             className="w-full bg-chatgpt-input hover:bg-chatgpt-hover text-white border border-chatgpt-border"
+            disabled={isSubmitting}
           >
-            Salvar Alterações
+            {isSubmitting ? "Salvando..." : "Salvar Alterações"}
           </Button>
         </div>
       </DialogContent>
