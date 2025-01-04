@@ -115,16 +115,18 @@ const Sidebar = ({ isOpen, onToggle, onNewChat, onChatSelect }: SidebarProps) =>
           <div className="flex justify-between h-[60px] items-center">
             <button 
               onClick={onToggle} 
-              className="flex items-center justify-center h-10 w-10 rounded-lg hover:bg-chatgpt-hover transition-colors mr-3"
+              className="flex items-center justify-center h-10 w-10 rounded-lg hover:bg-chatgpt-hover transition-colors"
             >
               <Menu className="h-5 w-5 text-white" strokeWidth={1.5} />
             </button>
-            <button 
-              onClick={onNewChat}
-              className="flex items-center justify-center h-10 w-10 rounded-lg hover:bg-chatgpt-hover transition-colors ml-3"
-            >
-              <Plus className="h-5 w-5 text-white" strokeWidth={1.5} />
-            </button>
+            <div className="flex items-center gap-2">
+              <button 
+                onClick={onNewChat}
+                className="flex items-center justify-center h-10 w-10 rounded-lg hover:bg-chatgpt-hover transition-colors"
+              >
+                <Plus className="h-5 w-5 text-white" strokeWidth={1.5} />
+              </button>
+            </div>
           </div>
 
           <div className="flex-col flex-1 transition-opacity duration-500 relative -mr-2 pr-2 overflow-y-auto">
@@ -149,8 +151,8 @@ const Sidebar = ({ isOpen, onToggle, onNewChat, onChatSelect }: SidebarProps) =>
       </div>
       <div 
         className={cn(
-          "fixed top-0 left-0 z-50 h-[60px] flex items-center transition-all duration-300",
-          isOpen ? "left-[272px]" : "left-16"
+          "fixed top-0 z-50 flex h-[60px] items-center transition-all duration-300",
+          isOpen ? "left-[76px]" : "left-[76px]"
         )}
       >
         <span className="text-lg font-semibold text-white">ArcaGPT</span>
