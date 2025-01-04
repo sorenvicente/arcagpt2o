@@ -45,9 +45,17 @@ export const useChatRegeneration = (
           throw new Error('No authentication token available');
         }
 
+        // Adiciona um timestamp para forçar uma nova resposta
+        const timestamp = new Date().getTime();
+        
         // Envia todas as mensagens anteriores para manter o contexto
+        // junto com um parâmetro de temperatura mais alto para aumentar a variabilidade
         const { data, error } = await supabase.functions.invoke('chat', {
-          body: { messages: conversationHistory },
+          body: { 
+            messages: conversationHistory,
+            timestamp, // Adiciona timestamp para evitar cache
+            temperature: 0.9 // Aumenta a temperatura para mais variabilidade
+          },
           headers: {
             Authorization: `Bearer ${session.access_token}`
           }

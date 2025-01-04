@@ -47,7 +47,7 @@ serve(async (req) => {
       throw new Error('Por favor, configure pelo menos uma chave API (OpenAI ou OpenRouter) na página de Chaves API.');
     }
 
-    const { messages } = await req.json();
+    const { messages, temperature = 0.7 } = await req.json();
     console.log('Processando requisição de chat com mensagens:', messages);
 
     // Tenta primeiro o OpenRouter se a chave existir
@@ -67,6 +67,7 @@ serve(async (req) => {
             model: 'meta-llama/llama-3.1-405b-instruct:free',
             messages: messages,
             max_tokens: 1000,
+            temperature: temperature, // Usa a temperatura fornecida
           }),
         });
 
@@ -114,6 +115,7 @@ serve(async (req) => {
             model: 'gpt-4-1106-preview',
             messages: messages,
             max_tokens: 1024,
+            temperature: temperature, // Usa a temperatura fornecida
           }),
         });
 
