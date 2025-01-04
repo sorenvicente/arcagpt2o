@@ -20,19 +20,8 @@ const Sidebar = ({ isOpen, onToggle, onNewChat, onChatSelect, activeCategory }: 
   const hoverTimeoutRef = useRef<NodeJS.Timeout>();
   const location = useLocation();
 
-  // Função auxiliar para verificar se estamos em uma página que não deve ter sidebar
-  const isRestrictedPage = () => {
-    const restrictedPaths = ['/admin', '/login', '/api-keys'];
-    return restrictedPaths.some(path => location.pathname.startsWith(path));
-  };
-
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      // Não ativar o hover em páginas restritas
-      if (isRestrictedPage()) {
-        return;
-      }
-
       if (e.clientX <= HOVER_THRESHOLD && !isOpen && !isHovering) {
         clearTimeout(hoverTimeoutRef.current);
         setIsHovering(true);
@@ -51,10 +40,10 @@ const Sidebar = ({ isOpen, onToggle, onNewChat, onChatSelect, activeCategory }: 
       document.removeEventListener('mousemove', handleMouseMove);
       clearTimeout(hoverTimeoutRef.current);
     };
-  }, [isOpen, isHovering, onToggle, location]);
+  }, [isOpen, isHovering, onToggle]);
 
-  // Não renderizar o sidebar em páginas restritas
-  if (isRestrictedPage()) {
+  // Only hide sidebar on admin pages
+  if (location.pathname.startsWith('/admin')) {
     return null;
   }
 
