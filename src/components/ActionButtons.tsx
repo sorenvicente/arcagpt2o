@@ -21,11 +21,6 @@ const ActionButtons = ({ onSelectPrompt, activeCategory }: ActionButtonsProps) =
         
         if (error) {
           console.error('Erro ao carregar prompts:', error);
-          toast({
-            title: "Erro",
-            description: "Não foi possível carregar os prompts",
-            variant: "destructive",
-          });
           return;
         }
 
@@ -59,7 +54,7 @@ const ActionButtons = ({ onSelectPrompt, activeCategory }: ActionButtonsProps) =
     return () => {
       channel.unsubscribe();
     };
-  }, [toast]);
+  }, []);
 
   const normalizeString = (str: string) => {
     return str.toLowerCase()
