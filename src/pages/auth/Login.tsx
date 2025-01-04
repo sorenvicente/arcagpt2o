@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
+import { Loader2 } from "lucide-react";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -13,16 +14,25 @@ const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    let mounted = true;
+
     const checkSession = async () => {
       try {
         const { data: { session } } = await supabase.auth.getSession();
+        
+        if (!mounted) return;
+
         if (session) {
-          // Buscar o role do usuário
-          const { data: profile } = await supabase
+          const { data: profile, error: profileError } = await supabase
             .from('profiles')
             .select('role')
             .eq('id', session.user.id)
             .single();
+
+          if (profileError) {
+            console.error('Error fetching profile:', profileError);
+            throw profileError;
+          }
 
           if (profile?.role === 'admin') {
             navigate('/admin');
@@ -32,29 +42,36 @@ const LoginPage = () => {
         }
       } catch (error) {
         console.error('Error checking session:', error);
-        toast({
-          title: "Erro ao verificar sessão",
-          description: "Por favor, tente fazer login novamente.",
-          variant: "destructive"
-        });
+        if (mounted) {
+          toast({
+            title: "Erro ao verificar sessão",
+            description: "Por favor, tente fazer login novamente.",
+            variant: "destructive"
+          });
+        }
       } finally {
-        setIsLoading(false);
+        if (mounted) {
+          setIsLoading(false);
+        }
       }
     };
 
     checkSession();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (!mounted) return;
+
       if (event === 'SIGNED_OUT') {
         setIsLoading(false);
       } else if (session) {
         try {
-          // Buscar o role do usuário após login
-          const { data: profile } = await supabase
+          const { data: profile, error: profileError } = await supabase
             .from('profiles')
             .select('role')
             .eq('id', session.user.id)
             .single();
+
+          if (profileError) throw profileError;
 
           if (profile?.role === 'admin') {
             navigate('/admin');
@@ -72,7 +89,10 @@ const LoginPage = () => {
       }
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, [navigate, toast]);
 
   const handleLogout = async () => {
@@ -95,7 +115,10 @@ const LoginPage = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-chatgpt-main flex items-center justify-center p-4">
-        <div className="text-white">Carregando...</div>
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="h-8 w-8 animate-spin text-white" />
+          <div className="text-white text-sm">Verificando autenticação...</div>
+        </div>
       </div>
     );
   }
