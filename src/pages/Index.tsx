@@ -15,7 +15,8 @@ const Index = () => {
     sendMessage,
     handleNewChat,
     loadChat,
-    activeAssistant
+    activeAssistant,
+    regenerateResponse
   } = useChat();
 
   // Enviar mensagem inicial do sistema em português
@@ -54,7 +55,10 @@ const Index = () => {
             </div>
           ) : (
             <>
-              <MessageList messages={messages} />
+              <MessageList 
+                messages={messages} 
+                onRegenerate={regenerateResponse}
+              />
               <div className="w-full max-w-3xl mx-auto px-4 py-2">
                 <ActionButtons 
                   onSelectPrompt={sendMessage}
