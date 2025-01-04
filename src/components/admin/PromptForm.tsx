@@ -6,11 +6,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { CategorySelect } from "./CategorySelect";
 
-interface PromptFormProps {
-  onSuccess: (promptId: string) => void;
-}
-
-export function PromptForm({ onSuccess }: PromptFormProps) {
+export function PromptForm() {
   const { toast } = useToast();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -33,20 +29,16 @@ export function PromptForm({ onSuccess }: PromptFormProps) {
     }
 
     try {
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('prompt_blocks')
         .insert({
           name,
           description,
           prompt,
           category,
-        })
-        .select()
-        .single();
+        });
 
       if (error) throw error;
-
-      onSuccess(data.id);
       
       toast({
         title: "Sucesso",

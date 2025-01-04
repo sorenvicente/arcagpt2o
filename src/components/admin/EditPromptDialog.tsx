@@ -16,8 +16,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
-import { FileUpload } from "./FileUpload";
-import { FileList } from "./FileList";
 import { supabase } from "@/integrations/supabase/client";
 
 interface EditPromptDialogProps {
@@ -137,12 +135,6 @@ export function EditPromptDialog({ open, onOpenChange, prompt, onUpdate }: EditP
               ))}
             </SelectContent>
           </Select>
-
-          <div className="border-t border-chatgpt-border pt-4">
-            <h3 className="text-sm font-medium text-white mb-2">Arquivos de Treinamento</h3>
-            <FileUpload promptId={prompt.id} />
-            <FileList promptId={prompt.id} />
-          </div>
 
           <Button 
             onClick={handleSave} 
