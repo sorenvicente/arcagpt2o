@@ -1,7 +1,7 @@
-import { LucideIcon } from "lucide-react";
+import { ReactNode } from "react";
 
 interface ActionButtonProps {
-  icon: React.ReactElement<LucideIcon>;
+  icon: ReactNode;
   label: string;
   isActive: boolean;
   onClick: () => void;
