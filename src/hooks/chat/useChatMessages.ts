@@ -34,9 +34,16 @@ export const useChatMessages = (
       setMessages(updatedMessages);
 
       if (!category) {
+        const { data: { session } } = await supabase.auth.getSession();
+        
+        if (!session?.access_token) {
+          throw new Error('No authentication token available');
+        }
+
         const { data, error } = await supabase.functions.invoke('chat', {
-          body: { 
-            messages: updatedMessages
+          body: { messages: updatedMessages },
+          headers: {
+            Authorization: `Bearer ${session.access_token}`
           }
         });
 

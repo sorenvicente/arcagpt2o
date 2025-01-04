@@ -13,10 +13,26 @@ serve(async (req) => {
   }
 
   try {
+    // Get the authorization header
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
+      throw new Error('No authorization header');
+    }
+
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
+
+    // Verify the JWT token
+    const { data: { user }, error: authError } = await supabaseClient.auth.getUser(
+      authHeader.replace('Bearer ', '')
+    );
+
+    if (authError || !user) {
+      console.error('Auth error:', authError);
+      throw new Error('Invalid authentication');
+    }
 
     // Fetch API keys
     const { data: apiKeys, error: apiKeysError } = await supabaseClient
@@ -145,7 +161,7 @@ serve(async (req) => {
         details: 'Please verify your API keys and quotas in the API Keys page.'
       }),
       { 
-        status: 500, 
+        status: error.message.includes('Invalid authentication') ? 401 : 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
       }
     );
