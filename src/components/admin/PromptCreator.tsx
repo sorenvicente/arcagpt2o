@@ -13,8 +13,10 @@ import {
 import { FileUpload } from "./FileUpload";
 import { FileList } from "./FileList";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 
 export function PromptCreator() {
+  useAuth(); // This will ensure the user is authenticated
   const { toast } = useToast();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
