@@ -18,6 +18,13 @@ const Index = () => {
     activeAssistant
   } = useChat();
 
+  // Enviar mensagem inicial do sistema em português
+  useState(() => {
+    if (messages.length === 0) {
+      sendMessage("Olá! Sou um assistente virtual pronto para ajudar você. Como posso ser útil hoje?", "system");
+    }
+  }, []);
+
   return (
     <div className="flex h-screen">
       <Sidebar 
