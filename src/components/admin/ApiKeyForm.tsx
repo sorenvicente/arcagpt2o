@@ -30,6 +30,16 @@ const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
   );
   const { toast } = useToast();
 
+  // Atualiza os estados locais quando as props mudam
+  useEffect(() => {
+    if (keys.selected_openai_model) {
+      setSelectedOpenAIModel(keys.selected_openai_model);
+    }
+    if (keys.selected_openrouter_model) {
+      setSelectedOpenRouterModel(keys.selected_openrouter_model);
+    }
+  }, [keys.selected_openai_model, keys.selected_openrouter_model]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -69,10 +79,18 @@ const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
 
   const handleOpenAIModelChange = (value: string) => {
     setSelectedOpenAIModel(value as OpenAIModel);
+    setKeys(prev => ({
+      ...prev,
+      selected_openai_model: value as OpenAIModel
+    }));
   };
 
   const handleOpenRouterModelChange = (value: string) => {
     setSelectedOpenRouterModel(value as OpenRouterModel);
+    setKeys(prev => ({
+      ...prev,
+      selected_openrouter_model: value as OpenRouterModel
+    }));
   };
 
   const openRouterExtraContent = (
