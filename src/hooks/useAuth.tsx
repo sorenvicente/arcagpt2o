@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 export const useAuth = (requiredRole?: 'admin' | 'user') => {
   const navigate = useNavigate();
@@ -24,19 +24,23 @@ export const useAuth = (requiredRole?: 'admin' | 'user') => {
           return;
         }
 
-        // Check if token is expired
+        // Check if token is expired or will expire in the next 5 minutes
         const tokenExpiryTime = new Date(session.expires_at! * 1000);
         const now = new Date();
+        const fiveMinutesFromNow = new Date(now.getTime() + 5 * 60000);
         
-        if (tokenExpiryTime < now) {
+        if (tokenExpiryTime < fiveMinutesFromNow) {
+          console.log('Token expired or expiring soon, refreshing...');
           const { data: { session: refreshedSession }, error: refreshError } = 
             await supabase.auth.refreshSession();
           
           if (refreshError || !refreshedSession) {
+            console.error('Failed to refresh session:', refreshError);
             throw new Error('Failed to refresh session');
           }
           
           setUser(refreshedSession.user);
+          console.log('Session refreshed successfully');
         } else {
           setUser(session.user);
         }
@@ -48,7 +52,10 @@ export const useAuth = (requiredRole?: 'admin' | 'user') => {
             .eq('id', session.user.id)
             .single();
 
-          if (profileError) throw profileError;
+          if (profileError) {
+            console.error('Error fetching profile:', profileError);
+            throw profileError;
+          }
 
           if (!profile || profile.role !== 'admin') {
             toast({
@@ -73,20 +80,49 @@ export const useAuth = (requiredRole?: 'admin' | 'user') => {
       }
     };
 
+    // Initial check
     checkAuth();
 
+    // Set up auth state change listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (event === 'SIGNED_OUT' || event === 'TOKEN_REFRESHED') {
-        if (!session) {
-          setUser(null);
-          navigate('/login');
-        } else {
+      console.log('Auth state changed:', event);
+      
+      if (event === 'SIGNED_OUT') {
+        setUser(null);
+        navigate('/login');
+      } else if (event === 'TOKEN_REFRESHED') {
+        if (session) {
+          console.log('Token refreshed, updating user');
           setUser(session.user);
+        }
+      } else if (event === 'SIGNED_IN') {
+        if (session) {
+          setUser(session.user);
+          // Check admin role if required
+          if (requiredRole === 'admin') {
+            const { data: profile } = await supabase
+              .from('profiles')
+              .select('role')
+              .eq('id', session.user.id)
+              .single();
+
+            if (!profile || profile.role !== 'admin') {
+              toast({
+                title: "Acesso negado",
+                description: "Você não tem permissão para acessar esta área.",
+                variant: "destructive"
+              });
+              navigate('/');
+              return;
+            }
+          }
         }
       }
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      subscription.unsubscribe();
+    };
   }, [navigate, requiredRole, toast]);
 
   const signOut = async () => {
