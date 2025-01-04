@@ -14,9 +14,11 @@ import { FileUpload } from "./FileUpload";
 import { FileList } from "./FileList";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 export function PromptCreator() {
-  useAuth(); // This will ensure the user is authenticated
+  const { user, isLoading } = useAuth(); // Get user and loading state
+  const navigate = useNavigate();
   const { toast } = useToast();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -24,6 +26,12 @@ export function PromptCreator() {
   const [category, setCategory] = useState("");
   const [createdPromptId, setCreatedPromptId] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // If not authenticated, redirect to login
+  if (!isLoading && !user) {
+    navigate('/login');
+    return null;
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -76,6 +84,14 @@ export function PromptCreator() {
       setIsSubmitting(false);
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="text-center py-8 text-gray-400">
+        Carregando...
+      </div>
+    );
+  }
 
   const categories = [
     { value: "propósito", label: "Propósito" },
