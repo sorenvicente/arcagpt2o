@@ -6,7 +6,7 @@ import { UserManagement } from "./settings/UserManagement";
 export const SystemSettings = () => {
   return (
     <Card className="w-full max-w-4xl mx-auto bg-[#343541] border-0 shadow-lg">
-      <Tabs defaultValue="users" className="space-y-4">
+      <Tabs defaultValue="users" className="space-y-2">
         <TabsList className="w-full grid grid-cols-2 gap-2 p-2 bg-[#444654] rounded-xl">
           <TabsTrigger 
             value="users" 
@@ -24,11 +24,11 @@ export const SystemSettings = () => {
 
         <div className="border-t border-[#4E4F60] opacity-30" />
 
-        <TabsContent value="users" className="mt-2 sm:mt-4 px-4 sm:px-6">
+        <TabsContent value="users" className="mt-2 px-4">
           <UserManagement />
         </TabsContent>
 
-        <TabsContent value="appearance" className="mt-2 sm:mt-4 px-4 sm:px-6">
+        <TabsContent value="appearance" className="mt-2 px-4">
           <LogoSettings />
         </TabsContent>
       </Tabs>
