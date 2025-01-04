@@ -5,8 +5,12 @@ import { ArrowLeft, Settings } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const AdminIndex = () => {
-  useAuth("admin");
+  const { isLoading } = useAuth("admin");
   const navigate = useNavigate();
+
+  if (isLoading) {
+    return <div>Carregando...</div>;
+  }
 
   return (
     <div className="container mx-auto p-6 space-y-6">
