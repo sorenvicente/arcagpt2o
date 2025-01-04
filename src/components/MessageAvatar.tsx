@@ -20,7 +20,7 @@ const MessageAvatar = ({ role }: MessageAvatarProps) => {
       return data;
     },
     staleTime: 1000 * 60, // 1 minuto
-    cacheTime: 1000 * 60 * 5, // 5 minutos
+    gcTime: 1000 * 60 * 5, // 5 minutos (anteriormente cacheTime)
   });
 
   return (
