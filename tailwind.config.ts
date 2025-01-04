@@ -69,13 +69,16 @@ export default {
         },
         gradientFlow: {
           '0%': { 
-            backgroundPosition: '0% 50%'
+            backgroundPosition: '0% 50%',
+            backgroundSize: '200% 200%'
           },
           '50%': {
-            backgroundPosition: '100% 50%'
+            backgroundPosition: '100% 50%',
+            backgroundSize: '200% 200%'
           },
           '100%': {
-            backgroundPosition: '0% 50%'
+            backgroundPosition: '0% 50%',
+            backgroundSize: '200% 200%'
           }
         }
       },

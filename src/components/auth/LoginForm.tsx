@@ -59,14 +59,16 @@ export const LoginForm = ({ onLogout }: LoginFormProps) => {
     <div className="min-h-screen relative overflow-hidden">
       {/* Animated gradient background */}
       <div 
-        className="absolute inset-0 animate-gradient bg-gradient-to-br from-chatgpt-secondary via-purple-900 to-blue-900 bg-[length:400%_400%]"
+        className="absolute inset-0 animate-gradient bg-gradient-to-br from-blue-900 via-purple-800 to-indigo-900 bg-[length:400%_400%]"
         style={{
-          filter: 'brightness(0.7)'
+          filter: 'brightness(0.7)',
+          maskImage: 'radial-gradient(circle at center, black, transparent 80%)',
+          WebkitMaskImage: 'radial-gradient(circle at center, black, transparent 80%)'
         }}
       />
       
       <div className="relative z-10 min-h-screen flex items-center justify-center p-4">
-        <Card className="w-full max-w-md bg-chatgpt-secondary/90 backdrop-blur-sm border-chatgpt-border rounded-xl shadow-xl">
+        <Card className="w-full max-w-md bg-chatgpt-secondary/80 backdrop-blur-md border-chatgpt-border rounded-xl shadow-xl">
           <CardHeader className="space-y-2">
             <CardTitle className="text-2xl text-white text-center">Bem-vindo!</CardTitle>
             <CardDescription className="text-gray-300 text-center">
