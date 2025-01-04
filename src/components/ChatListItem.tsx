@@ -1,4 +1,4 @@
-import { MessageSquare } from 'lucide-react';
+import { Grip } from 'lucide-react';
 import { SavedChat } from '@/types/chat';
 import { useState } from 'react';
 import { ChatItemTitle } from './chat/ChatItemTitle';
@@ -28,7 +28,7 @@ export const ChatListItem = ({ chat, onDelete, onClick }: ChatListItemProps) => 
       className="group flex h-11 items-center gap-2.5 rounded-xl px-4 hover:bg-chatgpt-hover cursor-pointer relative mt-2 transition-all duration-200"
       onClick={onClick}
     >
-      <MessageSquare className="h-4 w-4 flex-shrink-0" />
+      <Grip className="h-4 w-4 flex-shrink-0 rotate-90" />
       <div className="flex-1 truncate">
         <ChatItemTitle
           id={chat.id}
