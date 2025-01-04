@@ -43,7 +43,7 @@ serve(async (req) => {
 
     if (apiKeysError) {
       console.error('Error fetching API keys:', apiKeysError);
-      throw new Error('Failed to fetch API keys');
+      throw new Error('Falha ao buscar chaves API');
     }
 
     // Validate API keys
@@ -54,12 +54,10 @@ serve(async (req) => {
     const { messages } = await req.json();
     console.log('Processing chat request with messages:', messages);
 
-    let lastError = null;
-
     // Try OpenRouter first if key exists
     if (apiKeys.openrouter_key) {
       try {
-        console.log('Attempting OpenRouter API call...');
+        console.log('Tentando chamada à API do OpenRouter...');
         
         const openRouterBody = {
           model: 'meta-llama/llama-3.1-405b-instruct:free',
@@ -80,11 +78,11 @@ serve(async (req) => {
 
         if (!response.ok) {
           const errorText = await response.text();
-          console.error('OpenRouter API error:', {
+          console.error('Erro na API do OpenRouter:', {
             status: response.status,
             response: errorText
           });
-          throw new Error(`Erro OpenRouter: ${errorText}`);
+          throw new Error(`Erro na API do OpenRouter: ${errorText}`);
         }
 
         const data = await response.json();
@@ -94,26 +92,24 @@ serve(async (req) => {
         }
 
         console.log('OpenRouter API success');
-
         return new Response(
           JSON.stringify({ content: data.choices[0].message.content }),
           { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       } catch (error) {
         console.error('OpenRouter API failed:', error);
-        lastError = error;
         // Only throw if OpenAI key is not available as fallback
         if (!apiKeys.openai_key) {
           throw error;
         }
-        console.log('Falling back to OpenAI...');
+        console.log('Falha no OpenRouter, tentando OpenAI...');
       }
     }
 
     // Try OpenAI if OpenRouter failed or wasn't available
     if (apiKeys.openai_key) {
       try {
-        console.log('Attempting OpenAI API call...');
+        console.log('Tentando chamada à API do OpenAI...');
         const response = await fetch('https://api.openai.com/v1/chat/completions', {
           method: 'POST',
           headers: {
@@ -129,7 +125,7 @@ serve(async (req) => {
 
         if (!response.ok) {
           const error = await response.json();
-          console.error('OpenAI API error:', error);
+          console.error('Erro na API do OpenAI:', error);
           
           if (error.error?.code === 'insufficient_quota') {
             throw new Error('Cota do OpenAI excedida. Por favor, verifique seus detalhes de faturamento ou tente usar o OpenRouter.');
@@ -145,18 +141,13 @@ serve(async (req) => {
         }
 
         console.log('OpenAI API success');
-
         return new Response(
           JSON.stringify({ content: data.choices[0].message.content }),
           { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       } catch (error) {
         console.error('OpenAI API failed:', error);
-        // Se tivemos um erro anterior do OpenRouter, incluímos na mensagem
-        const errorMessage = lastError ? 
-          `Ambos os serviços falharam. OpenRouter: ${lastError.message}, OpenAI: ${error.message}` :
-          error.message;
-        throw new Error(errorMessage);
+        throw error;
       }
     }
 
