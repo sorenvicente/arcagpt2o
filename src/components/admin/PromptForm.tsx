@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { CategorySelect } from "./CategorySelect";
 
@@ -29,14 +29,15 @@ export function PromptForm() {
     }
 
     try {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('prompt_blocks')
         .insert({
           name,
           description,
           prompt,
           category,
-        });
+        })
+        .select();
 
       if (error) throw error;
       
@@ -50,6 +51,11 @@ export function PromptForm() {
       setDescription("");
       setPrompt("");
       setCategory("");
+
+      // Force a reload of the prompts list by triggering a DOM event
+      const event = new CustomEvent('promptCreated', { detail: data?.[0] });
+      window.dispatchEvent(event);
+      
     } catch (error) {
       console.error('Error creating prompt:', error);
       toast({

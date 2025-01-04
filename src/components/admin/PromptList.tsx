@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Trash2, Edit } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { EditPromptDialog } from "./EditPromptDialog";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -44,7 +44,13 @@ export function PromptList() {
   useEffect(() => {
     loadPrompts();
 
-    // Subscribe to changes
+    // Listen for prompt creation events
+    const handlePromptCreated = () => {
+      loadPrompts();
+    };
+    window.addEventListener('promptCreated', handlePromptCreated);
+
+    // Subscribe to Supabase changes
     const channel = supabase
       .channel('prompt_blocks_changes')
       .on('postgres_changes', 
@@ -60,6 +66,7 @@ export function PromptList() {
       .subscribe();
 
     return () => {
+      window.removeEventListener('promptCreated', handlePromptCreated);
       supabase.removeChannel(channel);
     };
   }, []);
