@@ -42,11 +42,10 @@ const Index = () => {
           activeCategory={activeAssistant}
         />
         
-        <div className={`flex h-full flex-col ${messages.length === 0 ? 'items-center justify-center' : 'justify-between'} pt-[60px] pb-4`}>
+        <div className={`flex h-full flex-col pt-[60px] pb-4`}>
           {messages.length === 0 ? (
-            <div className="w-full max-w-3xl px-4 space-y-4">
-              <div>
-                <h1 className="mb-8 text-4xl font-semibold text-center">Como posso ajudar?</h1>
+            <div className="flex-1 flex flex-col items-center justify-center">
+              <div className="w-full max-w-3xl px-4 space-y-4">
                 <ActionButtons 
                   onSelectPrompt={sendMessage}
                   activeCategory={activeAssistant}
@@ -56,15 +55,18 @@ const Index = () => {
             </div>
           ) : (
             <>
-              <MessageList 
-                messages={messages} 
-                onRegenerate={regenerateResponse}
-              />
-              <div className="w-full max-w-3xl mx-auto px-4 py-2">
+              <div className="w-full max-w-3xl mx-auto px-4 mb-4">
                 <ActionButtons 
                   onSelectPrompt={sendMessage}
                   activeCategory={activeAssistant}
                 />
+              </div>
+              <MessageList 
+                messages={messages} 
+                onRegenerate={regenerateResponse}
+                isLoading={isLoading}
+              />
+              <div className="w-full max-w-3xl mx-auto px-4 py-2">
                 <ChatInput onSend={sendMessage} isLoading={isLoading} />
               </div>
             </>
