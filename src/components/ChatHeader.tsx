@@ -26,9 +26,7 @@ const ChatHeader = ({ isSidebarOpen, activeCategory }: ChatHeaderProps) => {
   return (
     <header className="fixed top-0 z-10 flex h-[60px] w-full items-center justify-between border-b border-chatgpt-border bg-chatgpt-main px-4">
       <div className="flex items-center gap-2">
-        <span className="text-sm font-medium">
-          {activeCategory ? `Assistente de ${activeCategory}` : 'Chat'}
-        </span>
+        {/* Removed the redundant text that was showing outside the sidebar */}
       </div>
       <div className="flex items-center gap-2">
         <HexLogo 
