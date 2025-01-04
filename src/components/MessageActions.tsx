@@ -43,13 +43,15 @@ const MessageActions = ({ content, onRegenerate }: MessageActionsProps) => {
       >
         <Copy className="h-4 w-4" />
       </button>
-      <button 
-        className="p-1 hover:text-white transition-colors"
-        onClick={onRegenerate}
-        title="Regenerar resposta"
-      >
-        <RotateCcw className="h-4 w-4" />
-      </button>
+      {onRegenerate && (
+        <button 
+          className="p-1 hover:text-white transition-colors"
+          onClick={onRegenerate}
+          title="Regenerar resposta"
+        >
+          <RotateCcw className="h-4 w-4" />
+        </button>
+      )}
       <button className="p-1 hover:text-white transition-colors">
         <MoreHorizontal className="h-4 w-4" />
       </button>

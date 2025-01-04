@@ -57,16 +57,25 @@ export const useChat = () => {
         return;
       }
 
-      // Remove a última resposta do assistente
-      const newMessages = [...messages];
-      newMessages.pop();
-      setMessages(newMessages);
+      // Encontra a última mensagem do usuário e a última do assistente
+      const lastMessages = [...messages];
+      const assistantMessage = lastMessages.pop(); // Remove a última mensagem (do assistente)
+      const userMessage = lastMessages[lastMessages.length - 1];
 
-      // Pega a última mensagem do usuário
-      const lastUserMessage = newMessages[newMessages.length - 1];
+      if (assistantMessage?.role !== 'assistant' || userMessage?.role !== 'user') {
+        toast({
+          title: "Erro",
+          description: "Não foi possível regenerar a resposta.",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      // Remove a última resposta do assistente do estado
+      setMessages(lastMessages);
       
-      // Envia a mensagem novamente
-      await sendMessage(lastUserMessage.content);
+      // Faz uma nova solicitação com a mesma mensagem do usuário
+      await sendMessage(userMessage.content);
       
     } catch (error) {
       toast({
