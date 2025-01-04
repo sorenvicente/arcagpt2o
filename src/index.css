@@ -26,11 +26,14 @@
 }
 
 .sidebar-item {
-  @apply flex items-center gap-3 rounded-md px-3 py-3 text-sm transition-colors duration-200 hover:bg-light-hover dark:hover:bg-[#2A2B32] cursor-pointer;
+  @apply flex items-center gap-3 rounded-md px-3 py-3 text-sm transition-colors duration-200 
+    text-light-text hover:bg-light-hover dark:text-white dark:hover:bg-[#2A2B32] cursor-pointer;
 }
 
 .action-button {
-  @apply flex items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-light-hover dark:hover:bg-[#2A2B32]/50 border border-transparent hover:border-light-border dark:hover:border-[#4E4F60] transition-all duration-200;
+  @apply flex items-center gap-2 rounded-md px-3 py-2 text-sm 
+    text-light-text hover:bg-light-hover dark:text-white dark:hover:bg-[#2A2B32]/50 
+    border border-transparent hover:border-light-border dark:hover:border-[#4E4F60] transition-all duration-200;
 }
 
 /* Add depth to cards and inputs */
@@ -38,7 +41,8 @@
 .input, 
 .select, 
 .textarea {
-  @apply shadow-lg border border-light-border dark:border-[#4E4F60] bg-white dark:bg-[#40414F];
+  @apply shadow-lg border border-light-border dark:border-[#4E4F60] 
+    bg-white dark:bg-[#40414F] text-light-text dark:text-white;
 }
 
 /* Add hover effects to interactive elements */
@@ -90,4 +94,26 @@
   .link {
     @apply text-light-primary hover:text-blue-700;
   }
+}
+
+/* Message styles */
+.message {
+  @apply bg-white dark:bg-[#343541] text-light-text dark:text-white 
+    border-b border-light-border dark:border-chatgpt-border;
+}
+
+.message-assistant {
+  @apply bg-light-hover dark:bg-chatgpt-secondary;
+}
+
+/* Input styles */
+.chat-input {
+  @apply bg-white dark:bg-[#40414F] text-light-text dark:text-white 
+    border-light-border dark:border-chatgpt-border;
+}
+
+/* Sidebar styles */
+.sidebar {
+  @apply bg-light-background dark:bg-chatgpt-sidebar 
+    border-r border-light-border dark:border-chatgpt-border;
 }
