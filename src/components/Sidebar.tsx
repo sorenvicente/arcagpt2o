@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 import { UserMenu } from './UserMenu';
 import SidebarHeader from './sidebar/SidebarHeader';
 import ChatList from './sidebar/ChatList';
+import { useLocation } from 'react-router-dom';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -17,9 +18,15 @@ const HOVER_THRESHOLD = 50;
 const Sidebar = ({ isOpen, onToggle, onNewChat, onChatSelect, activeCategory }: SidebarProps) => {
   const [isHovering, setIsHovering] = useState(false);
   const hoverTimeoutRef = useRef<NodeJS.Timeout>();
+  const location = useLocation();
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
+      // Não ativar o hover na página de admin
+      if (location.pathname.startsWith('/admin')) {
+        return;
+      }
+
       if (e.clientX <= HOVER_THRESHOLD && !isOpen && !isHovering) {
         clearTimeout(hoverTimeoutRef.current);
         setIsHovering(true);
@@ -38,7 +45,12 @@ const Sidebar = ({ isOpen, onToggle, onNewChat, onChatSelect, activeCategory }: 
       document.removeEventListener('mousemove', handleMouseMove);
       clearTimeout(hoverTimeoutRef.current);
     };
-  }, [isOpen, isHovering, onToggle]);
+  }, [isOpen, isHovering, onToggle, location]);
+
+  // Não renderizar o sidebar nas páginas admin
+  if (location.pathname.startsWith('/admin')) {
+    return null;
+  }
 
   return (
     <div className={cn(

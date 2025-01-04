@@ -3,13 +3,13 @@ import { AuthForm } from "@/components/auth/AuthForm";
 import { useLoginSession } from "@/hooks/useLoginSession";
 
 const LoginPage = () => {
-  const { isLoading, handleLogout } = useLoginSession();
+  const { isLoading } = useLoginSession();
 
   if (isLoading) {
     return <LoadingScreen />;
   }
 
-  return <AuthForm onLogout={handleLogout} />;
+  return <AuthForm />;
 };
 
 export default LoginPage;

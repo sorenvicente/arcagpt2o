@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { DropdownMenu, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { DropdownMenu } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { UserAvatar } from "./user-menu/UserAvatar";
@@ -55,9 +55,7 @@ export function UserMenu() {
   return (
     <div className="relative">
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <UserAvatar email={user?.email} />
-        </DropdownMenuTrigger>
+        <UserAvatar email={user?.email} />
         <UserMenuContent 
           email={user?.email} 
           isAdmin={isAdmin} 
