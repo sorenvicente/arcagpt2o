@@ -12,6 +12,10 @@ const HexLogo = ({ className = "", size = "32", customLogoUrl }: HexLogoProps) =
         alt="Logo" 
         className={`${className} rounded-full object-cover`}
         style={{ width: `${size}px`, height: `${size}px` }}
+        onError={(e) => {
+          e.currentTarget.onerror = null; // Previne loop infinito
+          console.error('Erro ao carregar logo:', customLogoUrl);
+        }}
       />
     );
   }

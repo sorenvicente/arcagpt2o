@@ -28,17 +28,21 @@ export const ChatListItem = ({ chat, onDelete, onClick }: ChatListItemProps) => 
       className="group flex h-10 items-center gap-2.5 rounded-lg px-4 hover:bg-chatgpt-hover cursor-pointer relative mt-2 transition-all duration-200 border border-transparent hover:border-chatgpt-border"
       onClick={onClick}
     >
-      <MessageSquare className="h-4 w-4" />
-      <ChatItemTitle
-        id={chat.id}
-        title={chat.title}
-        isEditing={isEditing}
-        onEditEnd={() => setIsEditing(false)}
-      />
-      <ChatItemActions
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-      />
+      <MessageSquare className="h-4 w-4 flex-shrink-0" />
+      <div className="flex-1 min-w-0">
+        <ChatItemTitle
+          id={chat.id}
+          title={chat.title}
+          isEditing={isEditing}
+          onEditEnd={() => setIsEditing(false)}
+        />
+      </div>
+      <div className="flex-shrink-0">
+        <ChatItemActions
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+        />
+      </div>
     </div>
   );
 };
