@@ -1,0 +1,25 @@
+.sidebar-item {
+  @apply flex items-center gap-3 rounded-md px-3 py-3 text-sm transition-colors duration-200 
+    text-light-text hover:bg-light-hover dark:text-white dark:hover:bg-[#2A2B32] cursor-pointer;
+}
+
+.action-button {
+  @apply flex items-center gap-2 rounded-md px-3 py-2 text-sm 
+    text-light-text hover:bg-light-hover dark:text-white dark:hover:bg-[#2A2B32]/50 
+    border border-transparent hover:border-light-border dark:hover:border-[#4E4F60] transition-all duration-200;
+}
+
+/* Add depth to cards and inputs */
+.card, 
+.input, 
+.select, 
+.textarea {
+  @apply shadow-lg border border-light-border dark:border-[#4E4F60] 
+    bg-light-main dark:bg-[#40414F] text-light-text dark:text-white;
+}
+
+/* Add hover effects to interactive elements */
+.button, 
+.link {
+  @apply transition-all duration-200 hover:shadow-md;
+}

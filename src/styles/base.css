@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Light mode (default) */
+:root {
+  @apply bg-light-background text-light-text;
+}
+
+/* Dark mode */
+.dark {
+  @apply bg-[#343541] text-white;
+}
+
+/* Custom scrollbar styling */
+::-webkit-scrollbar {
+  @apply w-1.5 sm:w-2;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-light-background dark:bg-[#343541];
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-light-border hover:bg-light-hover dark:bg-[#4E4F60] dark:hover:bg-[#2A2B32] transition-colors duration-200;
+}

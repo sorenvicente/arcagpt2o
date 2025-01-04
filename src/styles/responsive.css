@@ -1,0 +1,14 @@
+/* Mobile optimizations */
+@media (max-width: 640px) {
+  .container {
+    @apply px-2;
+  }
+  
+  .card {
+    @apply rounded-lg;
+  }
+  
+  .button {
+    @apply w-full;
+  }
+}
