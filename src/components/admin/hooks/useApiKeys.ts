@@ -19,6 +19,7 @@ export const useApiKeys = () => {
 
   const fetchApiKeys = async () => {
     try {
+      console.log('Fetching API keys...');
       const { data, error } = await supabase
         .from("api_keys")
         .select("*")
@@ -37,12 +38,18 @@ export const useApiKeys = () => {
       }
 
       if (data) {
-        console.log("Fetched API keys:", data);
+        console.log("Fetched API key:", data);
         setKeys({
           openai_key: data.openai_key || "",
           openrouter_key: data.openrouter_key || "",
           selected_openai_model: data.selected_openai_model as OpenAIModel,
           selected_openrouter_model: data.selected_openrouter_model as OpenRouterModel,
+        });
+      } else {
+        console.log("No API keys found");
+        setKeys({
+          openai_key: "",
+          openrouter_key: "",
         });
       }
     } catch (error: any) {
@@ -60,12 +67,17 @@ export const useApiKeys = () => {
     try {
       console.log("Saving keys:", keys);
 
-      const { data: existingKeys } = await supabase
+      const { data: existingKeys, error: fetchError } = await supabase
         .from("api_keys")
         .select("*")
         .order('created_at', { ascending: false })
         .limit(1)
         .maybeSingle();
+
+      if (fetchError) {
+        console.error("Error fetching existing keys:", fetchError);
+        throw fetchError;
+      }
 
       const dataToSave = {
         openai_key: keys.openai_key.trim(),
@@ -77,20 +89,21 @@ export const useApiKeys = () => {
 
       console.log("Data to save:", dataToSave);
 
+      let saveError;
       if (existingKeys) {
         const { error } = await supabase
           .from("api_keys")
           .update(dataToSave)
           .eq("id", existingKeys.id);
-
-        if (error) throw error;
+        saveError = error;
       } else {
         const { error } = await supabase
           .from("api_keys")
           .insert([dataToSave]);
-
-        if (error) throw error;
+        saveError = error;
       }
+
+      if (saveError) throw saveError;
 
       toast({
         title: "Sucesso",
