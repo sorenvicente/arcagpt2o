@@ -43,6 +43,7 @@ export const CreateUserForm = ({ onSuccess }: CreateUserFormProps) => {
             action: "create",
             email: values.email,
             password: values.password,
+            role: "user", // Ensure we're creating a regular user, not an admin
           }),
         }
       );
@@ -59,6 +60,7 @@ export const CreateUserForm = ({ onSuccess }: CreateUserFormProps) => {
       toast({
         title: "Sucesso",
         description: "Usuário criado com sucesso",
+        className: "bg-[#40414F] border border-[#4E4F60] text-white",
       });
       form.reset();
       onSuccess();
@@ -68,6 +70,7 @@ export const CreateUserForm = ({ onSuccess }: CreateUserFormProps) => {
         title: "Erro",
         description: error.message,
         variant: "destructive",
+        className: "bg-red-900 border border-red-700 text-white",
       });
     },
   });
@@ -84,11 +87,15 @@ export const CreateUserForm = ({ onSuccess }: CreateUserFormProps) => {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel className="text-[#9b87f5]">Email</FormLabel>
               <FormControl>
-                <Input placeholder="email@exemplo.com" {...field} />
+                <Input 
+                  placeholder="email@exemplo.com" 
+                  {...field} 
+                  className="bg-[#40414F] border-[#4E4F60] text-white placeholder:text-gray-400 focus:ring-[#9b87f5] focus:border-[#9b87f5]"
+                />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-red-400" />
             </FormItem>
           )}
         />
@@ -97,15 +104,23 @@ export const CreateUserForm = ({ onSuccess }: CreateUserFormProps) => {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Senha</FormLabel>
+              <FormLabel className="text-[#9b87f5]">Senha</FormLabel>
               <FormControl>
-                <Input type="password" placeholder="******" {...field} />
+                <Input 
+                  type="password" 
+                  placeholder="******" 
+                  {...field} 
+                  className="bg-[#40414F] border-[#4E4F60] text-white placeholder:text-gray-400 focus:ring-[#9b87f5] focus:border-[#9b87f5]"
+                />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-red-400" />
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full">
+        <Button 
+          type="submit" 
+          className="w-full bg-[#9b87f5] hover:bg-[#7E69AB] text-white transition-all duration-200 shadow-md hover:shadow-lg"
+        >
           Criar Usuário
         </Button>
       </form>
