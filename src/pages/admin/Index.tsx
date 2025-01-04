@@ -10,7 +10,18 @@ const AdminPage = () => {
   const { isLoading } = useAuth("admin");
 
   if (isLoading) {
-    return <div>Carregando...</div>;
+    return (
+      <div className="container mx-auto py-8 px-4">
+        <div className="flex justify-between items-center mb-8">
+          <div className="h-8 w-48 bg-chatgpt-input animate-pulse rounded"></div>
+          <div className="h-10 w-40 bg-chatgpt-input animate-pulse rounded-xl"></div>
+        </div>
+        <div className="grid gap-8 md:grid-cols-[1fr_2fr]">
+          <div className="h-96 bg-chatgpt-input animate-pulse rounded-xl"></div>
+          <div className="h-96 bg-chatgpt-input animate-pulse rounded-xl"></div>
+        </div>
+      </div>
+    );
   }
 
   return (
