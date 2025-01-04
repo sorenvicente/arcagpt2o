@@ -3,8 +3,8 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-import PromptCreator from "@/components/admin/PromptCreator";
-import PromptGrid from "@/components/admin/PromptGrid";
+import { PromptCreator } from "@/components/admin/PromptCreator";
+import { PromptGrid } from "@/components/admin/PromptGrid";
 
 const AdminPage = () => {
   const navigate = useNavigate();
