@@ -3,27 +3,32 @@ import { PricingCard } from "./PricingCard";
 export const PricingSection = () => {
   const basicFeatures = [
     "Criação de propósito e método",
-    "Estruturação de mentoria",
-    "Geração de conteúdo básico",
+    "Estruturação básica de mentoria",
+    "10 gerações de conteúdo por mês",
     "Suporte por email"
   ];
 
   const proFeatures = [
     "Tudo do plano básico",
     "Criação avançada de cursos",
-    "Geração ilimitada de conteúdo",
+    "Gerações ilimitadas de conteúdo",
     "Criação de ofertas otimizadas",
     "Páginas de vendas personalizadas",
     "Suporte prioritário 24/7"
   ];
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <h2 className="text-3xl font-bold text-white text-center mb-12">
-        Escolha o Plano Ideal para Seu Negócio
-      </h2>
+    <div className="max-w-5xl mx-auto mb-24">
+      <div className="text-center mb-16">
+        <h2 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-400 mb-4">
+          Escolha o Plano Ideal
+        </h2>
+        <p className="text-xl text-gray-300">
+          Comece gratuitamente e escale conforme seu negócio cresce
+        </p>
+      </div>
       
-      <div className="grid md:grid-cols-2 gap-8">
+      <div className="grid md:grid-cols-2 gap-8 px-4">
         <PricingCard
           title="Plano Básico"
           price="R$ 97"

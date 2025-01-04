@@ -5,7 +5,7 @@ import { CTASection } from "@/components/sales/CTASection";
 
 const SalesPage = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-chatgpt-main to-chatgpt-secondary">
+    <div className="min-h-screen bg-gradient-to-br from-[#0F0F1A] to-[#1A1A2E] overflow-hidden">
       <div className="container mx-auto px-4 py-16">
         <HeroSection />
         <FeaturesGrid />
