@@ -18,7 +18,7 @@ export const FeatureCard = ({ title, description, icon }: FeatureCardProps) => {
   }[icon];
 
   return (
-    <Card className="p-6 bg-gradient-to-br from-purple-900/30 to-blue-900/30 border-purple-500/20 hover:border-purple-500/40 transition-all duration-300 rounded-3xl">
+    <Card className="p-6 bg-gradient-to-br from-purple-900/30 to-blue-900/30 border-purple-500/20 hover:border-purple-500/40 transition-all duration-300 rounded-[2rem]">
       <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center mb-4">
         <Icon className="h-6 w-6 text-white" />
       </div>
