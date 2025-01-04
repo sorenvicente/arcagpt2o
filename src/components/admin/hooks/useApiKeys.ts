@@ -38,8 +38,8 @@ export const useApiKeys = () => {
         setKeys({
           openai_key: data.openai_key || "",
           openrouter_key: data.openrouter_key || "",
-          selected_openai_model: data.selected_openai_model,
-          selected_openrouter_model: data.selected_openrouter_model,
+          selected_openai_model: data.selected_openai_model as OpenAIModel,
+          selected_openrouter_model: data.selected_openrouter_model as OpenRouterModel,
         });
       }
     } catch (error: any) {
