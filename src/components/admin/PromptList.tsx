@@ -117,9 +117,17 @@ export function PromptList() {
       {prompts.map((prompt) => (
         <div
           key={prompt.id}
-          className="flex items-center justify-between p-3 bg-chatgpt-secondary rounded-lg border border-chatgpt-border"
+          className="flex items-center justify-between p-4 bg-chatgpt-secondary rounded-lg border border-chatgpt-border hover:bg-chatgpt-hover transition-colors"
         >
-          <span className="font-medium text-white">{prompt.name}</span>
+          <div className="flex-1">
+            <h3 className="font-medium text-white">{prompt.name}</h3>
+            {prompt.description && (
+              <p className="text-sm text-gray-400 mt-1">{prompt.description}</p>
+            )}
+            <span className="text-xs text-gray-500 mt-1 block">
+              Categoria: {prompt.category}
+            </span>
+          </div>
           <div className="flex gap-2">
             <Button
               variant="ghost"
@@ -133,7 +141,7 @@ export function PromptList() {
               variant="ghost"
               size="icon"
               onClick={() => handleDelete(prompt.id)}
-              className="text-gray-400 hover:text-white hover:bg-chatgpt-hover"
+              className="text-gray-400 hover:text-red-400 hover:bg-chatgpt-hover"
             >
               <Trash2 className="h-4 w-4" />
             </Button>
