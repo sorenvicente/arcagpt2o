@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Pencil } from 'lucide-react';
 import EditableMessage from './EditableMessage';
 import {
@@ -16,6 +16,52 @@ const UserMessage = ({ content }: UserMessageProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [messageContent, setMessageContent] = useState(content);
+  const messageRef = useRef<HTMLDivElement>(null);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [shouldShowPencil, setShouldShowPencil] = useState(false);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!messageRef.current) return;
+
+      const rect = messageRef.current.getBoundingClientRect();
+      const messageCenter = {
+        x: rect.left + rect.width / 2,
+        y: rect.top + rect.height / 2
+      };
+
+      // Calculate the angle between mouse position and message center
+      const angle = Math.atan2(
+        e.clientY - messageCenter.y,
+        e.clientX - messageCenter.x
+      );
+
+      // Calculate distance from mouse to message center
+      const distance = Math.sqrt(
+        Math.pow(e.clientX - messageCenter.x, 2) +
+        Math.pow(e.clientY - messageCenter.y, 2)
+      );
+
+      // Check if mouse is moving towards the message
+      const prevDistance = Math.sqrt(
+        Math.pow(mousePosition.x - messageCenter.x, 2) +
+        Math.pow(mousePosition.y - messageCenter.y, 2)
+      );
+
+      // Update mouse position
+      setMousePosition({ x: e.clientX, y: e.clientY });
+
+      // Show pencil if mouse is moving towards message and within range
+      if (distance < prevDistance && distance < 718.2) {
+        setShouldShowPencil(true);
+      } else if (distance > 718.2) {
+        setShouldShowPencil(false);
+      }
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, [mousePosition]);
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -29,16 +75,15 @@ const UserMessage = ({ content }: UserMessageProps) => {
   return (
     <div
       className="relative group"
+      ref={messageRef}
       onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseLeave={() => {
+        setIsHovered(false);
+        setShouldShowPencil(false);
+      }}
     >
       <div className="bg-gray-700/50 rounded-[20px] px-4 py-2 inline-block relative">
-        <div 
-          className="absolute inset-0 -left-[718.2px] -right-[718.2px] -top-[718.2px] -bottom-[718.2px] z-[-1]"
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-        />
-        {isHovered && !isEditing && (
+        {(shouldShowPencil || isHovered) && !isEditing && (
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
