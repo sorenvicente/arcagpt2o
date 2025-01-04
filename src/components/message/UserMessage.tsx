@@ -28,7 +28,7 @@ const UserMessage = ({ content }: UserMessageProps) => {
 
   return (
     <div
-      className="relative group"
+      className="relative group px-16"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
