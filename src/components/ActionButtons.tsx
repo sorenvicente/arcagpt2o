@@ -76,10 +76,6 @@ const ActionButtons = ({ onSelectPrompt, activeCategory }: ActionButtonsProps) =
       const systemMessage = `Você está agora atuando como um assistente especializado em ${category}. Seu objetivo é: ${selectedPrompt.prompt}`;
       onSelectPrompt(systemMessage, category);
       console.log('Prompt selecionado:', selectedPrompt.prompt, 'Categoria:', category);
-      toast({
-        title: "Assistente Ativado",
-        description: `Assistente de ${category} está pronto para ajudar`,
-      });
     } else {
       console.log('Nenhum prompt encontrado para categoria:', category);
       toast({
