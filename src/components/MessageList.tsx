@@ -40,18 +40,15 @@ const MessageList = ({ messages, onRegenerate, isLoading }: MessageListProps) =>
               }
             />
           ))}
+          {isLoading && (
+            <div className="flex items-center gap-3 text-gray-400 px-4">
+              <Loader2 className="h-4 w-4 animate-spin" />
+              <span className="text-sm">Gerando resposta...</span>
+            </div>
+          )}
           <div ref={messagesEndRef} />
         </div>
       </div>
-      
-      {isLoading && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-chatgpt-main p-6 rounded-lg shadow-lg flex items-center gap-3">
-            <Loader2 className="h-6 w-6 animate-spin text-blue-500" />
-            <span className="text-white">Gerando resposta...</span>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
