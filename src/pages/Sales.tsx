@@ -1,5 +1,6 @@
 import { HeroSection } from "@/components/sales/HeroSection";
 import { FeaturesGrid } from "@/components/sales/FeaturesGrid";
+import { StepsSection } from "@/components/sales/StepsSection";
 import { PricingSection } from "@/components/sales/PricingSection";
 import { GuaranteeSection } from "@/components/sales/GuaranteeSection";
 import { FAQSection } from "@/components/sales/FAQSection";
@@ -11,6 +12,7 @@ const SalesPage = () => {
       <div className="container mx-auto px-4 py-16">
         <HeroSection />
         <FeaturesGrid />
+        <StepsSection />
         <PricingSection />
         <GuaranteeSection />
         <FAQSection />
