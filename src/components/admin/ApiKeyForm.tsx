@@ -19,9 +19,12 @@ const openAiModels = [
   { value: "gpt-4-turbo", label: "GPT-4 Turbo" },
   { value: "gpt-4", label: "GPT-4" },
   { value: "gpt-4-vision", label: "GPT-4 Vision" },
+  { value: "gpt-3.5-turbo", label: "GPT-3.5 Turbo" },
+  { value: "gpt-3.5-turbo-16k", label: "GPT-3.5 Turbo 16K" },
 ];
 
 const openRouterModels = [
+  // Modelos Gratuitos
   { value: "meta-llama/llama-3.1-405b-instruct:free", label: "Meta Llama 3.1 405B (Free)" },
   { value: "meta-llama/llama-2-70b-chat", label: "Meta Llama 2 70B (Free)" },
   { value: "meta-llama/llama-2-13b-chat", label: "Meta Llama 2 13B (Free)" },
@@ -33,6 +36,22 @@ const openRouterModels = [
   { value: "anthropic/claude-2", label: "Anthropic Claude 2 (Free)" },
   { value: "mistral/mistral-7b", label: "Mistral 7B (Free)" },
   { value: "mistral/mixtral-8x7b", label: "Mixtral 8x7B (Free)" },
+  
+  // Modelos Pagos - OpenAI via OpenRouter
+  { value: "openai/gpt-4-1106-preview", label: "GPT-4 Turbo (OpenRouter)" },
+  { value: "openai/gpt-4-vision-preview", label: "GPT-4 Vision (OpenRouter)" },
+  { value: "openai/gpt-4", label: "GPT-4 (OpenRouter)" },
+  { value: "openai/gpt-3.5-turbo", label: "GPT-3.5 Turbo (OpenRouter)" },
+  
+  // Outros Modelos Pagos Populares
+  { value: "anthropic/claude-3-opus", label: "Claude 3 Opus (Paid)" },
+  { value: "anthropic/claude-3-sonnet", label: "Claude 3 Sonnet (Paid)" },
+  { value: "anthropic/claude-3-haiku", label: "Claude 3 Haiku (Paid)" },
+  { value: "google/gemini-pro-vision", label: "Gemini Pro Vision (Paid)" },
+  { value: "google/gemini-ultra", label: "Gemini Ultra (Paid)" },
+  { value: "mistral/mistral-large", label: "Mistral Large (Paid)" },
+  { value: "mistral/mistral-medium", label: "Mistral Medium (Paid)" },
+  { value: "mistral/mistral-small", label: "Mistral Small (Paid)" },
 ];
 
 const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
@@ -66,7 +85,7 @@ const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
     <form onSubmit={handleSubmit} className="space-y-6">
       <ApiKeySection
         title="OpenAI API Key"
-        description="Opcional - Acesso ao GPT-4, GPT-4 Turbo e GPT-4 Vision"
+        description="Opcional - Acesso ao GPT-4, GPT-4 Turbo, GPT-4 Vision e GPT-3.5 Turbo"
         apiKey={keys.openai_key}
         onApiKeyChange={(value) => setKeys({ ...keys, openai_key: value })}
         selectedModel={selectedOpenAIModel}
@@ -78,14 +97,14 @@ const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
 
       <ApiKeySection
         title="OpenRouter API Key"
-        description="Opcional - Acesso gratuito aos modelos Llama 3.1 405B, Llama 2 (70B, 13B, 7B), Code Llama (70B, 34B, 13B), Gemini Pro, Claude 2, Mistral e outros"
+        description="Opcional - Acesso a modelos gratuitos e pagos: Llama, Claude, Gemini, Mistral e outros"
         apiKey={keys.openrouter_key}
         onApiKeyChange={(value) => setKeys({ ...keys, openrouter_key: value })}
         selectedModel={selectedOpenRouterModel}
         onModelChange={setSelectedOpenRouterModel}
         models={openRouterModels}
         modelSelectorLabel="Selecione o Modelo OpenRouter"
-        modelListTitle="Modelos Gratuitos Disponíveis"
+        modelListTitle="Modelos Disponíveis (Gratuitos e Pagos)"
         extraContent={openRouterExtraContent}
       />
 
