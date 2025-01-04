@@ -74,7 +74,10 @@ serve(async (req) => {
         console.error('Erro na API do OpenAI:', error);
         
         if (error.error?.code === 'insufficient_quota') {
-          return { error: 'insufficient_quota' };
+          return { 
+            error: 'insufficient_quota',
+            message: 'Sua cota da OpenAI foi excedida. Tentando usar OpenRouter como alternativa...'
+          };
         }
         
         throw new Error(error.error?.message || 'Erro ao chamar a API do OpenAI');
@@ -125,8 +128,11 @@ serve(async (req) => {
     if (apiKeys.openai_key) {
       try {
         openAIResult = await tryOpenAI();
-        if (openAIResult && openAIResult !== 'insufficient_quota') {
+        if (openAIResult && typeof openAIResult === 'string') {
           content = openAIResult;
+        } else if (openAIResult?.error === 'insufficient_quota') {
+          console.log('Cota OpenAI excedida, tentando OpenRouter...');
+          content = await tryOpenRouter();
         }
       } catch (error) {
         console.error('Erro ao tentar OpenAI:', error);
@@ -146,7 +152,7 @@ serve(async (req) => {
     }
 
     if (!content) {
-      throw new Error('Nenhum serviço de API disponível ou todas as tentativas falharam');
+      throw new Error('Nenhum serviço de API disponível ou todas as tentativas falharam. Por favor, verifique suas chaves API.');
     }
 
     return new Response(
