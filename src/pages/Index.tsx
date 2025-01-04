@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Sidebar from '@/components/Sidebar';
 import ChatHeader from '@/components/ChatHeader';
 import ChatInput from '@/components/ChatInput';
@@ -19,11 +19,11 @@ const Index = () => {
   } = useChat();
 
   // Enviar mensagem inicial do sistema em português
-  useState(() => {
+  useEffect(() => {
     if (messages.length === 0) {
       sendMessage("Olá! Sou um assistente virtual pronto para ajudar você. Como posso ser útil hoje?", "system");
     }
-  }, []);
+  }, [messages.length, sendMessage]);
 
   return (
     <div className="flex h-screen">

@@ -48,7 +48,7 @@ serve(async (req) => {
 
     // Validate API keys
     if (!apiKeys.openai_key && !apiKeys.openrouter_key) {
-      throw new Error('No API keys configured. Please configure either OpenAI or OpenRouter API key in the API Keys page.');
+      throw new Error('Por favor, configure pelo menos uma chave API (OpenAI ou OpenRouter) na página de Chaves API.');
     }
 
     const { messages } = await req.json();
@@ -84,11 +84,15 @@ serve(async (req) => {
             status: response.status,
             response: errorText
           });
-          lastError = new Error(`OpenRouter error: ${errorText}`);
-          throw lastError;
+          throw new Error(`Erro OpenRouter: ${errorText}`);
         }
 
         const data = await response.json();
+        
+        if (!data.choices?.[0]?.message?.content) {
+          throw new Error('Resposta inválida do OpenRouter');
+        }
+
         console.log('OpenRouter API success');
 
         return new Response(
@@ -128,13 +132,18 @@ serve(async (req) => {
           console.error('OpenAI API error:', error);
           
           if (error.error?.code === 'insufficient_quota') {
-            throw new Error('OpenAI quota exceeded. Please check your billing details or try using OpenRouter.');
+            throw new Error('Cota do OpenAI excedida. Por favor, verifique seus detalhes de faturamento ou tente usar o OpenRouter.');
           }
           
-          throw new Error(error.error?.message || 'Error calling OpenAI API');
+          throw new Error(error.error?.message || 'Erro ao chamar a API do OpenAI');
         }
 
         const data = await response.json();
+        
+        if (!data.choices?.[0]?.message?.content) {
+          throw new Error('Resposta inválida do OpenAI');
+        }
+
         console.log('OpenAI API success');
 
         return new Response(
@@ -143,22 +152,22 @@ serve(async (req) => {
         );
       } catch (error) {
         console.error('OpenAI API failed:', error);
-        // If we had a previous OpenRouter error, include it in the message
+        // Se tivemos um erro anterior do OpenRouter, incluímos na mensagem
         const errorMessage = lastError ? 
-          `Both services failed. OpenRouter: ${lastError.message}, OpenAI: ${error.message}` :
+          `Ambos os serviços falharam. OpenRouter: ${lastError.message}, OpenAI: ${error.message}` :
           error.message;
         throw new Error(errorMessage);
       }
     }
 
-    throw new Error('No working API service available');
+    throw new Error('Nenhum serviço de API disponível');
 
   } catch (error) {
     console.error('Chat function error:', error);
     return new Response(
       JSON.stringify({ 
         error: error.message,
-        details: 'Please verify your API keys and quotas in the API Keys page.'
+        details: 'Por favor, verifique suas chaves API e cotas na página de Chaves API.'
       }),
       { 
         status: error.message.includes('Invalid authentication') ? 401 : 500,
