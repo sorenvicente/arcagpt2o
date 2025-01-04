@@ -94,10 +94,7 @@ serve(async (req) => {
     // Try OpenAI if configured
     if (apiKey.openai_key) {
       console.log('Tentando usar OpenAI...');
-      if (!apiKey.openai_key.startsWith('sk-')) {
-        throw new Error('Chave OpenAI inválida. A chave deve começar com "sk-"');
-      }
-
+      // Remove OpenAI key validation since we want to support different key formats
       const openAIResponse = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {
