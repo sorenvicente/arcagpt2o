@@ -26,19 +26,23 @@ const MessageList = ({ messages, onRegenerate, isLoading }: MessageListProps) =>
 
   return (
     <div className="relative flex-1 overflow-y-auto">
-      {messages.map((message, index) => (
-        <Message
-          key={index}
-          role={message.role}
-          content={message.content}
-          onRegenerate={
-            index === messages.length - 1 && message.role === "assistant"
-              ? onRegenerate
-              : undefined
-          }
-        />
-      ))}
-      <div ref={messagesEndRef} />
+      <div className="w-full max-w-3xl mx-auto px-4">
+        <div className="space-y-8">
+          {messages.map((message, index) => (
+            <Message
+              key={index}
+              role={message.role}
+              content={message.content}
+              onRegenerate={
+                index === messages.length - 1 && message.role === "assistant"
+                  ? onRegenerate
+                  : undefined
+              }
+            />
+          ))}
+          <div ref={messagesEndRef} />
+        </div>
+      </div>
       
       {isLoading && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
