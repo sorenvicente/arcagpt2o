@@ -19,16 +19,20 @@ const ActionButtons = ({ onSelectPrompt, activeCategory }: ActionButtonsProps) =
   };
 
   const handlePromptSelect = (category: string) => {
+    console.log('Procurando prompt para categoria:', category);
+    console.log('Prompts disponíveis:', prompts);
+    
     const selectedPrompt = prompts.find(p => 
       normalizeString(p.category) === normalizeString(category)
     );
     
     if (selectedPrompt) {
+      console.log('Prompt encontrado:', selectedPrompt);
       const systemMessage = `Você está agora atuando como um assistente especializado em ${category}. Seu objetivo é: ${selectedPrompt.prompt}`;
       onSelectPrompt(systemMessage, category);
-      console.log('Prompt selecionado:', selectedPrompt.prompt, 'Categoria:', category);
     } else {
       console.log('Nenhum prompt encontrado para categoria:', category);
+      console.log('Categorias disponíveis:', prompts.map(p => p.category));
       toast({
         title: "Erro",
         description: `Nenhum prompt encontrado para ${category}`,

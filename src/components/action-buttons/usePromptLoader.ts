@@ -8,7 +8,8 @@ export const usePromptLoader = () => {
 
   const loadPrompts = async () => {
     try {
-      // Changed from .single() to .limit(1) to get the most recent API key
+      console.log('Iniciando carregamento dos prompts...');
+      
       const { data: apiKeys, error: apiKeysError } = await supabase
         .from('api_keys')
         .select('*')
@@ -20,8 +21,8 @@ export const usePromptLoader = () => {
         throw new Error('Falha ao buscar chaves API');
       }
 
-      // Check if we have any API keys
       if (!apiKeys?.length || (!apiKeys[0].openai_key && !apiKeys[0].openrouter_key)) {
+        console.log('Nenhuma chave API encontrada');
         toast({
           title: "Configuração necessária",
           description: "Por favor, configure pelo menos uma chave API (OpenAI ou OpenRouter) na página de Chaves API.",
@@ -45,8 +46,8 @@ export const usePromptLoader = () => {
       }
 
       if (data) {
+        console.log('Prompts carregados com sucesso:', data);
         setPrompts(data);
-        console.log('Prompts carregados:', data);
       }
     } catch (error) {
       console.error('Erro ao carregar prompts:', error);
@@ -71,6 +72,7 @@ export const usePromptLoader = () => {
           table: 'prompt_blocks'
         },
         () => {
+          console.log('Mudança detectada na tabela prompt_blocks, recarregando...');
           loadPrompts();
         }
       )
