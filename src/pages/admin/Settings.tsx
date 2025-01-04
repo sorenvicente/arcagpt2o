@@ -1,32 +1,36 @@
-import { SystemSettings } from "@/components/admin/SystemSettings";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { LogoSettings } from "@/components/admin/settings/LogoSettings";
+import { UserManagement } from "@/components/admin/settings/UserManagement";
 
 const SystemSettingsPage = () => {
-  useAuth("admin");
   const navigate = useNavigate();
+  const { isLoading } = useAuth("admin");
+
+  if (isLoading) {
+    return <div>Carregando...</div>;
+  }
 
   return (
-    <div className="container mx-auto py-2 space-y-4">
-      <div className="w-full max-w-4xl mx-auto">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 bg-[#444654] p-2 rounded-xl shadow border border-[#4E4F60]">
-          <h1 className="text-xl font-semibold text-white">
-            Configurações do Sistema
-          </h1>
-          <Button 
-            onClick={() => navigate("/app")}
-            variant="outline"
-            className="flex items-center gap-2 w-full sm:w-auto justify-center bg-[#40414F] hover:bg-[#2A2B32] text-white transition-all duration-200 border-0 shadow text-sm rounded-xl"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Voltar à Interface
-          </Button>
-        </div>
+    <div className="container mx-auto py-8 px-4">
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-2xl font-bold">Configurações do Sistema</h1>
+        <Button
+          variant="outline"
+          className="flex items-center gap-2"
+          onClick={() => navigate("/app")}
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Voltar à Interface
+        </Button>
       </div>
-      
-      <SystemSettings />
+
+      <div className="space-y-8">
+        <LogoSettings />
+        <UserManagement />
+      </div>
     </div>
   );
 };

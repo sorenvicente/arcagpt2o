@@ -1,44 +1,40 @@
-import { PromptCreator } from "@/components/admin/PromptCreator";
-import { useAuth } from "@/hooks/useAuth";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Settings } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
+import PromptCreator from "@/components/admin/PromptCreator";
+import PromptGrid from "@/components/admin/PromptGrid";
 
-const AdminIndex = () => {
-  const { isLoading } = useAuth("admin");
+const AdminPage = () => {
   const navigate = useNavigate();
+  const [selectedPromptId, setSelectedPromptId] = useState<string | null>(null);
+  const { isLoading } = useAuth("admin");
 
   if (isLoading) {
     return <div>Carregando...</div>;
   }
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-4 mb-6">
-        <h1 className="text-2xl font-bold">Gerenciamento de Prompts</h1>
-        <div className="flex flex-col sm:flex-row w-full sm:w-auto gap-2">
-          <Button 
-            onClick={() => navigate("/admin/settings")}
-            variant="outline"
-            className="flex items-center justify-center gap-2 w-full sm:w-auto rounded-xl transition-all duration-200 hover:bg-[#2A2B32]/70"
-          >
-            <Settings className="h-4 w-4" />
-            <span className="whitespace-nowrap">Configurações</span>
-          </Button>
-          <Button 
-            onClick={() => navigate("/admin/dashboard")}
-            variant="ghost"
-            className="flex items-center justify-center gap-2 w-full sm:w-auto rounded-xl"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            <span className="whitespace-nowrap">Voltar ao Dashboard</span>
-          </Button>
-        </div>
+    <div className="container mx-auto py-8 px-4">
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-2xl font-bold">Gerenciar Prompts</h1>
+        <Button
+          variant="outline"
+          className="flex items-center gap-2"
+          onClick={() => navigate("/app")}
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Voltar à Interface
+        </Button>
       </div>
-      
-      <PromptCreator />
+
+      <div className="grid gap-8 md:grid-cols-[1fr_2fr]">
+        <PromptCreator selectedPromptId={selectedPromptId} />
+        <PromptGrid onPromptSelect={setSelectedPromptId} />
+      </div>
     </div>
   );
 };
 
-export default AdminIndex;
+export default AdminPage;

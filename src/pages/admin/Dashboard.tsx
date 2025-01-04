@@ -1,6 +1,6 @@
 import { SystemSettings } from "@/components/admin/SystemSettings";
 import { Button } from "@/components/ui/button";
-import { Home } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -19,10 +19,10 @@ const DashboardPage = () => {
         <Button
           variant="outline"
           className="flex items-center gap-2"
-          onClick={() => navigate("/admin")}
+          onClick={() => navigate("/app")}
         >
-          <Home className="h-4 w-4" />
-          Gerenciar Prompts
+          <ArrowLeft className="h-4 w-4" />
+          Voltar à Interface
         </Button>
       </div>
 
