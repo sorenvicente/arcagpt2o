@@ -22,13 +22,13 @@ export const PartnersMarquee = () => {
       </div>
 
       <div className="relative flex flex-col gap-2 overflow-hidden">
-        {/* Gradientes laterais */}
+        {/* Gradientes laterais com transição suave */}
         <div className="absolute inset-y-0 left-0 w-32 z-10">
-          <div className="h-full w-full bg-gradient-to-r from-[#1A1A2E] via-[#151522]/80 to-transparent"></div>
+          <div className="h-full w-full bg-gradient-to-r from-[#151522] via-[#151522]/60 to-transparent"></div>
         </div>
 
         <div className="absolute inset-y-0 right-0 w-32 z-10">
-          <div className="h-full w-full bg-gradient-to-l from-[#1A1A2E] via-[#151522]/80 to-transparent"></div>
+          <div className="h-full w-full bg-gradient-to-l from-[#151522] via-[#151522]/60 to-transparent"></div>
         </div>
 
         {/* First row - Left to right */}
