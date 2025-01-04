@@ -20,36 +20,37 @@ const Message = ({ role, content, onRegenerate, isRegenerating }: MessageProps) 
       <div className={`flex gap-4 ${role === 'user' ? 'flex-row-reverse' : ''}`}>
         <MessageAvatar role={role} />
         <div className={`flex-1 space-y-2 ${role === 'user' ? 'flex justify-end' : ''}`}>
-          <div className={`${role === 'user' ? 'bg-gray-700/50 rounded-[20px] px-4 py-2 inline-block' : 'prose prose-invert max-w-none'}`}>
+          <div className={`relative ${role === 'user' ? 'bg-gray-700/50 rounded-[20px] px-4 py-2 inline-block' : 'prose prose-invert max-w-none'}`}>
             {role === 'user' ? (
               messageContent
             ) : (
               <>
-                {isRegenerating ? (
-                  <div className="flex items-center gap-2 text-[#9b87f5]">
-                    <Loader className="h-4 w-4 animate-spin" />
-                    <span>Regenerando resposta...</span>
+                <ReactMarkdown
+                  components={{
+                    p: ({ children }) => <p className="mb-4">{children}</p>,
+                    h1: ({ children }) => <h1 className="text-2xl font-bold mb-4">{children}</h1>,
+                    h2: ({ children }) => <h2 className="text-xl font-bold mb-3">{children}</h2>,
+                    h3: ({ children }) => <h3 className="text-lg font-bold mb-2">{children}</h3>,
+                    ul: ({ children }) => <ul className="list-disc pl-6 mb-4">{children}</ul>,
+                    ol: ({ children }) => <ol className="list-decimal pl-6 mb-4">{children}</ol>,
+                    li: ({ children }) => <li className="mb-1">{children}</li>,
+                    code: ({ children }) => <code className="bg-gray-800 px-1 rounded">{children}</code>,
+                    pre: ({ children }) => (
+                      <pre className="bg-gray-800 p-4 rounded-lg overflow-x-auto mb-4">
+                        {children}
+                      </pre>
+                    ),
+                  }}
+                >
+                  {messageContent}
+                </ReactMarkdown>
+                {isRegenerating && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded">
+                    <div className="flex items-center gap-2 text-[#9b87f5]">
+                      <Loader className="h-5 w-5 animate-spin" />
+                      <span>Regenerando resposta...</span>
+                    </div>
                   </div>
-                ) : (
-                  <ReactMarkdown
-                    components={{
-                      p: ({ children }) => <p className="mb-4">{children}</p>,
-                      h1: ({ children }) => <h1 className="text-2xl font-bold mb-4">{children}</h1>,
-                      h2: ({ children }) => <h2 className="text-xl font-bold mb-3">{children}</h2>,
-                      h3: ({ children }) => <h3 className="text-lg font-bold mb-2">{children}</h3>,
-                      ul: ({ children }) => <ul className="list-disc pl-6 mb-4">{children}</ul>,
-                      ol: ({ children }) => <ol className="list-decimal pl-6 mb-4">{children}</ol>,
-                      li: ({ children }) => <li className="mb-1">{children}</li>,
-                      code: ({ children }) => <code className="bg-gray-800 px-1 rounded">{children}</code>,
-                      pre: ({ children }) => (
-                        <pre className="bg-gray-800 p-4 rounded-lg overflow-x-auto mb-4">
-                          {children}
-                        </pre>
-                      ),
-                    }}
-                  >
-                    {messageContent}
-                  </ReactMarkdown>
                 )}
               </>
             )}
