@@ -17,9 +17,14 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <Router>
         <Routes>
+          {/* Página inicial (Sales) como rota principal */}
           <Route path="/" element={<SalesPage />} />
-          <Route path="/app" element={<IndexPage />} />
+          
+          {/* Página de login */}
           <Route path="/login" element={<LoginPage />} />
+          
+          {/* Rotas protegidas que requerem autenticação */}
+          <Route path="/app" element={<IndexPage />} />
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/admin/dashboard" element={<DashboardPage />} />
           <Route path="/admin/settings" element={<SystemSettingsPage />} />
