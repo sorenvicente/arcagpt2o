@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
+import { Loader2 } from "lucide-react";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -15,14 +16,22 @@ const LoginPage = () => {
   useEffect(() => {
     const checkSession = async () => {
       try {
-        const { data: { session } } = await supabase.auth.getSession();
+        const { data: { session }, error } = await supabase.auth.getSession();
+        
+        if (error) {
+          throw error;
+        }
+
         if (session) {
-          // Buscar o role do usuário
-          const { data: profile } = await supabase
+          const { data: profile, error: profileError } = await supabase
             .from('profiles')
             .select('role')
             .eq('id', session.user.id)
             .single();
+
+          if (profileError) {
+            throw profileError;
+          }
 
           if (profile?.role === 'admin') {
             navigate('/admin');
@@ -49,12 +58,15 @@ const LoginPage = () => {
         setIsLoading(false);
       } else if (session) {
         try {
-          // Buscar o role do usuário após login
-          const { data: profile } = await supabase
+          const { data: profile, error: profileError } = await supabase
             .from('profiles')
             .select('role')
             .eq('id', session.user.id)
             .single();
+
+          if (profileError) {
+            throw profileError;
+          }
 
           if (profile?.role === 'admin') {
             navigate('/admin');
@@ -77,7 +89,9 @@ const LoginPage = () => {
 
   const handleLogout = async () => {
     try {
-      await supabase.auth.signOut();
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      
       toast({
         title: "Logout realizado",
         description: "Você foi desconectado com sucesso."
@@ -95,7 +109,10 @@ const LoginPage = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-chatgpt-main flex items-center justify-center p-4">
-        <div className="text-white">Carregando...</div>
+        <div className="flex items-center gap-2 text-white">
+          <Loader2 className="h-6 w-6 animate-spin" />
+          <span>Carregando...</span>
+        </div>
       </div>
     );
   }
