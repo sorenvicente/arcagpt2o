@@ -98,7 +98,7 @@
 
 /* Message styles */
 .message {
-  @apply bg-white dark:bg-[#343541] text-light-text dark:text-white 
+  @apply bg-light-main dark:bg-[#343541] text-light-text dark:text-white 
     border-b border-light-border dark:border-chatgpt-border;
 }
 
@@ -108,12 +108,12 @@
 
 /* Input styles */
 .chat-input {
-  @apply bg-white dark:bg-[#40414F] text-light-text dark:text-white 
+  @apply bg-light-input dark:bg-[#40414F] text-light-text dark:text-white 
     border-light-border dark:border-chatgpt-border;
 }
 
 /* Sidebar styles */
 .sidebar {
-  @apply bg-light-background dark:bg-chatgpt-sidebar 
+  @apply bg-light-sidebar dark:bg-chatgpt-sidebar 
     border-r border-light-border dark:border-chatgpt-border;
 }

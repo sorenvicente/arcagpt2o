@@ -43,7 +43,10 @@ export default {
           error: "#DC3545",
           warning: "#FFC107",
           highlight: "#007BFF",
-          accent: "#6C757D"
+          accent: "#6C757D",
+          sidebar: "#FFFFFF",
+          main: "#FFFFFF",
+          input: "#FFFFFF"
         },
         primary: {
           DEFAULT: "hsl(var(--primary))",
