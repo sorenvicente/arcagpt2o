@@ -18,7 +18,7 @@ const EditButton = ({ onEdit, visible }: EditButtonProps) => {
         aria-label="Editar texto"
       >
         <Pencil className="h-4 w-4" />
-        <span className="absolute left-1/2 -translate-x-1/2 -top-8 bg-white text-black text-xs px-2 py-1 rounded-lg opacity-0 group-hover/tooltip:opacity-100 transition-opacity whitespace-nowrap">
+        <span className="absolute left-1/2 -translate-x-1/2 -top-8 bg-white text-black text-xs px-2 py-1 rounded-2xl opacity-0 group-hover/tooltip:opacity-100 transition-opacity whitespace-nowrap">
           Editar texto
         </span>
       </button>
