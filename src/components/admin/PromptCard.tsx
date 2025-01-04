@@ -33,17 +33,17 @@ export function PromptCard({ prompt, onEdit, onDelete }: PromptCardProps) {
           variant="ghost"
           size="icon"
           onClick={() => onEdit(prompt)}
-          className="h-4 w-4 text-gray-400 hover:text-white hover:bg-chatgpt-hover rounded-lg"
+          className="h-6 w-6 text-gray-400 hover:text-white hover:bg-chatgpt-hover rounded-lg"
         >
-          <Edit className="h-2.5 w-2.5" />
+          <Edit className="h-4 w-4" />
         </Button>
         <Button
           variant="ghost"
           size="icon"
           onClick={() => onDelete(prompt.id)}
-          className="h-4 w-4 text-gray-400 hover:text-red-400 hover:bg-chatgpt-hover rounded-lg"
+          className="h-6 w-6 text-gray-400 hover:text-red-400 hover:bg-chatgpt-hover rounded-lg"
         >
-          <Trash2 className="h-2.5 w-2.5" />
+          <Trash2 className="h-4 w-4" />
         </Button>
       </div>
     </div>
