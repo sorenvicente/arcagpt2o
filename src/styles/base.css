@@ -4,7 +4,7 @@
 
 /* Dark mode (default) */
 :root {
-  @apply bg-[#343541] text-white;
+  @apply bg-chatgpt-main text-white;
 }
 
 /* Custom scrollbar styling */
@@ -13,9 +13,9 @@
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-[#343541];
+  @apply bg-chatgpt-main;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-[#4E4F60] hover:bg-[#2A2B32] transition-colors duration-200;
+  @apply bg-chatgpt-border hover:bg-chatgpt-hover transition-colors duration-200;
 }

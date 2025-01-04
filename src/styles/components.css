@@ -1,12 +1,12 @@
 .sidebar-item {
   @apply flex items-center gap-3 rounded-md px-3 py-3 text-sm transition-colors duration-200 
-    text-white hover:bg-[#2A2B32] cursor-pointer;
+    text-white hover:bg-chatgpt-hover cursor-pointer;
 }
 
 .action-button {
   @apply flex items-center gap-2 rounded-md px-3 py-2 text-sm 
-    text-white hover:bg-[#2A2B32]/50 
-    border border-transparent hover:border-[#4E4F60] transition-all duration-200;
+    text-white hover:bg-chatgpt-hover/50 
+    border border-transparent hover:border-chatgpt-border transition-all duration-200;
 }
 
 /* Add depth to cards and inputs */
@@ -14,8 +14,8 @@
 .input, 
 .select, 
 .textarea {
-  @apply shadow-lg border border-[#4E4F60] 
-    bg-[#40414F] text-white;
+  @apply shadow-lg border border-chatgpt-border 
+    bg-chatgpt-input text-white;
 }
 
 /* Add hover effects to interactive elements */

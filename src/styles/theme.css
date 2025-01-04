@@ -1,6 +1,6 @@
 /* Message styles */
 .message {
-  @apply bg-[#343541] text-white border-b border-chatgpt-border;
+  @apply bg-chatgpt-main text-white border-b border-chatgpt-border;
 }
 
 .message-assistant {
@@ -9,7 +9,7 @@
 
 /* Input styles */
 .chat-input {
-  @apply bg-[#40414F] text-white border-chatgpt-border;
+  @apply bg-chatgpt-input text-white border-chatgpt-border;
 }
 
 /* Sidebar styles */
