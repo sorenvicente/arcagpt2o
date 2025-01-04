@@ -42,7 +42,7 @@ export const CreateUserForm = ({ onSuccess }: CreateUserFormProps) => {
         }
 
         const response = await fetch(
-          `${supabase.supabaseUrl}/functions/v1/manage-users`,
+          `${process.env.VITE_SUPABASE_URL}/functions/v1/manage-users`,
           {
             method: "POST",
             headers: {
