@@ -30,7 +30,7 @@ const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
   );
   const { toast } = useToast();
 
-  // Atualiza os estados locais quando as props mudam
+  // Update local states when props change
   useEffect(() => {
     if (keys.selected_openai_model) {
       setSelectedOpenAIModel(keys.selected_openai_model);
@@ -53,7 +53,7 @@ const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
     }
 
     try {
-      // Atualiza os modelos selecionados antes de salvar
+      // Update selected models before saving
       const updatedKeys = {
         ...keys,
         selected_openai_model: selectedOpenAIModel,
@@ -93,6 +93,13 @@ const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
     }));
   };
 
+  const handleApiKeyChange = (type: 'openai' | 'openrouter', value: string) => {
+    setKeys(prev => ({
+      ...prev,
+      [type === 'openai' ? 'openai_key' : 'openrouter_key']: value
+    }));
+  };
+
   const openRouterExtraContent = (
     <div className="text-sm text-gray-400 mt-2">
       <p>Observação: OpenRouter oferece créditos gratuitos para testar vários modelos de IA.</p>
@@ -106,7 +113,7 @@ const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
         title="OpenAI API Key"
         description="Opcional - Acesso ao GPT-4, GPT-4 Turbo, GPT-4 Vision e GPT-3.5 Turbo"
         apiKey={keys.openai_key}
-        onApiKeyChange={(value) => setKeys({ ...keys, openai_key: value })}
+        onApiKeyChange={(value) => handleApiKeyChange('openai', value)}
         selectedModel={selectedOpenAIModel}
         onModelChange={handleOpenAIModelChange}
         models={[...openAiModels] as ModelOption[]}
@@ -118,7 +125,7 @@ const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
         title="OpenRouter API Key"
         description="Opcional - Acesso a modelos gratuitos e pagos: Llama, Claude, Gemini, Mistral e outros"
         apiKey={keys.openrouter_key}
-        onApiKeyChange={(value) => setKeys({ ...keys, openrouter_key: value })}
+        onApiKeyChange={(value) => handleApiKeyChange('openrouter', value)}
         selectedModel={selectedOpenRouterModel}
         onModelChange={handleOpenRouterModelChange}
         models={[...openRouterModels] as ModelOption[]}
