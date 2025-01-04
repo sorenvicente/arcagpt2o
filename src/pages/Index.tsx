@@ -19,13 +19,6 @@ const Index = () => {
     regenerateResponse
   } = useChat();
 
-  // Enviar mensagem inicial do sistema em português
-  useEffect(() => {
-    if (messages.length === 0) {
-      sendMessage("Olá! Sou um assistente virtual pronto para ajudar você. Como posso ser útil hoje?", "system");
-    }
-  }, [messages.length, sendMessage]);
-
   return (
     <div className="flex h-screen">
       <Sidebar 
@@ -45,7 +38,8 @@ const Index = () => {
         <div className={`flex h-full flex-col pt-[60px] pb-4`}>
           {messages.length === 0 ? (
             <div className="flex-1 flex flex-col items-center justify-center">
-              <div className="w-full max-w-3xl px-4 space-y-4">
+              <div className="w-full max-w-3xl px-4 space-y-8">
+                <h1 className="text-4xl font-semibold text-center">Como posso ajudar?</h1>
                 <ActionButtons 
                   onSelectPrompt={sendMessage}
                   activeCategory={activeAssistant}
