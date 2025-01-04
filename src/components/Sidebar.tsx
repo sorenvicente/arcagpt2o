@@ -112,7 +112,7 @@ const Sidebar = ({ isOpen, onToggle, onNewChat, onChatSelect }: SidebarProps) =>
         isOpen ? "w-64" : "w-0"
       )}>
         <nav className="flex h-full w-full flex-col px-3" aria-label="Chat history">
-          <div className="flex justify-between h-[60px] items-center">
+          <div className="flex h-[60px] items-center gap-3">
             <button 
               onClick={onToggle} 
               className="flex items-center justify-center h-10 w-10 rounded-lg hover:bg-chatgpt-hover transition-colors"
