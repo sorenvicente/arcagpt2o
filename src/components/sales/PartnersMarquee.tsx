@@ -15,24 +15,24 @@ export const PartnersMarquee = () => {
   return (
     <section className="py-16 overflow-hidden mb-32">
       <div className="text-center mb-8">
-        <h2 className="text-2xl font-semibold text-white mb-2">
+        <h2 className="text-3xl font-bold text-white mb-2">
           Integrado com as Melhores IAs
         </h2>
-        <p className="text-gray-400">
+        <p className="text-lg text-gray-400">
           Acesse os modelos mais avançados de IA através de nossa plataforma
         </p>
       </div>
 
-      <div className="relative flex flex-col gap-12">
+      <div className="relative flex flex-col gap-4">
         {/* First row - Left to right */}
         <div className="relative flex overflow-x-hidden">
           <div className="animate-marquee whitespace-nowrap flex items-center">
             {[...partners, ...partners].map((partner, index) => (
               <div
                 key={index}
-                className="mx-8 flex items-center justify-center h-24"
+                className="mx-8 flex items-center justify-center h-16"
               >
-                <span className="text-xl font-semibold text-white opacity-70 hover:opacity-100 transition-opacity">
+                <span className="text-xl font-semibold text-gray-400 hover:text-white transition-colors">
                   {partner.name}
                 </span>
               </div>
@@ -46,9 +46,9 @@ export const PartnersMarquee = () => {
             {[...partners.reverse(), ...partners].map((partner, index) => (
               <div
                 key={index}
-                className="mx-8 flex items-center justify-center h-24"
+                className="mx-8 flex items-center justify-center h-16"
               >
-                <span className="text-xl font-semibold text-white opacity-70 hover:opacity-100 transition-opacity">
+                <span className="text-xl font-semibold text-gray-400 hover:text-white transition-colors">
                   {partner.name}
                 </span>
               </div>

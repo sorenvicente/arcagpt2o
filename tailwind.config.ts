@@ -29,8 +29,8 @@ export default {
         }
       },
       animation: {
-        marquee: 'marquee 25s linear infinite',
-        marqueeReverse: 'marqueeReverse 25s linear infinite',
+        marquee: 'marquee 40s linear infinite',
+        marqueeReverse: 'marqueeReverse 40s linear infinite',
       },
       colors: {
         border: "hsl(var(--border))",
