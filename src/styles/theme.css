@@ -49,3 +49,10 @@
   @apply bg-light-sidebar dark:bg-chatgpt-sidebar 
     border-r border-light-border dark:border-chatgpt-border;
 }
+
+/* Selected item styles */
+.selected-item {
+  @apply bg-light-selectedBg dark:bg-chatgpt-secondary
+    text-light-selectedText dark:text-white
+    border-l-4 border-light-selectedBorder dark:border-chatgpt-border;
+}

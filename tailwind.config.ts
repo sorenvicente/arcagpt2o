@@ -38,15 +38,20 @@ export default {
           primary: "#0056D2",
           secondary: "#ECECF1",
           hover: "#F5F5F5",
-          border: "#E5E5E5",
+          border: "#DADADA",
           success: "#28A745",
           error: "#DC3545",
           warning: "#FFC107",
           highlight: "#007BFF",
           accent: "#6C757D",
-          sidebar: "#F7F7F8",
+          sidebar: "#FFFFFF",
           main: "#FFFFFF",
-          input: "#FFFFFF"
+          input: "#F9F9F9",
+          placeholder: "#B0B0B0",
+          icons: "#333333",
+          selectedBg: "#E7F3FF",
+          selectedText: "#0056D2",
+          selectedBorder: "#007BFF"
         },
         primary: {
           DEFAULT: "hsl(var(--primary))",
