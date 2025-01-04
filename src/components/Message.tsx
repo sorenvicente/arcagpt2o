@@ -47,7 +47,7 @@ const Message = ({ role, content, onRegenerate, isRegenerating }: MessageProps) 
                   {messageContent}
                 </ReactMarkdown>
                 {isRegenerating && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-lg backdrop-blur-sm transition-all duration-300">
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-lg backdrop-blur-sm transition-all duration-100">
                     <div className="flex flex-col items-center gap-3 p-4 bg-gray-800/90 rounded-lg shadow-xl">
                       <Loader className="h-8 w-8 animate-spin text-[#9b87f5]" />
                       <span className="text-[#9b87f5] font-medium">Regenerando resposta...</span>
