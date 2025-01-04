@@ -13,7 +13,10 @@ export const useAuth = (requiredRole?: 'admin' | 'user') => {
   const refreshSession = async () => {
     try {
       const { data: { session }, error } = await supabase.auth.refreshSession();
-      if (error) throw error;
+      if (error) {
+        console.error('Error refreshing session:', error);
+        throw error;
+      }
       return session;
     } catch (error) {
       console.error('Error refreshing session:', error);
@@ -24,12 +27,8 @@ export const useAuth = (requiredRole?: 'admin' | 'user') => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        let { data: { session } } = await supabase.auth.getSession();
         
-        if (sessionError) {
-          throw sessionError;
-        }
-
         if (!session) {
           navigate('/login');
           return;
@@ -39,20 +38,17 @@ export const useAuth = (requiredRole?: 'admin' | 'user') => {
         const tokenExpiryTime = new Date(session.expires_at! * 1000);
         const now = new Date();
         const fiveMinutesFromNow = new Date(now.getTime() + 5 * 60000);
-        
+
         if (tokenExpiryTime < fiveMinutesFromNow) {
           console.log('Token expired or expiring soon, refreshing...');
           const refreshedSession = await refreshSession();
-          
           if (!refreshedSession) {
             throw new Error('Failed to refresh session');
           }
-          
-          setUser(refreshedSession.user);
-          console.log('Session refreshed successfully');
-        } else {
-          setUser(session.user);
+          session = refreshedSession;
         }
+
+        setUser(session.user);
 
         if (requiredRole === 'admin') {
           const { data: profile, error: profileError } = await supabase
@@ -83,6 +79,7 @@ export const useAuth = (requiredRole?: 'admin' | 'user') => {
           description: "Por favor, faça login novamente.",
           variant: "destructive"
         });
+        await supabase.auth.signOut();
         navigate('/login');
       } finally {
         setIsLoading(false);
@@ -104,26 +101,24 @@ export const useAuth = (requiredRole?: 'admin' | 'user') => {
           console.log('Token refreshed, updating user');
           setUser(session.user);
         }
-      } else if (event === 'SIGNED_IN') {
-        if (session) {
-          setUser(session.user);
-          // Check admin role if required
-          if (requiredRole === 'admin') {
-            const { data: profile } = await supabase
-              .from('profiles')
-              .select('role')
-              .eq('id', session.user.id)
-              .single();
+      } else if (session) {
+        setUser(session.user);
+        // Check admin role if required
+        if (requiredRole === 'admin') {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', session.user.id)
+            .single();
 
-            if (!profile || profile.role !== 'admin') {
-              toast({
-                title: "Acesso negado",
-                description: "Você não tem permissão para acessar esta área.",
-                variant: "destructive"
-              });
-              navigate('/');
-              return;
-            }
+          if (!profile || profile.role !== 'admin') {
+            toast({
+              title: "Acesso negado",
+              description: "Você não tem permissão para acessar esta área.",
+              variant: "destructive"
+            });
+            navigate('/');
+            return;
           }
         }
       }
