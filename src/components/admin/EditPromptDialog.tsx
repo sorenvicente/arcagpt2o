@@ -5,6 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -84,8 +85,8 @@ export function EditPromptDialog({ open, onOpenChange, prompt, onUpdate }: EditP
   };
 
   const categories = [
-    { value: "propósito", label: "Propósito" },
-    { value: "método", label: "Método" },
+    { value: "proposito", label: "Propósito" },
+    { value: "metodo", label: "Método" },
     { value: "mentoria", label: "Mentoria" },
     { value: "curso", label: "Curso" },
     { value: "conteudo", label: "Conteúdo" },
@@ -96,6 +97,9 @@ export function EditPromptDialog({ open, onOpenChange, prompt, onUpdate }: EditP
       <DialogContent className="bg-chatgpt-secondary border-chatgpt-border">
         <DialogHeader>
           <DialogTitle className="text-white">Editar Prompt</DialogTitle>
+          <DialogDescription className="text-gray-400">
+            Faça as alterações necessárias no prompt abaixo.
+          </DialogDescription>
         </DialogHeader>
         <div className="space-y-4">
           <Input
