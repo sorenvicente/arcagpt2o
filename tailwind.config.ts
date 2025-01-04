@@ -32,6 +32,17 @@ export default {
           border: "#4E4F60",
           input: "#40414F"
         },
+        light: {
+          background: "#FFFFFF",
+          text: "#000000",
+          primary: "#0056D2",
+          secondary: "#E0E0E0",
+          hover: "#F5F5F5",
+          border: "#E0E0E0",
+          success: "#28A745",
+          error: "#DC3545",
+          warning: "#FFC107"
+        },
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",

@@ -11,9 +11,11 @@
   will-change: filter;
   transition: filter 300ms;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
@@ -35,8 +37,9 @@
 
 .card {
   padding: 2em;
+  @apply bg-white dark:bg-[#343541] text-light-text dark:text-white;
 }
 
 .read-the-docs {
-  color: #888;
+  @apply text-gray-600 dark:text-gray-400;
 }

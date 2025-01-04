@@ -2,8 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
+/* Dark mode (default) */
+.dark {
   @apply bg-[#343541] text-white;
+}
+
+/* Light mode */
+:root {
+  @apply bg-light-background text-light-text;
 }
 
 /* Custom scrollbar styling */
@@ -12,19 +18,19 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-[#343541];
+  @apply bg-light-background dark:bg-[#343541];
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-[#4E4F60] rounded-full hover:bg-[#2A2B32] transition-colors duration-200;
+  @apply bg-light-border hover:bg-light-hover dark:bg-[#4E4F60] dark:hover:bg-[#2A2B32] transition-colors duration-200;
 }
 
 .sidebar-item {
-  @apply flex items-center gap-3 rounded-md px-3 py-3 text-sm transition-colors duration-200 hover:bg-[#2A2B32] cursor-pointer;
+  @apply flex items-center gap-3 rounded-md px-3 py-3 text-sm transition-colors duration-200 hover:bg-light-hover dark:hover:bg-[#2A2B32] cursor-pointer;
 }
 
 .action-button {
-  @apply flex items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-[#2A2B32]/50 border border-transparent hover:border-[#4E4F60] transition-all duration-200;
+  @apply flex items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-light-hover dark:hover:bg-[#2A2B32]/50 border border-transparent hover:border-light-border dark:hover:border-[#4E4F60] transition-all duration-200;
 }
 
 /* Add depth to cards and inputs */
@@ -32,7 +38,7 @@ body {
 .input, 
 .select, 
 .textarea {
-  @apply shadow-lg border border-[#4E4F60] bg-[#40414F];
+  @apply shadow-lg border border-light-border dark:border-[#4E4F60] bg-white dark:bg-[#40414F];
 }
 
 /* Add hover effects to interactive elements */
@@ -53,5 +59,35 @@ body {
   
   .button {
     @apply w-full;
+  }
+}
+
+/* Light mode specific styles */
+.light {
+  /* Buttons */
+  .btn-primary {
+    @apply bg-light-primary text-white hover:bg-blue-700;
+  }
+  
+  .btn-secondary {
+    @apply bg-light-secondary text-gray-700 hover:bg-gray-200;
+  }
+  
+  /* Alerts */
+  .alert-success {
+    @apply bg-light-success text-white;
+  }
+  
+  .alert-error {
+    @apply bg-light-error text-white;
+  }
+  
+  .alert-warning {
+    @apply bg-light-warning text-gray-900;
+  }
+  
+  /* Links */
+  .link {
+    @apply text-light-primary hover:text-blue-700;
   }
 }
