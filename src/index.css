@@ -12,11 +12,11 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-[#1A1F2C];
+  @apply bg-chatgpt-main;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-[#2A2F3C] rounded-full hover:bg-[#9b87f5]/30 transition-colors duration-200;
+  @apply bg-chatgpt-border rounded-full hover:bg-chatgpt-hover transition-colors duration-200;
 }
 
 .sidebar-item {
