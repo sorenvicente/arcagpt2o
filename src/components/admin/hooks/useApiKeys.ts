@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { OpenAIModel, OpenRouterModel } from "@/config/aiModels";
 
 interface ApiKeys {
   openai_key: string;
   openrouter_key: string;
+  selected_openai_model?: OpenAIModel;
+  selected_openrouter_model?: OpenRouterModel;
 }
 
 export const useApiKeys = () => {
@@ -19,6 +22,7 @@ export const useApiKeys = () => {
       const { data, error } = await supabase
         .from("api_keys")
         .select("*")
+        .order('created_at', { ascending: false })
         .limit(1)
         .single();
 
@@ -34,6 +38,8 @@ export const useApiKeys = () => {
         setKeys({
           openai_key: data.openai_key || "",
           openrouter_key: data.openrouter_key || "",
+          selected_openai_model: data.selected_openai_model,
+          selected_openrouter_model: data.selected_openrouter_model,
         });
       }
     } catch (error: any) {
@@ -61,6 +67,8 @@ export const useApiKeys = () => {
           .update({
             openai_key: keys.openai_key.trim(),
             openrouter_key: keys.openrouter_key.trim(),
+            selected_openai_model: keys.selected_openai_model,
+            selected_openrouter_model: keys.selected_openrouter_model,
             updated_at: new Date().toISOString(),
           })
           .eq("id", existingKeys.id);
@@ -71,6 +79,8 @@ export const useApiKeys = () => {
           {
             openai_key: keys.openai_key.trim(),
             openrouter_key: keys.openrouter_key.trim(),
+            selected_openai_model: keys.selected_openai_model,
+            selected_openrouter_model: keys.selected_openrouter_model,
           },
         ]);
 
