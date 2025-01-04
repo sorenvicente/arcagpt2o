@@ -106,7 +106,7 @@ export const UserTable = ({ users }: UserTableProps) => {
             <TableCell>{user.email}</TableCell>
             <TableCell>
               <select
-                className="bg-[#40414F] text-white border border-[#4E4F60] rounded-lg p-1 text-sm focus:ring-[#4E4F60] focus:border-[#4E4F60]"
+                className="bg-[#40414F] text-white text-xs border border-[#4E4F60] rounded-xl p-0.5 focus:ring-[#4E4F60] focus:border-[#4E4F60] w-24"
                 value={user.role}
                 onChange={(e) =>
                   updateUserRole.mutate({
