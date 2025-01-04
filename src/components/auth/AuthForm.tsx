@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 
 interface AuthFormProps {
-  onLogout: () => Promise<void>;
+  onLogout?: () => Promise<void>;
 }
 
 export const AuthForm = ({ onLogout }: AuthFormProps) => {
@@ -15,13 +15,15 @@ export const AuthForm = ({ onLogout }: AuthFormProps) => {
         <CardHeader className="space-y-1">
           <div className="flex justify-between items-center">
             <CardTitle className="text-white text-2xl">Bem-vindo</CardTitle>
-            <Button
-              variant="ghost"
-              onClick={onLogout}
-              className="text-white hover:text-gray-300"
-            >
-              Logout
-            </Button>
+            {onLogout && (
+              <Button
+                variant="ghost"
+                onClick={onLogout}
+                className="text-white hover:text-gray-300"
+              >
+                Logout
+              </Button>
+            )}
           </div>
           <CardDescription className="text-gray-400">
             Faça login ou crie uma conta para continuar
