@@ -3,9 +3,11 @@ import MessageActions from './MessageActions';
 import { Message as MessageType } from '@/types/chat';
 import ReactMarkdown from 'react-markdown';
 
-type MessageProps = Pick<MessageType, 'role' | 'content'>;
+type MessageProps = Pick<MessageType, 'role' | 'content'> & {
+  onRegenerate?: () => void;
+};
 
-const Message = ({ role, content }: MessageProps) => {
+const Message = ({ role, content, onRegenerate }: MessageProps) => {
   return (
     <div className="py-6">
       <div className={`flex gap-4 ${role === 'user' ? 'flex-row-reverse' : ''}`}>
@@ -36,7 +38,12 @@ const Message = ({ role, content }: MessageProps) => {
               </ReactMarkdown>
             )}
           </div>
-          {role === 'assistant' && <MessageActions />}
+          {role === 'assistant' && (
+            <MessageActions 
+              content={content} 
+              onRegenerate={onRegenerate}
+            />
+          )}
         </div>
       </div>
     </div>

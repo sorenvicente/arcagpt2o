@@ -2,7 +2,12 @@ import { Message as MessageType } from "@/types/chat";
 import Message from "./Message";
 import { useEffect, useRef } from "react";
 
-const MessageList = ({ messages }: { messages: MessageType[] }) => {
+type MessageListProps = {
+  messages: MessageType[];
+  onRegenerate?: () => void;
+};
+
+const MessageList = ({ messages, onRegenerate }: MessageListProps) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -18,7 +23,11 @@ const MessageList = ({ messages }: { messages: MessageType[] }) => {
       <div className="w-full max-w-3xl mx-auto px-4">
         <div className="space-y-8">
           {messages.filter(msg => msg.role !== 'system').map((message, index) => (
-            <Message key={index} {...message} />
+            <Message 
+              key={index} 
+              {...message} 
+              onRegenerate={message.role === 'assistant' ? onRegenerate : undefined}
+            />
           ))}
           <div ref={messagesEndRef} />
         </div>
