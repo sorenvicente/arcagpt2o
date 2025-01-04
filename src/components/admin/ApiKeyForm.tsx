@@ -59,7 +59,7 @@ const ApiKeyForm = ({ keys, setKeys, onSubmit }: ApiKeyFormProps) => {
 
       <Button 
         type="submit" 
-        className="w-full bg-chatgpt-secondary hover:bg-chatgpt-hover text-white border border-chatgpt-border rounded-xl"
+        className="w-full bg-chatgpt-secondary hover:bg-chatgpt-hover text-white border border-chatgpt-border rounded-xl transition-all duration-200"
       >
         Salvar Chaves
       </Button>

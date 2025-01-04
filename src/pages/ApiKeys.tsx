@@ -15,7 +15,7 @@ const ApiKeysPage = () => {
           <div className="flex gap-2">
             <Button
               variant="outline"
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 rounded-xl border-chatgpt-border hover:bg-chatgpt-hover text-white"
               onClick={() => navigate('/')}
             >
               <Home className="h-4 w-4" />
@@ -23,7 +23,7 @@ const ApiKeysPage = () => {
             </Button>
             <Button
               variant="outline"
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 rounded-xl border-chatgpt-border hover:bg-chatgpt-hover text-white"
               onClick={() => navigate('/admin')}
             >
               <FileText className="h-4 w-4" />
