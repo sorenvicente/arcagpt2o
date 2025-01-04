@@ -1,91 +1,12 @@
-import { Auth } from "@supabase/auth-ui-react";
-import { ThemeSupa } from "@supabase/auth-ui-shared";
+import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
-import { Loader2 } from "lucide-react";
+import { LoadingSpinner } from "@/components/auth/LoadingSpinner";
+import { LoginForm } from "@/components/auth/LoginForm";
+import { useAuthRedirect } from "@/hooks/useAuthRedirect";
 
 const LoginPage = () => {
-  const navigate = useNavigate();
   const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const checkSession = async () => {
-      try {
-        const { data: { session }, error } = await supabase.auth.getSession();
-        
-        if (error) {
-          throw error;
-        }
-
-        if (session) {
-          const { data: profile, error: profileError } = await supabase
-            .from('profiles')
-            .select('role')
-            .eq('id', session.user.id)
-            .single();
-
-          if (profileError) {
-            throw profileError;
-          }
-
-          if (profile?.role === 'admin') {
-            navigate('/admin');
-          } else {
-            navigate('/');
-          }
-        }
-      } catch (error) {
-        console.error('Error checking session:', error);
-        toast({
-          title: "Erro ao verificar sessão",
-          description: "Por favor, tente fazer login novamente.",
-          variant: "destructive"
-        });
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    checkSession();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (event === 'SIGNED_OUT') {
-        setIsLoading(false);
-      } else if (session) {
-        try {
-          const { data: profile, error: profileError } = await supabase
-            .from('profiles')
-            .select('role')
-            .eq('id', session.user.id)
-            .single();
-
-          if (profileError) {
-            throw profileError;
-          }
-
-          if (profile?.role === 'admin') {
-            navigate('/admin');
-          } else {
-            navigate('/');
-          }
-        } catch (error) {
-          console.error('Error checking profile:', error);
-          toast({
-            title: "Erro ao verificar perfil",
-            description: "Por favor, tente fazer login novamente.",
-            variant: "destructive"
-          });
-        }
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, [navigate, toast]);
+  const { isLoading } = useAuthRedirect();
 
   const handleLogout = async () => {
     try {
@@ -107,101 +28,10 @@ const LoginPage = () => {
   };
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-chatgpt-main flex items-center justify-center p-4">
-        <div className="flex items-center gap-2 text-white">
-          <Loader2 className="h-6 w-6 animate-spin" />
-          <span>Carregando...</span>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
-  return (
-    <div className="min-h-screen bg-chatgpt-main flex items-center justify-center p-4">
-      <Card className="w-full max-w-md bg-chatgpt-secondary border-chatgpt-border rounded-2xl shadow-lg">
-        <CardHeader className="space-y-1">
-          <div className="flex justify-between items-center">
-            <CardTitle className="text-white text-2xl text-center w-full">Bem-vindo</CardTitle>
-            <Button
-              variant="ghost"
-              onClick={handleLogout}
-              className="text-white hover:text-gray-300 absolute right-4"
-            >
-              Logout
-            </Button>
-          </div>
-          <CardDescription className="text-gray-400 text-center">
-            Faça login ou crie uma conta para continuar
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Auth
-            supabaseClient={supabase}
-            appearance={{
-              theme: ThemeSupa,
-              variables: {
-                default: {
-                  colors: {
-                    brand: '#2563eb',
-                    brandAccent: '#1d4ed8',
-                  },
-                },
-              },
-              style: {
-                button: {
-                  borderRadius: '1rem',
-                },
-                input: {
-                  borderRadius: '1rem',
-                  color: '#fff',
-                },
-                anchor: {
-                  color: '#fff',
-                },
-                label: {
-                  color: '#fff',
-                },
-              },
-            }}
-            localization={{
-              variables: {
-                sign_in: {
-                  email_label: 'Endereço de email',
-                  password_label: 'Senha',
-                  button_label: 'Entrar',
-                  loading_button_label: 'Entrando...',
-                  social_provider_text: 'Entrar com {{provider}}',
-                  link_text: 'Já tem uma conta? Entre',
-                },
-                sign_up: {
-                  email_label: 'Endereço de email',
-                  password_label: 'Senha',
-                  button_label: 'Criar conta',
-                  loading_button_label: 'Criando conta...',
-                  social_provider_text: 'Criar conta com {{provider}}',
-                  link_text: 'Não tem uma conta? Cadastre-se',
-                },
-                magic_link: {
-                  email_input_label: 'Endereço de email',
-                  button_label: 'Enviar link mágico',
-                  loading_button_label: 'Enviando link mágico...',
-                  link_text: 'Enviar email com link mágico',
-                },
-                forgotten_password: {
-                  email_label: 'Endereço de email',
-                  button_label: 'Enviar instruções',
-                  loading_button_label: 'Enviando instruções...',
-                  link_text: 'Esqueceu sua senha?',
-                },
-              },
-            }}
-            providers={[]}
-          />
-        </CardContent>
-      </Card>
-    </div>
-  );
+  return <LoginForm onLogout={handleLogout} />;
 };
 
 export default LoginPage;
