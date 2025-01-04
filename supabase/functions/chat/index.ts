@@ -33,34 +33,35 @@ serve(async (req) => {
       throw new Error('Autenticação inválida');
     }
 
-    // Fetch API keys
+    // Fetch most recent API keys
     const { data: apiKeys, error: apiKeysError } = await supabaseClient
       .from('api_keys')
       .select('*')
-      .limit(1)
-      .single();
+      .order('created_at', { ascending: false })
+      .limit(1);
 
     if (apiKeysError) {
       console.error('Erro ao buscar chaves API:', apiKeysError);
       throw new Error('Falha ao buscar chaves API');
     }
 
-    if (!apiKeys.openai_key && !apiKeys.openrouter_key) {
+    if (!apiKeys?.length || (!apiKeys[0].openai_key && !apiKeys[0].openrouter_key)) {
       throw new Error('Por favor, configure pelo menos uma chave API (OpenAI ou OpenRouter) na página de Chaves API.');
     }
 
+    const apiKey = apiKeys[0];
     const { messages, temperature = 0.7 } = await req.json();
     console.log('Processando requisição de chat com mensagens:', messages);
 
     // Função auxiliar para tentar a chamada OpenAI
     const tryOpenAI = async () => {
-      if (!apiKeys.openai_key) return null;
+      if (!apiKey.openai_key) return null;
       
       console.log('Tentando chamada à API do OpenAI...');
       const openAIResponse = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${apiKeys.openai_key}`,
+          'Authorization': `Bearer ${apiKey.openai_key}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
@@ -88,13 +89,13 @@ serve(async (req) => {
 
     // Função auxiliar para tentar a chamada OpenRouter
     const tryOpenRouter = async () => {
-      if (!apiKeys.openrouter_key) return null;
+      if (!apiKey.openrouter_key) return null;
       
       console.log('Usando OpenRouter...');
       const openRouterResponse = await fetch('https://openrouter.ai/api/v1/chat/completions', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${apiKeys.openrouter_key}`,
+          'Authorization': `Bearer ${apiKey.openrouter_key}`,
           'Content-Type': 'application/json',
           'HTTP-Referer': Deno.env.get('SUPABASE_URL') || 'http://localhost:5173',
           'X-Title': 'Lovable Chat App',
@@ -123,13 +124,13 @@ serve(async (req) => {
     let content = null;
 
     // Se tiver chave OpenAI configurada, tenta usar OpenAI primeiro
-    if (apiKeys.openai_key) {
+    if (apiKey.openai_key) {
       try {
         content = await tryOpenAI();
       } catch (error) {
         console.error('Erro ao tentar OpenAI:', error);
         // Se a OpenAI falhou e temos OpenRouter configurado, tentamos usar o OpenRouter
-        if (apiKeys.openrouter_key) {
+        if (apiKey.openrouter_key) {
           console.log('OpenAI falhou, tentando OpenRouter...');
           content = await tryOpenRouter();
         } else {
@@ -138,7 +139,7 @@ serve(async (req) => {
       }
     }
     // Se não tiver OpenAI configurada mas tiver OpenRouter, usa OpenRouter
-    else if (apiKeys.openrouter_key) {
+    else if (apiKey.openrouter_key) {
       content = await tryOpenRouter();
     }
 
