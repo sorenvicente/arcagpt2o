@@ -4,16 +4,18 @@ export const PricingSection = () => {
   const basicFeatures = [
     "Criação de propósito e método",
     "Estruturação básica de mentoria",
-    "10 gerações de conteúdo por mês",
+    "Geração de conteúdo limitada",
+    "1 VSL e 1 página de vendas por mês",
     "Suporte por email"
   ];
 
   const proFeatures = [
     "Tudo do plano básico",
     "Criação avançada de cursos",
-    "Gerações ilimitadas de conteúdo",
-    "Criação de ofertas otimizadas",
-    "Páginas de vendas personalizadas",
+    "Geração ilimitada de conteúdo",
+    "VSLs e páginas de vendas ilimitadas",
+    "Criação de CPLs otimizadas",
+    "Ofertas personalizadas com IA",
     "Suporte prioritário 24/7"
   ];
 

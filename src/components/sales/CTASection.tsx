@@ -9,13 +9,15 @@ export const CTASection = () => {
     <div className="text-center mb-16">
       <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600/20 to-blue-600/20 px-4 py-2 rounded-full mb-8">
         <Star className="h-4 w-4 text-purple-400" />
-        <span className="text-sm text-purple-400">Comece sua Jornada Hoje</span>
+        <span className="text-sm text-purple-400">Transforme seu Negócio Hoje</span>
       </div>
       <h2 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-400 mb-6">
-        Pronto para Transformar seu Negócio?
+        Pronto para Revolucionar seu
+        <br />
+        Negócio Digital?
       </h2>
       <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-        Junte-se aos empreendedores que já estão construindo seus impérios digitais com IA
+        Junte-se aos empreendedores que já estão construindo seus impérios digitais com nossa IA
       </p>
       <Button
         onClick={() => navigate("/login")}
