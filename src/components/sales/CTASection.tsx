@@ -30,8 +30,17 @@ export const CTASection = () => {
               className="w-full h-full object-cover"
             />
           </div>
-          <p className="text-lg text-gray-300 mb-4">
-            Criador do ArcaGPT que acelera para que sua mensagem chegue ao mundo
+          <h3 className="text-xl font-semibold text-white mb-2">
+            Criador e Mentor
+          </h3>
+          <h4 className="text-lg font-medium text-purple-400 mb-4">
+            Soren Vincente
+          </h4>
+          <p className="text-lg text-gray-300 mb-6 max-w-2xl">
+            "Minha missão é capacitar empreendedores a alcançarem seu máximo potencial através da tecnologia. 
+            Acredito que cada mensagem tem o poder de transformar vidas e negócios, e com a IA podemos amplificar 
+            esse impacto de forma extraordinária. Junte-se a nós nessa jornada de transformação digital e descubra 
+            como sua voz pode alcançar o mundo de maneira mais eficiente e impactante."
           </p>
           <p className="text-sm text-gray-400">
             © 2024 ArcaGPT. Todos os direitos reservados.
