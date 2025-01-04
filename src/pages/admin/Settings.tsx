@@ -9,8 +9,8 @@ const SystemSettingsPage = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="container mx-auto px-4 py-4 sm:p-6 space-y-4 sm:space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center gap-3 bg-[#444654] p-3 rounded-xl shadow-lg border border-[#4E4F60]">
+    <div className="container mx-auto px-4 py-2 space-y-2">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-2 bg-[#444654] p-2 rounded-xl shadow-lg border border-[#4E4F60]">
         <h1 className="text-xl font-semibold text-white">
           Configurações do Sistema
         </h1>
