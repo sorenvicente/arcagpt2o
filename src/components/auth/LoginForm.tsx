@@ -20,13 +20,36 @@ export const LoginForm = ({ onLogout }: LoginFormProps) => {
       console.log("Auth state changed:", event, session);
       
       if (event === 'SIGNED_IN' && session) {
-        // Todos os usuários vão para a interface principal
-        navigate('/app');
-        
-        toast({
-          title: "Login realizado com sucesso",
-          description: "Bem-vindo de volta!"
-        });
+        try {
+          // Fetch user profile to check role
+          const { data: profile, error: profileError } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', session.user.id)
+            .single();
+
+          if (profileError) {
+            console.error('Error fetching profile:', profileError);
+            throw profileError;
+          }
+
+          // All users go to /app by default
+          navigate('/app');
+          
+          toast({
+            title: "Login realizado com sucesso",
+            description: "Bem-vindo de volta!"
+          });
+        } catch (error) {
+          console.error('Error during login:', error);
+          toast({
+            title: "Erro ao fazer login",
+            description: "Por favor, verifique suas credenciais e tente novamente.",
+            variant: "destructive"
+          });
+        }
+      } else if (event === 'SIGNED_OUT') {
+        navigate('/login');
       }
     });
 
@@ -60,6 +83,30 @@ export const LoginForm = ({ onLogout }: LoginFormProps) => {
                 },
               }}
               providers={[]}
+              localization={{
+                variables: {
+                  sign_in: {
+                    email_label: 'Email',
+                    password_label: 'Senha',
+                    email_input_placeholder: 'Seu email',
+                    password_input_placeholder: 'Sua senha',
+                    button_label: 'Entrar',
+                    loading_button_label: 'Entrando...',
+                    social_provider_text: 'Entrar com {{provider}}',
+                    link_text: 'Já tem uma conta? Entre',
+                  },
+                  sign_up: {
+                    email_label: 'Email',
+                    password_label: 'Senha',
+                    email_input_placeholder: 'Seu email',
+                    password_input_placeholder: 'Sua senha',
+                    button_label: 'Criar conta',
+                    loading_button_label: 'Criando conta...',
+                    social_provider_text: 'Criar conta com {{provider}}',
+                    link_text: 'Não tem uma conta? Cadastre-se',
+                  },
+                },
+              }}
             />
           </div>
         </CardContent>
