@@ -19,28 +19,30 @@ export const useApiKeys = () => {
 
   const fetchApiKeys = async () => {
     try {
+      // Changed from .single() to .limit(1) to get the most recent API key
       const { data, error } = await supabase
         .from("api_keys")
         .select("*")
         .order('created_at', { ascending: false })
-        .limit(1)
-        .single();
+        .limit(1);
 
       if (error) {
-        if (error.code === 'PGRST116') {
-          // No records found, this is fine for new installations
-          return;
-        }
-        throw error;
+        console.error("Error fetching API keys:", error);
+        toast({
+          title: "Erro",
+          description: "Falha ao buscar as chaves API",
+          variant: "destructive",
+        });
+        return;
       }
 
-      if (data) {
-        console.log("Fetched API keys:", data); // Debug log
+      if (data && data.length > 0) {
+        console.log("Fetched API keys:", data[0]); // Debug log
         setKeys({
-          openai_key: data.openai_key || "",
-          openrouter_key: data.openrouter_key || "",
-          selected_openai_model: data.selected_openai_model as OpenAIModel,
-          selected_openrouter_model: data.selected_openrouter_model as OpenRouterModel,
+          openai_key: data[0].openai_key || "",
+          openrouter_key: data[0].openrouter_key || "",
+          selected_openai_model: data[0].selected_openai_model as OpenAIModel,
+          selected_openrouter_model: data[0].selected_openrouter_model as OpenRouterModel,
         });
       }
     } catch (error: any) {
@@ -61,8 +63,8 @@ export const useApiKeys = () => {
       const { data: existingKeys } = await supabase
         .from("api_keys")
         .select("*")
-        .limit(1)
-        .single();
+        .order('created_at', { ascending: false })
+        .limit(1);
 
       const dataToSave = {
         openai_key: keys.openai_key.trim(),
@@ -74,11 +76,11 @@ export const useApiKeys = () => {
 
       console.log("Data to save:", dataToSave); // Debug log
 
-      if (existingKeys) {
+      if (existingKeys && existingKeys.length > 0) {
         const { error } = await supabase
           .from("api_keys")
           .update(dataToSave)
-          .eq("id", existingKeys.id);
+          .eq("id", existingKeys[0].id);
 
         if (error) throw error;
       } else {

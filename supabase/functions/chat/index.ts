@@ -53,44 +53,8 @@ serve(async (req) => {
     const { messages, temperature = 0.7 } = await req.json();
     console.log('Processando requisição de chat com mensagens:', messages);
 
-    // Função auxiliar para tentar a chamada OpenAI
-    const tryOpenAI = async () => {
-      if (!apiKey.openai_key) return null;
-      
-      console.log('Tentando chamada à API do OpenAI...');
-      const openAIResponse = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${apiKey.openai_key}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'gpt-4-1106-preview',
-          messages: messages,
-          max_tokens: 1024,
-          temperature: temperature,
-        }),
-      });
-
-      if (!openAIResponse.ok) {
-        const error = await openAIResponse.json();
-        console.error('Erro na API do OpenAI:', error);
-        
-        if (error.error?.code === 'insufficient_quota') {
-          throw new Error('Sua cota da OpenAI foi excedida. Por favor, verifique seu saldo.');
-        }
-        
-        throw new Error(error.error?.message || 'Erro ao chamar a API do OpenAI');
-      }
-
-      const data = await openAIResponse.json();
-      return data.choices?.[0]?.message?.content;
-    };
-
-    // Função auxiliar para tentar a chamada OpenRouter
-    const tryOpenRouter = async () => {
-      if (!apiKey.openrouter_key) return null;
-      
+    // Try OpenRouter first if configured
+    if (apiKey.openrouter_key) {
       console.log('Usando OpenRouter...');
       const openRouterResponse = await fetch('https://openrouter.ai/api/v1/chat/completions', {
         method: 'POST',
@@ -101,56 +65,55 @@ serve(async (req) => {
           'X-Title': 'Lovable Chat App',
         },
         body: JSON.stringify({
-          model: 'anthropic/claude-2',
+          model: apiKey.selected_openrouter_model || 'anthropic/claude-2',
           messages: messages,
           max_tokens: 1000,
           temperature: temperature,
         }),
       });
 
-      if (!openRouterResponse.ok) {
-        const errorText = await openRouterResponse.text();
-        console.error('Erro na API do OpenRouter:', {
-          status: openRouterResponse.status,
-          response: errorText
-        });
-        throw new Error(`Erro na API do OpenRouter: ${errorText}`);
+      if (openRouterResponse.ok) {
+        const data = await openRouterResponse.json();
+        return new Response(
+          JSON.stringify({ content: data.choices[0].message.content }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
       }
+      
+      console.error('OpenRouter falhou, tentando OpenAI...');
+    }
 
-      const data = await openRouterResponse.json();
-      return data.choices?.[0]?.message?.content;
-    };
-
-    let content = null;
-
-    // Se tiver chave OpenAI configurada, tenta usar OpenAI primeiro
+    // Try OpenAI if configured
     if (apiKey.openai_key) {
-      try {
-        content = await tryOpenAI();
-      } catch (error) {
-        console.error('Erro ao tentar OpenAI:', error);
-        // Se a OpenAI falhou e temos OpenRouter configurado, tentamos usar o OpenRouter
-        if (apiKey.openrouter_key) {
-          console.log('OpenAI falhou, tentando OpenRouter...');
-          content = await tryOpenRouter();
-        } else {
-          throw error; // Se não temos OpenRouter, propaga o erro
-        }
+      console.log('Usando OpenAI...');
+      const openAIResponse = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${apiKey.openai_key}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: apiKey.selected_openai_model || 'gpt-4-1106-preview',
+          messages: messages,
+          max_tokens: 1024,
+          temperature: temperature,
+        }),
+      });
+
+      if (!openAIResponse.ok) {
+        const error = await openAIResponse.json();
+        console.error('Erro na API do OpenAI:', error);
+        throw new Error(error.error?.message || 'Erro ao chamar a API do OpenAI');
       }
-    }
-    // Se não tiver OpenAI configurada mas tiver OpenRouter, usa OpenRouter
-    else if (apiKey.openrouter_key) {
-      content = await tryOpenRouter();
+
+      const data = await openAIResponse.json();
+      return new Response(
+        JSON.stringify({ content: data.choices[0].message.content }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
 
-    if (!content) {
-      throw new Error('Nenhum serviço de API disponível ou todas as tentativas falharam. Por favor, verifique suas chaves API.');
-    }
-
-    return new Response(
-      JSON.stringify({ content }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    );
+    throw new Error('Nenhuma chave API válida configurada');
 
   } catch (error) {
     console.error('Erro na função de chat:', error);
