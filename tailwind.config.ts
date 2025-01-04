@@ -29,21 +29,17 @@ export default {
         },
         sidebarSlideIn: {
           '0%': { 
-            transform: 'translateX(-20px)',
             opacity: '0'
           },
           '100%': { 
-            transform: 'translateX(0)',
             opacity: '1'
           },
         },
         sidebarSlideOut: {
           '0%': { 
-            transform: 'translateX(0)',
             opacity: '1'
           },
           '100%': { 
-            transform: 'translateX(-20px)',
             opacity: '0'
           }
         }
@@ -51,8 +47,8 @@ export default {
       animation: {
         marquee: 'marquee 40s linear infinite',
         marqueeReverse: 'marqueeReverse 40s linear infinite',
-        sidebarIn: 'sidebarSlideIn 0.3s ease-in-out',
-        sidebarOut: 'sidebarSlideOut 0.3s ease-in-out'
+        sidebarIn: 'sidebarSlideIn 0.5s ease-in-out',
+        sidebarOut: 'sidebarSlideOut 0.5s ease-in-out'
       },
       colors: {
         border: "hsl(var(--border))",

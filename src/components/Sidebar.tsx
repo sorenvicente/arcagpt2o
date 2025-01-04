@@ -44,7 +44,7 @@ const Sidebar = ({ isOpen, onToggle, onNewChat, onChatSelect, activeCategory }: 
 
   useEffect(() => {
     setIsAnimating(true);
-    const timer = setTimeout(() => setIsAnimating(false), 300);
+    const timer = setTimeout(() => setIsAnimating(false), 500);
     return () => clearTimeout(timer);
   }, [isOpen]);
 
@@ -53,7 +53,7 @@ const Sidebar = ({ isOpen, onToggle, onNewChat, onChatSelect, activeCategory }: 
       {/* Background overlay */}
       <div 
         className={cn(
-          "fixed inset-0 bg-black/20 transition-opacity duration-300",
+          "fixed inset-0 bg-black/20 transition-opacity duration-500",
           isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         )}
         onClick={() => onToggle()}
@@ -65,8 +65,8 @@ const Sidebar = ({ isOpen, onToggle, onNewChat, onChatSelect, activeCategory }: 
           "fixed top-0 left-0 z-40 h-screen",
           "bg-chatgpt-sidebar dark:bg-chatgpt-sidebar",
           "border-r border-chatgpt-border dark:border-chatgpt-border",
-          "transition-all duration-300 ease-in-out",
-          isOpen ? "w-[240px] translate-x-0" : "w-[240px] -translate-x-full",
+          "transition-all duration-500 ease-in-out",
+          isOpen ? "w-[240px] opacity-100" : "w-[240px] opacity-0 pointer-events-none",
           isOpen ? "animate-sidebarIn" : isAnimating ? "animate-sidebarOut" : ""
         )}
       >
@@ -74,7 +74,7 @@ const Sidebar = ({ isOpen, onToggle, onNewChat, onChatSelect, activeCategory }: 
           ref={contentRef}
           className={cn(
             "flex h-full w-full flex-col px-3",
-            "transition-all duration-300 ease-in-out",
+            "transition-all duration-500 ease-in-out",
             isOpen ? "opacity-100" : "opacity-0"
           )}
         >
