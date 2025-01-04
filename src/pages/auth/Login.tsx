@@ -105,16 +105,16 @@ const LoginPage = () => {
       <Card className="w-full max-w-md bg-chatgpt-secondary border-chatgpt-border rounded-2xl shadow-lg">
         <CardHeader className="space-y-1">
           <div className="flex justify-between items-center">
-            <CardTitle className="text-white text-2xl">Bem-vindo</CardTitle>
+            <CardTitle className="text-white text-2xl text-center w-full">Bem-vindo</CardTitle>
             <Button
               variant="ghost"
               onClick={handleLogout}
-              className="text-white hover:text-gray-300"
+              className="text-white hover:text-gray-300 absolute right-4"
             >
               Logout
             </Button>
           </div>
-          <CardDescription className="text-gray-400">
+          <CardDescription className="text-gray-400 text-center">
             Faça login ou crie uma conta para continuar
           </CardDescription>
         </CardHeader>
@@ -137,9 +137,13 @@ const LoginPage = () => {
                 },
                 input: {
                   borderRadius: '1rem',
+                  color: '#fff',
                 },
                 anchor: {
-                  color: '#2563eb',
+                  color: '#fff',
+                },
+                label: {
+                  color: '#fff',
                 },
               },
             }}
