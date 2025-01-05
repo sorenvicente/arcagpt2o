@@ -72,7 +72,10 @@ serve(async (req) => {
           },
           body: JSON.stringify({
             model: apiKey.selected_openrouter_model || 'anthropic/claude-2',
-            messages: messages,
+            messages: messages.map(msg => ({
+              ...msg,
+              content: msg.content.replace(/<[^>]*>/g, '') // Remove HTML tags for API request
+            })),
             max_tokens: 1000,
             temperature: temperature,
           }),
@@ -80,8 +83,14 @@ serve(async (req) => {
 
         if (openRouterResponse.ok) {
           const data = await openRouterResponse.json();
+          // Format the response with HTML
+          const formattedContent = data.choices[0].message.content
+            .split('\n')
+            .map((line: string) => `<div>${line}</div>`)
+            .join('');
+          
           return new Response(
-            JSON.stringify({ content: data.choices[0].message.content }),
+            JSON.stringify({ content: formattedContent }),
             { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
           );
         }
@@ -94,7 +103,6 @@ serve(async (req) => {
     // Try OpenAI if configured
     if (apiKey.openai_key) {
       console.log('Tentando usar OpenAI...');
-      // Remove OpenAI key validation since we want to support different key formats
       const openAIResponse = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {
@@ -103,7 +111,10 @@ serve(async (req) => {
         },
         body: JSON.stringify({
           model: apiKey.selected_openai_model || 'gpt-4-1106-preview',
-          messages: messages,
+          messages: messages.map(msg => ({
+            ...msg,
+            content: msg.content.replace(/<[^>]*>/g, '') // Remove HTML tags for API request
+          })),
           max_tokens: 1024,
           temperature: temperature,
         }),
@@ -116,8 +127,14 @@ serve(async (req) => {
       }
 
       const data = await openAIResponse.json();
+      // Format the response with HTML
+      const formattedContent = data.choices[0].message.content
+        .split('\n')
+        .map((line: string) => `<div>${line}</div>`)
+        .join('');
+
       return new Response(
-        JSON.stringify({ content: data.choices[0].message.content }),
+        JSON.stringify({ content: formattedContent }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
