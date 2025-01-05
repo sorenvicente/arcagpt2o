@@ -14,42 +14,32 @@ export const EditorContent = ({
   onContentChange 
 }: EditorContentProps) => {
   const editorRef = useRef<HTMLDivElement>(null);
-  const lastCaretPosition = useRef<number>(0);
 
   useEffect(() => {
-    if (editorRef.current) {
+    if (editorRef.current && content !== editorRef.current.innerHTML) {
       const selection = window.getSelection();
-      if (!selection) return;
-
-      // Mantém o conteúdo e a posição do cursor
-      const currentPosition = lastCaretPosition.current;
+      const range = selection?.getRangeAt(0);
+      const start = range?.startOffset || 0;
+      
       editorRef.current.innerHTML = content;
-
-      try {
-        // Restaura a posição do cursor
-        const range = document.createRange();
-        const textNode = editorRef.current.firstChild || editorRef.current;
-        const position = Math.min(currentPosition, textNode.textContent?.length || 0);
-        
-        range.setStart(textNode, position);
-        range.setEnd(textNode, position);
-        
-        selection.removeAllRanges();
-        selection.addRange(range);
-      } catch (error) {
-        console.log('Erro ao restaurar posição do cursor:', error);
+      
+      if (selection && range && editorRef.current.firstChild) {
+        try {
+          const newRange = document.createRange();
+          newRange.setStart(editorRef.current.firstChild, start);
+          newRange.setEnd(editorRef.current.firstChild, start);
+          selection.removeAllRanges();
+          selection.addRange(newRange);
+        } catch (error) {
+          console.log('Erro ao restaurar posição do cursor:', error);
+        }
       }
     }
   }, [content]);
 
-  const handleInput = (e: React.FormEvent<HTMLDivElement>) => {
-    const newContent = e.currentTarget.innerHTML;
-    onContentChange(newContent);
-    
-    // Salva a posição atual do cursor
-    const selection = window.getSelection();
-    if (selection && selection.rangeCount > 0) {
-      lastCaretPosition.current = selection.getRangeAt(0).startOffset;
+  const handleInput = () => {
+    if (editorRef.current) {
+      onContentChange(editorRef.current.innerHTML);
     }
   };
 
@@ -58,58 +48,23 @@ export const EditorContent = ({
     if (e.key === 'z' && (e.ctrlKey || e.metaKey)) {
       e.preventDefault();
       document.execCommand('undo');
+      handleInput();
       return;
     }
 
     // Trata a tecla Enter
     if (e.key === 'Enter') {
       e.preventDefault();
-      
-      const selection = window.getSelection();
-      if (!selection || !editorRef.current) return;
-      
-      const range = selection.getRangeAt(0);
-      const br = document.createElement('br');
-      
-      // Insere a quebra de linha
-      range.insertNode(br);
-      
-      // Move o cursor para depois da quebra de linha
-      range.setStartAfter(br);
-      range.setEndAfter(br);
-      selection.removeAllRanges();
-      selection.addRange(range);
-      
-      // Atualiza o conteúdo
-      onContentChange(editorRef.current.innerHTML);
-      
-      // Salva a nova posição do cursor
-      lastCaretPosition.current = range.startOffset;
+      document.execCommand('insertLineBreak');
+      handleInput();
     }
   };
 
   const handlePaste = (e: React.ClipboardEvent) => {
     e.preventDefault();
-    
     const text = e.clipboardData.getData('text/plain');
-    const selection = window.getSelection();
-    if (!selection || !editorRef.current) return;
-    
-    const range = selection.getRangeAt(0);
-    const textNode = document.createTextNode(text);
-    
-    range.deleteContents();
-    range.insertNode(textNode);
-    
-    // Move o cursor para o final do texto colado
-    range.setStartAfter(textNode);
-    range.setEndAfter(textNode);
-    selection.removeAllRanges();
-    selection.addRange(range);
-    
-    // Atualiza o conteúdo e salva a posição do cursor
-    onContentChange(editorRef.current.innerHTML);
-    lastCaretPosition.current = range.startOffset;
+    document.execCommand('insertText', false, text);
+    handleInput();
   };
 
   return (
