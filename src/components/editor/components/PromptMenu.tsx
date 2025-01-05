@@ -50,7 +50,7 @@ export const PromptMenu = ({
         value={promptInput}
         onChange={(e) => onPromptInputChange(e.target.value)}
         placeholder="Digite // para acionar agentes..."
-        className="w-full bg-chatgpt-secondary text-white/70 border-none rounded-xl px-6 py-3 placeholder-gray-400 text-lg"
+        className="w-full bg-chatgpt-secondary text-white/70 border-none rounded-xl px-6 py-4 placeholder-gray-400 text-lg"
       />
       
       {showPromptMenu && (
