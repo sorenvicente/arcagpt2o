@@ -15,7 +15,7 @@ export const EditorContent = ({
   onContentChange 
 }: EditorContentProps) => {
   return (
-    <div className="flex-1 p-8 pt-20">
+    <div className="flex-1 p-8 pt-20 max-w-[800px] mx-auto">
       <EditorTitle 
         title={title} 
         onTitleChange={onTitleChange} 
