@@ -53,9 +53,11 @@ const FloatingEditor = ({ isOpen, onClose }: FloatingEditorProps) => {
   return (
     <div className="fixed inset-0 bg-chatgpt-main/90 z-50 flex items-center justify-center">
       <div className="bg-chatgpt-main w-full h-full flex flex-col">
-        {/* Floating Toolbar */}
+        {/* Floating Toolbar - Increased thickness with py-4 */}
         <div className="fixed top-4 left-1/2 -translate-x-1/2 bg-chatgpt-secondary rounded-xl shadow-lg z-10">
-          <EditorToolbar />
+          <div className="py-4">
+            <EditorToolbar />
+          </div>
         </div>
 
         {/* Main Content */}
@@ -86,13 +88,13 @@ const FloatingEditor = ({ isOpen, onClose }: FloatingEditorProps) => {
             <Input
               value={promptInput}
               onChange={(e) => handlePromptInput(e.target.value)}
-              placeholder="Digite // para acessar os prompts..."
-              className="w-full bg-chatgpt-secondary text-white border-none rounded-xl pl-4 pr-10 py-3 placeholder-gray-400"
+              placeholder="Digite // para acionar agentes..."
+              className="w-full bg-chatgpt-secondary text-white border-none rounded-xl pl-4 pr-10 py-4 placeholder-gray-400"
             />
             
-            {/* Prompt Menu */}
+            {/* Prompt Menu - Moved closer to input with mb-1 */}
             {showPromptMenu && (
-              <div className="absolute bottom-full mb-2 w-full bg-chatgpt-secondary rounded-xl shadow-lg border border-chatgpt-border">
+              <div className="absolute bottom-full mb-1 w-full bg-chatgpt-secondary rounded-xl shadow-lg border border-chatgpt-border">
                 <div className="p-2">
                   <div className="flex items-center justify-between text-gray-400 text-sm mb-2">
                     <span>Prompts Disponíveis</span>
