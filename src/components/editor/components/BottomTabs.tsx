@@ -8,7 +8,7 @@ interface BottomTabsProps {
 export const BottomTabs = ({ activeTab, onTabChange }: BottomTabsProps) => {
   return (
     <Tabs.Root value={activeTab} onValueChange={onTabChange}>
-      <div className="flex items-center gap-1 p-0.5 min-w-[300px]">
+      <Tabs.List className="flex items-center gap-1 p-0.5 min-w-[300px]">
         <Tabs.Trigger
           value="eixos"
           className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
@@ -39,7 +39,7 @@ export const BottomTabs = ({ activeTab, onTabChange }: BottomTabsProps) => {
         >
           Prompts
         </Tabs.Trigger>
-      </div>
+      </Tabs.List>
     </Tabs.Root>
   );
 };
