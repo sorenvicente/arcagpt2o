@@ -6,19 +6,24 @@ import { useToast } from '@/hooks/use-toast';
 interface EditorToolbarProps {
   content: string;
   onClose: () => void;
+  title: string;
 }
 
-export const EditorToolbar = ({ content, onClose }: EditorToolbarProps) => {
+export const EditorToolbar = ({ content, onClose, title }: EditorToolbarProps) => {
   const { formatText, alignText } = useRichTextEditor();
   const { toast } = useToast();
 
   const handleSave = () => {
-    // Agora salvamos o conteúdo com a formatação HTML
+    // Save both content and title
     localStorage.setItem('editor-content', content);
+    localStorage.setItem('editor-title', title);
     
-    // Dispatch custom event com o conteúdo formatado
+    // Dispatch custom event with both content and title
     window.dispatchEvent(new CustomEvent('editor-content-saved', {
-      detail: { content: content }
+      detail: { 
+        content: content,
+        title: title || 'Novo documento'
+      }
     }));
     
     toast({

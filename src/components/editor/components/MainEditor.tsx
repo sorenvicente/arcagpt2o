@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { EditorToolbar } from './EditorToolbar';
 import { BottomTabs } from './BottomTabs';
@@ -22,6 +22,19 @@ export const MainEditor = ({
   const [activeTab, setActiveTab] = useState('eixos');
   const { toast } = useToast();
 
+  // Generate a suggestive title based on content
+  useEffect(() => {
+    if (!title && content) {
+      // Get first line or first 50 characters
+      const suggestedTitle = content.split('\n')[0]?.slice(0, 50) || 
+        content.slice(0, 50);
+      
+      if (suggestedTitle) {
+        setTitle(suggestedTitle + (suggestedTitle.length >= 50 ? '...' : ''));
+      }
+    }
+  }, [content, title]);
+
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
     onTabChange(tab);
@@ -33,18 +46,30 @@ export const MainEditor = ({
     });
   };
 
+  const handleTitleChange = (newTitle: string) => {
+    setTitle(newTitle);
+    // Save to localStorage to persist the title
+    if (newTitle) {
+      localStorage.setItem('editor-title', newTitle);
+    }
+  };
+
   return (
     <div className="flex flex-col h-[calc(100vh-120px)]">
       <div className="fixed top-4 left-1/2 -translate-x-1/2 bg-chatgpt-secondary rounded-xl shadow-md z-10">
         <div className="py-1">
-          <EditorToolbar content={content} onClose={onClose} />
+          <EditorToolbar 
+            content={content} 
+            onClose={onClose}
+            title={title} 
+          />
         </div>
       </div>
 
       <EditorContent
         title={title}
         content={content}
-        onTitleChange={setTitle}
+        onTitleChange={handleTitleChange}
         onContentChange={onContentChange}
       />
 
