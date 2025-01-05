@@ -24,6 +24,9 @@ export const ContentEditableArea = ({ content, onContentChange }: ContentEditabl
       const range = selection.getRangeAt(0);
       const br = document.createElement('br');
       
+      // Store current scroll position
+      const scrollTop = editorRef.current?.scrollTop || 0;
+      
       range.deleteContents();
       range.insertNode(br);
       
@@ -37,6 +40,11 @@ export const ContentEditableArea = ({ content, onContentChange }: ContentEditabl
       range.setEndAfter(textNode);
       selection.removeAllRanges();
       selection.addRange(range);
+      
+      // Restore scroll position
+      if (editorRef.current) {
+        editorRef.current.scrollTop = scrollTop;
+      }
       
       handleInput();
     }
