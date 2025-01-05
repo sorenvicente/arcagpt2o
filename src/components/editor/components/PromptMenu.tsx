@@ -26,7 +26,7 @@ export const PromptMenu = ({
       />
       
       {showPromptMenu && (
-        <div className="absolute bottom-full mb-1 w-full bg-chatgpt-secondary rounded-xl shadow-lg border border-chatgpt-border">
+        <div className="absolute bottom-full mb-4 w-full bg-chatgpt-secondary rounded-xl shadow-lg border border-chatgpt-border">
           <div className="p-2">
             <div className="flex items-center justify-between text-gray-400 text-sm mb-1">
               <span>Prompts Disponíveis</span>

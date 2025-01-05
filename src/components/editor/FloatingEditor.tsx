@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
-import { X } from 'lucide-react';
+import { X, ArrowBigUp } from 'lucide-react';
 import { EditorToolbar } from './components/EditorToolbar';
 import { BottomTabs } from './components/BottomTabs';
 import { EditorContent } from './components/EditorContent';
 import { PromptMenu } from './components/PromptMenu';
 import { usePrompts } from './hooks/usePrompts';
+import { Button } from '@/components/ui/button';
+import { useToast } from '@/components/ui/use-toast';
 
 interface FloatingEditorProps {
   isOpen: boolean;
@@ -18,6 +20,7 @@ const FloatingEditor = ({ isOpen, onClose }: FloatingEditorProps) => {
   const [promptInput, setPromptInput] = useState('');
   const [showPromptMenu, setShowPromptMenu] = useState(false);
   const { prompts, loadPrompts } = usePrompts();
+  const { toast } = useToast();
 
   useEffect(() => {
     if (showPromptMenu) {
@@ -46,6 +49,26 @@ const FloatingEditor = ({ isOpen, onClose }: FloatingEditorProps) => {
     setShowPromptMenu(false);
   };
 
+  const handleGenerateText = async () => {
+    if (!content.trim()) {
+      toast({
+        title: "Erro",
+        description: "Por favor, insira um prompt primeiro.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Here you would typically make an API call to generate text
+    toast({
+      title: "Gerando texto...",
+      description: "Aguarde enquanto processamos seu prompt.",
+    });
+    
+    // TODO: Implement the actual API call
+    console.log("Generating text with prompt:", content);
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -67,8 +90,18 @@ const FloatingEditor = ({ isOpen, onClose }: FloatingEditorProps) => {
         />
 
         {/* Bottom Tabs - Adjusted spacing */}
-        <div className="fixed bottom-20 left-1/2 -translate-x-1/2 bg-chatgpt-secondary rounded-xl shadow-lg">
+        <div className="fixed bottom-28 left-1/2 -translate-x-1/2 bg-chatgpt-secondary rounded-xl shadow-lg">
           <BottomTabs activeTab={activeTab} onTabChange={setActiveTab} />
+        </div>
+
+        {/* Generate Text Button */}
+        <div className="fixed bottom-16 left-1/2 -translate-x-1/2">
+          <Button
+            onClick={handleGenerateText}
+            className="bg-chatgpt-secondary hover:bg-chatgpt-hover text-white px-4 py-2 rounded-xl shadow-lg transition-colors"
+          >
+            <ArrowBigUp className="h-6 w-6" />
+          </Button>
         </div>
 
         {/* Prompt Menu - Increased height and adjusted spacing */}
