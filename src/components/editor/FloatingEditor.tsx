@@ -1,7 +1,9 @@
 import { useState } from 'react';
-import { X, Undo, Redo, Bold, Italic, Underline, AlignLeft, AlignCenter, AlignRight, Link as LinkIcon, FileInput, Edit, MessageSquare, Lightbulb, Target, ChevronUp } from 'lucide-react';
+import { X, Undo, Redo, Bold, Italic, Underline, AlignLeft, AlignCenter, AlignRight, Link as LinkIcon, FileInput, MessageSquare, Lightbulb, Target, ChevronUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/components/ui/use-toast';
 
 interface FloatingEditorProps {
   isOpen: boolean;
@@ -11,26 +13,49 @@ interface FloatingEditorProps {
 const FloatingEditor = ({ isOpen, onClose }: FloatingEditorProps) => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [activeTab, setActiveTab] = useState('edicao');
+  const [activeTab, setActiveTab] = useState('chat');
   const [promptInput, setPromptInput] = useState('');
   const [showPromptMenu, setShowPromptMenu] = useState(false);
+  const { toast } = useToast();
+  const [prompts, setPrompts] = useState<any[]>([]);
 
   if (!isOpen) return null;
 
-  const handlePromptInput = (value: string) => {
+  const handlePromptInput = async (value: string) => {
     setPromptInput(value);
     if (value.includes('//')) {
       setShowPromptMenu(true);
+      try {
+        const { data, error } = await supabase
+          .from('prompt_blocks')
+          .select('*');
+        
+        if (error) {
+          console.error('Erro ao carregar prompts:', error);
+          toast({
+            title: "Erro",
+            description: "Não foi possível carregar os prompts. Por favor, tente novamente.",
+            variant: "destructive",
+          });
+          return;
+        }
+
+        if (data) {
+          setPrompts(data);
+          console.log('Prompts carregados:', data);
+        }
+      } catch (error) {
+        console.error('Erro ao carregar prompts:', error);
+        toast({
+          title: "Erro",
+          description: "Ocorreu um erro ao carregar os prompts. Por favor, tente novamente.",
+          variant: "destructive",
+        });
+      }
     } else {
       setShowPromptMenu(false);
     }
   };
-
-  const availablePrompts = [
-    { id: 1, name: 'Rabino' },
-    { id: 2, name: 'CPL 01 - oportunidades' },
-    { id: 3, name: 'Roteiro de Vídeo Curto' },
-  ];
 
   return (
     <div className="fixed inset-0 bg-chatgpt-main/90 z-50 flex items-center justify-center">
@@ -113,15 +138,6 @@ const FloatingEditor = ({ isOpen, onClose }: FloatingEditorProps) => {
         <div className="fixed bottom-24 left-1/2 -translate-x-1/2 bg-chatgpt-secondary rounded-xl shadow-lg">
           <div className="flex items-center gap-2 p-1">
             <Button
-              variant={activeTab === 'edicao' ? 'secondary' : 'ghost'}
-              size="sm"
-              className="gap-2 rounded-lg"
-              onClick={() => setActiveTab('edicao')}
-            >
-              <Edit className="h-4 w-4" />
-              Edição
-            </Button>
-            <Button
               variant={activeTab === 'chat' ? 'secondary' : 'ghost'}
               size="sm"
               className="gap-2 rounded-lg"
@@ -169,7 +185,7 @@ const FloatingEditor = ({ isOpen, onClose }: FloatingEditorProps) => {
                     <span>Prompts Disponíveis</span>
                     <ChevronUp className="h-4 w-4" />
                   </div>
-                  {availablePrompts.map((prompt) => (
+                  {prompts.map((prompt) => (
                     <button
                       key={prompt.id}
                       className="w-full text-left px-3 py-2 text-white hover:bg-chatgpt-hover rounded-lg transition-colors"
