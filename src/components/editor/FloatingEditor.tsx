@@ -1,9 +1,10 @@
-import { useState } from 'react';
-import { X, Undo, Redo, Bold, Italic, Underline, AlignLeft, AlignCenter, AlignRight, Link as LinkIcon, FileInput, MessageSquare, Lightbulb, Target, ChevronUp } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { X, ChevronUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/components/ui/use-toast';
+import { EditorToolbar } from './components/EditorToolbar';
+import { BottomTabs } from './components/BottomTabs';
+import { usePrompts } from './hooks/usePrompts';
 
 interface FloatingEditorProps {
   isOpen: boolean;
@@ -16,45 +17,19 @@ const FloatingEditor = ({ isOpen, onClose }: FloatingEditorProps) => {
   const [activeTab, setActiveTab] = useState('chat');
   const [promptInput, setPromptInput] = useState('');
   const [showPromptMenu, setShowPromptMenu] = useState(false);
-  const { toast } = useToast();
-  const [prompts, setPrompts] = useState<any[]>([]);
+  const { prompts, loadPrompts } = usePrompts();
+
+  useEffect(() => {
+    if (showPromptMenu) {
+      loadPrompts();
+    }
+  }, [showPromptMenu]);
 
   if (!isOpen) return null;
 
-  const handlePromptInput = async (value: string) => {
+  const handlePromptInput = (value: string) => {
     setPromptInput(value);
-    if (value.includes('//')) {
-      setShowPromptMenu(true);
-      try {
-        const { data, error } = await supabase
-          .from('prompt_blocks')
-          .select('*');
-        
-        if (error) {
-          console.error('Erro ao carregar prompts:', error);
-          toast({
-            title: "Erro",
-            description: "Não foi possível carregar os prompts. Por favor, tente novamente.",
-            variant: "destructive",
-          });
-          return;
-        }
-
-        if (data) {
-          setPrompts(data);
-          console.log('Prompts carregados:', data);
-        }
-      } catch (error) {
-        console.error('Erro ao carregar prompts:', error);
-        toast({
-          title: "Erro",
-          description: "Ocorreu um erro ao carregar os prompts. Por favor, tente novamente.",
-          variant: "destructive",
-        });
-      }
-    } else {
-      setShowPromptMenu(false);
-    }
+    setShowPromptMenu(value.includes('//'));
   };
 
   return (
@@ -62,59 +37,7 @@ const FloatingEditor = ({ isOpen, onClose }: FloatingEditorProps) => {
       <div className="bg-chatgpt-main w-full h-full flex flex-col">
         {/* Floating Toolbar */}
         <div className="fixed top-4 left-1/2 -translate-x-1/2 bg-chatgpt-secondary rounded-xl shadow-lg z-10">
-          <div className="flex items-center px-2 h-12">
-            <select className="bg-transparent text-white border-none outline-none mr-4 rounded-lg">
-              <option>Parágrafo</option>
-            </select>
-            
-            <div className="flex items-center gap-1 px-2 border-r border-chatgpt-border">
-              <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400 hover:text-white rounded-lg">
-                <Undo className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400 hover:text-white rounded-lg">
-                <Redo className="h-4 w-4" />
-              </Button>
-            </div>
-            
-            <div className="flex items-center gap-1 px-2">
-              <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400 hover:text-white rounded-lg">
-                <Bold className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400 hover:text-white rounded-lg">
-                <Italic className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400 hover:text-white rounded-lg">
-                <Underline className="h-4 w-4" />
-              </Button>
-            </div>
-            
-            <div className="flex items-center gap-1 px-2 border-l border-r border-chatgpt-border">
-              <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400 hover:text-white rounded-lg">
-                <AlignLeft className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400 hover:text-white rounded-lg">
-                <AlignCenter className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400 hover:text-white rounded-lg">
-                <AlignRight className="h-4 w-4" />
-              </Button>
-            </div>
-            
-            <div className="flex items-center gap-1 px-2">
-              <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400 hover:text-white rounded-lg">
-                <LinkIcon className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400 hover:text-white rounded-lg">
-                <FileInput className="h-4 w-4" />
-              </Button>
-            </div>
-
-            <div className="ml-auto">
-              <Button variant="secondary" size="sm" className="h-8 rounded-lg">
-                Salvar
-              </Button>
-            </div>
-          </div>
+          <EditorToolbar />
         </div>
 
         {/* Main Content */}
@@ -136,35 +59,7 @@ const FloatingEditor = ({ isOpen, onClose }: FloatingEditorProps) => {
 
         {/* Bottom Tabs */}
         <div className="fixed bottom-24 left-1/2 -translate-x-1/2 bg-chatgpt-secondary rounded-xl shadow-lg">
-          <div className="flex items-center gap-2 p-1">
-            <Button
-              variant={activeTab === 'chat' ? 'secondary' : 'ghost'}
-              size="sm"
-              className="gap-2 rounded-lg"
-              onClick={() => setActiveTab('chat')}
-            >
-              <MessageSquare className="h-4 w-4" />
-              Chat
-            </Button>
-            <Button
-              variant={activeTab === 'prompts' ? 'secondary' : 'ghost'}
-              size="sm"
-              className="gap-2 rounded-lg"
-              onClick={() => setActiveTab('prompts')}
-            >
-              <Lightbulb className="h-4 w-4" />
-              Prompts
-            </Button>
-            <Button
-              variant={activeTab === 'eixos' ? 'secondary' : 'ghost'}
-              size="sm"
-              className="gap-2 rounded-lg"
-              onClick={() => setActiveTab('eixos')}
-            >
-              <Target className="h-4 w-4" />
-              Eixos
-            </Button>
-          </div>
+          <BottomTabs activeTab={activeTab} onTabChange={setActiveTab} />
         </div>
 
         {/* Prompt Input Area */}
