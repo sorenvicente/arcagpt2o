@@ -26,7 +26,6 @@ export const PromptMenu = ({
   onPromptInputChange,
   onPromptSelect,
 }: PromptMenuProps) => {
-  // Mapeia as abas para as categorias correspondentes
   const getCategoryForTab = (tab: string) => {
     switch (tab.toLowerCase()) {
       case 'eixos':
@@ -40,15 +39,10 @@ export const PromptMenu = ({
     }
   };
 
-  // Filtra os prompts baseado na aba ativa
   const filteredPrompts = prompts.filter(prompt => {
     const categoryForTab = getCategoryForTab(activeTab);
-    console.log('Filtrando prompts para categoria:', categoryForTab);
-    console.log('Prompt categoria:', prompt.category);
     return prompt.category.toLowerCase() === categoryForTab;
   });
-
-  console.log('Prompts filtrados:', filteredPrompts);
 
   return (
     <div className="relative w-3/4 mx-auto">
@@ -56,7 +50,7 @@ export const PromptMenu = ({
         value={promptInput}
         onChange={(e) => onPromptInputChange(e.target.value)}
         placeholder="Digite // para acionar agentes..."
-        className="w-full bg-chatgpt-secondary text-white/70 border-none rounded-xl px-6 py-10 placeholder-gray-400 text-lg"
+        className="w-full bg-chatgpt-secondary text-white/70 border-none rounded-xl px-6 py-3 placeholder-gray-400 text-lg"
       />
       
       {showPromptMenu && (

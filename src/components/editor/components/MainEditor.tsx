@@ -34,7 +34,7 @@ export const MainEditor = ({
   };
 
   return (
-    <div className="bg-chatgpt-main w-full h-full flex flex-col">
+    <div className="flex flex-col h-[calc(100vh-120px)]">
       <div className="fixed top-4 left-1/2 -translate-x-1/2 bg-chatgpt-secondary rounded-xl shadow-md z-10">
         <div className="py-1">
           <EditorToolbar />
