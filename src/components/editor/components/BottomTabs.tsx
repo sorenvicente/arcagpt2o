@@ -8,33 +8,33 @@ interface BottomTabsProps {
 export const BottomTabs = ({ activeTab, onTabChange }: BottomTabsProps) => {
   return (
     <Tabs.Root value={activeTab} onValueChange={onTabChange}>
-      <Tabs.List className="flex items-center p-0.5 min-w-[300px] bg-[#1A1F2C]/80 rounded-lg">
+      <Tabs.List className="inline-flex items-center bg-[#1A1F2C]/80 rounded-xl overflow-hidden">
         <Tabs.Trigger
           value="eixos"
-          className={`flex-1 px-3 py-1.5 text-sm font-medium transition-all duration-200 ${
+          className={`px-4 py-1.5 text-sm transition-colors duration-200 ${
             activeTab === 'eixos'
-              ? 'bg-[#222222] text-white'
-              : 'text-gray-400 hover:text-white hover:bg-chatgpt-hover/30'
+              ? 'bg-[#1A1F2C] text-white'
+              : 'text-gray-400 hover:text-white'
           }`}
         >
           Eixos
         </Tabs.Trigger>
         <Tabs.Trigger
           value="blocos"
-          className={`flex-1 px-3 py-1.5 text-sm font-medium transition-all duration-200 ${
+          className={`px-4 py-1.5 text-sm transition-colors duration-200 ${
             activeTab === 'blocos'
-              ? 'bg-[#222222] text-white'
-              : 'text-gray-400 hover:text-white hover:bg-chatgpt-hover/30'
+              ? 'bg-[#1A1F2C] text-white'
+              : 'text-gray-400 hover:text-white'
           }`}
         >
           Blocos
         </Tabs.Trigger>
         <Tabs.Trigger
           value="prompts"
-          className={`flex-1 px-3 py-1.5 text-sm font-medium transition-all duration-200 ${
+          className={`px-4 py-1.5 text-sm transition-colors duration-200 ${
             activeTab === 'prompts'
-              ? 'bg-[#222222] text-white'
-              : 'text-gray-400 hover:text-white hover:bg-chatgpt-hover/30'
+              ? 'bg-[#1A1F2C] text-white'
+              : 'text-gray-400 hover:text-white'
           }`}
         >
           Prompts
