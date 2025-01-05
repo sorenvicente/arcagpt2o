@@ -72,25 +72,16 @@ serve(async (req) => {
           },
           body: JSON.stringify({
             model: apiKey.selected_openrouter_model || 'anthropic/claude-2',
-            messages: messages.map(msg => ({
-              ...msg,
-              content: msg.content.replace(/<[^>]*>/g, '') // Remove HTML tags for API request
-            })),
-            max_tokens: 1000,
+            messages: messages,
+            max_tokens: 4000, // Aumentado para 4000 tokens
             temperature: temperature,
           }),
         });
 
         if (openRouterResponse.ok) {
           const data = await openRouterResponse.json();
-          // Format the response with HTML
-          const formattedContent = data.choices[0].message.content
-            .split('\n')
-            .map((line: string) => `<div>${line}</div>`)
-            .join('');
-          
           return new Response(
-            JSON.stringify({ content: formattedContent }),
+            JSON.stringify({ content: data.choices[0].message.content }),
             { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
           );
         }
@@ -111,11 +102,8 @@ serve(async (req) => {
         },
         body: JSON.stringify({
           model: apiKey.selected_openai_model || 'gpt-4-1106-preview',
-          messages: messages.map(msg => ({
-            ...msg,
-            content: msg.content.replace(/<[^>]*>/g, '') // Remove HTML tags for API request
-          })),
-          max_tokens: 1024,
+          messages: messages,
+          max_tokens: 4000, // Aumentado para 4000 tokens
           temperature: temperature,
         }),
       });
@@ -127,14 +115,8 @@ serve(async (req) => {
       }
 
       const data = await openAIResponse.json();
-      // Format the response with HTML
-      const formattedContent = data.choices[0].message.content
-        .split('\n')
-        .map((line: string) => `<div>${line}</div>`)
-        .join('');
-
       return new Response(
-        JSON.stringify({ content: formattedContent }),
+        JSON.stringify({ content: data.choices[0].message.content }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
