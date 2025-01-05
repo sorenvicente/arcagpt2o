@@ -34,6 +34,26 @@ export const ContentEditableArea = ({ content, onContentChange }: ContentEditabl
     }
   };
 
+  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!editorRef.current) return;
+
+    // Get click coordinates relative to the editor
+    const rect = editorRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    // Create a range from the click position
+    const range = document.caretRangeFromPoint(e.clientX, e.clientY);
+    if (!range) return;
+
+    // Set the cursor at the clicked position
+    const selection = window.getSelection();
+    if (selection) {
+      selection.removeAllRanges();
+      selection.addRange(range);
+    }
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Tab') {
       e.preventDefault();
@@ -63,7 +83,7 @@ export const ContentEditableArea = ({ content, onContentChange }: ContentEditabl
     e.preventDefault();
     
     // Get clipboard content
-    const text = e.clipboardData.getData('text/html') || e.clipboardData.getData('text/plain');
+    const text = e.clipboardData.getData('text/plain');
     
     // Get current selection
     const selection = window.getSelection();
@@ -71,14 +91,9 @@ export const ContentEditableArea = ({ content, onContentChange }: ContentEditabl
     
     const range = selection.getRangeAt(0);
     
-    // Create temporary div to clean pasted content
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = text;
-    const cleanText = tempDiv.innerText;
-    
     // Insert at cursor position
     range.deleteContents();
-    const textNode = document.createTextNode(cleanText);
+    const textNode = document.createTextNode(text);
     range.insertNode(textNode);
     
     // Move cursor to end of inserted text
@@ -96,6 +111,7 @@ export const ContentEditableArea = ({ content, onContentChange }: ContentEditabl
       ref={editorRef}
       contentEditable="true"
       onInput={handleInput}
+      onClick={handleClick}
       onKeyDown={handleKeyDown}
       onPaste={handlePaste}
       data-placeholder="Digite seu texto aqui..."
