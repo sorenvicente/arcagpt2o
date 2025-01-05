@@ -13,23 +13,12 @@ export const MainEditor = ({ onClose }: MainEditorProps) => {
   const [content, setContent] = useState('');
   const [activeTab, setActiveTab] = useState('chat');
 
-  const handleFormatText = (format: string) => {
-    document.execCommand(format, false);
-  };
-
-  const handleAlignText = (alignment: string) => {
-    document.execCommand('justify' + alignment, false);
-  };
-
   return (
     <div className="bg-chatgpt-main w-full h-full flex flex-col">
       {/* Floating Toolbar */}
       <div className="fixed top-4 left-1/2 -translate-x-1/2 bg-chatgpt-secondary rounded-xl shadow-lg z-10">
         <div className="py-4">
-          <EditorToolbar 
-            onFormatText={handleFormatText}
-            onAlignText={handleAlignText}
-          />
+          <EditorToolbar />
         </div>
       </div>
 

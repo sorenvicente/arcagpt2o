@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useRichTextEditor } from '../hooks/useRichTextEditor';
 
 interface EditorContentProps {
