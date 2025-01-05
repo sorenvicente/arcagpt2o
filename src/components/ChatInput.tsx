@@ -57,9 +57,9 @@ const ChatInput = ({ onSend, isLoading = false }: ChatInputProps) => {
   const handleSubmit = () => {
     if (message.trim() && !isLoading) {
       onSend(message);
-      setMessage("");
+      setMessage(""); // Limpa o textarea após enviar
       if (textareaRef.current) {
-        textareaRef.current.style.height = "auto";
+        textareaRef.current.style.height = "auto"; // Reset altura do textarea
       }
     }
   };
