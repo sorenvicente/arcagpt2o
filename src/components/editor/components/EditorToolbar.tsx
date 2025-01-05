@@ -1,9 +1,28 @@
 import { Undo, Redo, Bold, Italic, Underline, AlignLeft, AlignCenter, AlignRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useRichTextEditor } from '../hooks/useRichTextEditor';
+import { useToast } from '@/hooks/use-toast';
 
-export const EditorToolbar = () => {
+interface EditorToolbarProps {
+  content: string;
+  onClose: () => void;
+}
+
+export const EditorToolbar = ({ content, onClose }: EditorToolbarProps) => {
   const { formatText, alignText } = useRichTextEditor();
+  const { toast } = useToast();
+
+  const handleSave = () => {
+    // Armazena o conteúdo no localStorage temporariamente
+    localStorage.setItem('editor-content', content);
+    
+    toast({
+      title: "Conteúdo salvo",
+      description: "O texto foi transferido para a área de chat",
+    });
+    
+    onClose();
+  };
 
   return (
     <div className="flex items-center px-2 h-10">
@@ -66,6 +85,7 @@ export const EditorToolbar = () => {
           variant="ghost"
           size="sm" 
           className="h-7 bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white rounded-xl text-xs px-4"
+          onClick={handleSave}
         >
           Salvar
         </Button>

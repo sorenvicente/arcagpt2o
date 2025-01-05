@@ -23,6 +23,15 @@ const ChatInput = ({ onSend, isLoading = false }: ChatInputProps) => {
     adjustTextareaHeight();
   }, [message]);
 
+  useEffect(() => {
+    // Verifica se há conteúdo salvo do editor
+    const savedContent = localStorage.getItem('editor-content');
+    if (savedContent) {
+      setMessage(savedContent);
+      localStorage.removeItem('editor-content');
+    }
+  }, []);
+
   const handleSubmit = () => {
     if (message.trim() && !isLoading) {
       onSend(message);

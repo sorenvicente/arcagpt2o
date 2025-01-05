@@ -3,7 +3,7 @@ import { X } from 'lucide-react';
 import { EditorToolbar } from './EditorToolbar';
 import { BottomTabs } from './BottomTabs';
 import { EditorContent } from './EditorContent';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 
 interface MainEditorProps {
   onClose: () => void;
@@ -37,7 +37,7 @@ export const MainEditor = ({
     <div className="flex flex-col h-[calc(100vh-120px)]">
       <div className="fixed top-4 left-1/2 -translate-x-1/2 bg-chatgpt-secondary rounded-xl shadow-md z-10">
         <div className="py-1">
-          <EditorToolbar />
+          <EditorToolbar content={content} onClose={onClose} />
         </div>
       </div>
 
