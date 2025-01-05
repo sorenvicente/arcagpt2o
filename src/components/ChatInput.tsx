@@ -1,12 +1,13 @@
 import { useState, useRef, useEffect } from "react";
-import { ArrowUp, Loader2 } from "lucide-react";
+import { ArrowUp, Loader2, Square } from "lucide-react";
 
 interface ChatInputProps {
   onSend: (message: string) => void;
   isLoading?: boolean;
+  onStop?: () => void;
 }
 
-const ChatInput = ({ onSend, isLoading = false }: ChatInputProps) => {
+const ChatInput = ({ onSend, isLoading = false, onStop }: ChatInputProps) => {
   const [message, setMessage] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -92,21 +93,31 @@ const ChatInput = ({ onSend, isLoading = false }: ChatInputProps) => {
           }}
           disabled={isLoading}
         />
-        <button 
-          onClick={handleSubmit}
-          disabled={isLoading || !message.trim()}
-          className="absolute right-4 bottom-3 p-2
-            bg-gray-700 rounded-full 
-            hover:bg-gray-600 
-            disabled:opacity-50 disabled:cursor-not-allowed
-            shadow-lg"
-        >
-          {isLoading ? (
-            <Loader2 className="h-5 w-5 text-white animate-spin" />
-          ) : (
+        {isLoading ? (
+          <button 
+            onClick={onStop}
+            className="absolute right-4 bottom-3 p-2
+              bg-red-600 rounded-full 
+              hover:bg-red-700
+              transition-colors duration-200
+              shadow-lg"
+            title="Parar geração"
+          >
+            <Square className="h-5 w-5 text-white" />
+          </button>
+        ) : (
+          <button 
+            onClick={handleSubmit}
+            disabled={isLoading || !message.trim()}
+            className="absolute right-4 bottom-3 p-2
+              bg-gray-700 rounded-full 
+              hover:bg-gray-600 
+              disabled:opacity-50 disabled:cursor-not-allowed
+              shadow-lg"
+          >
             <ArrowUp className="h-5 w-5 text-white" />
-          )}
-        </button>
+          </button>
+        )}
       </div>
     </div>
   );

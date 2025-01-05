@@ -9,6 +9,18 @@ export const useChatMessages = (
   setActiveAssistant: (assistant: string | null) => void
 ) => {
   const { toast } = useToast();
+  let abortController: AbortController | null = null;
+
+  const stopGeneration = () => {
+    if (abortController) {
+      abortController.abort();
+      setIsLoading(false);
+      toast({
+        title: "Geração interrompida",
+        description: "A geração da resposta foi interrompida.",
+      });
+    }
+  };
 
   const sendMessage = async (content: string, category?: string) => {
     try {
@@ -40,11 +52,14 @@ export const useChatMessages = (
           throw new Error('No authentication token available');
         }
 
+        abortController = new AbortController();
+
         const { data, error } = await supabase.functions.invoke('chat', {
           body: { messages: updatedMessages },
           headers: {
             Authorization: `Bearer ${session.access_token}`
-          }
+          },
+          signal: abortController.signal
         });
 
         if (error) {
@@ -65,6 +80,10 @@ export const useChatMessages = (
       }
 
     } catch (error: any) {
+      if (error.name === 'AbortError') {
+        console.log('Request aborted');
+        return;
+      }
       console.error('Error sending message:', error);
       toast({
         title: "Erro",
@@ -73,8 +92,9 @@ export const useChatMessages = (
       });
     } finally {
       setIsLoading(false);
+      abortController = null;
     }
   };
 
-  return { sendMessage };
+  return { sendMessage, stopGeneration };
 };

@@ -16,7 +16,7 @@ export const useChat = () => {
     setActiveAssistant
   } = useChatCore();
 
-  const { sendMessage } = useChatMessages(
+  const { sendMessage, stopGeneration } = useChatMessages(
     messages,
     setMessages,
     setIsLoading,
@@ -59,6 +59,7 @@ export const useChat = () => {
     loadChat,
     chatId,
     activeAssistant,
-    regenerateResponse
+    regenerateResponse,
+    stopGeneration
   };
 };

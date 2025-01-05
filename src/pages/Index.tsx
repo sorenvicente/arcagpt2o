@@ -17,7 +17,8 @@ const Index = () => {
     handleNewChat,
     loadChat,
     activeAssistant,
-    regenerateResponse
+    regenerateResponse,
+    stopGeneration
   } = useChat();
 
   return (
@@ -46,7 +47,11 @@ const Index = () => {
                     onSelectPrompt={sendMessage}
                     activeCategory={activeAssistant}
                   />
-                  <ChatInput onSend={sendMessage} isLoading={isLoading} />
+                  <ChatInput 
+                    onSend={sendMessage} 
+                    isLoading={isLoading}
+                    onStop={stopGeneration}
+                  />
                 </div>
               </div>
             </div>
@@ -62,7 +67,11 @@ const Index = () => {
                   onSelectPrompt={sendMessage}
                   activeCategory={activeAssistant}
                 />
-                <ChatInput onSend={sendMessage} isLoading={isLoading} />
+                <ChatInput 
+                  onSend={sendMessage} 
+                  isLoading={isLoading}
+                  onStop={stopGeneration}
+                />
               </div>
             </>
           )}
