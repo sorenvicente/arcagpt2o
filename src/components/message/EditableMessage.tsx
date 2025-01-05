@@ -43,7 +43,7 @@ const EditableMessage = ({ content, onSave }: EditableMessageProps) => {
       onChange={(e) => setEditedContent(e.target.value)}
       onBlur={() => onSave(editedContent)}
       onKeyDown={handleKeyDown}
-      className="w-full bg-transparent outline-none resize-none overflow-y-auto"
+      className="w-full bg-transparent outline-none resize-none overflow-y-auto min-h-[24px] p-0"
       style={{ maxHeight: '70vh' }}
       autoFocus
     />
