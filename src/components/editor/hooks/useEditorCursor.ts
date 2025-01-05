@@ -1,37 +1,22 @@
-import { RefObject, useState } from 'react';
+import { RefObject } from 'react';
 
 export const useEditorCursor = (editorRef: RefObject<HTMLDivElement>) => {
-  const [clickCount, setClickCount] = useState(0);
-  const [lastClickTime, setLastClickTime] = useState(0);
-
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!editorRef.current) return;
 
-    const currentTime = new Date().getTime();
+    // Get the clicked position
+    const x = e.clientX;
+    const y = e.clientY;
     
-    // Reset click count if too much time has passed
-    if (currentTime - lastClickTime > 500) {
-      setClickCount(1);
-    } else {
-      setClickCount(prev => prev + 1);
-    }
+    // Try to get the specific node and offset at click position
+    const position = document.caretRangeFromPoint(x, y);
     
-    setLastClickTime(currentTime);
-
-    // Handle triple click
-    if (clickCount === 2) {
-      // Create a new range at the clicked position
-      const range = document.createRange();
+    if (position) {
       const selection = window.getSelection();
-      
-      // Get the clicked position
-      const x = e.clientX;
-      const y = e.clientY;
-      
-      // Try to get the specific node and offset at click position
-      const position = document.caretRangeFromPoint(x, y);
-      
-      if (position && selection) {
+      if (selection) {
+        // Create a new range
+        const range = document.createRange();
+        
         // Set cursor at clicked position
         range.setStart(position.startContainer, position.startOffset);
         range.collapse(true);
@@ -39,13 +24,7 @@ export const useEditorCursor = (editorRef: RefObject<HTMLDivElement>) => {
         // Update selection
         selection.removeAllRanges();
         selection.addRange(range);
-        
-        // Prevent text selection
-        e.preventDefault();
       }
-      
-      // Reset click count
-      setClickCount(0);
     }
   };
 
