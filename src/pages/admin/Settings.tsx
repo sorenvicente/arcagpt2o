@@ -2,8 +2,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-import { LogoSettings } from "@/components/admin/settings/LogoSettings";
-import { UserManagement } from "@/components/admin/settings/UserManagement";
+import { SystemSettings } from "@/components/admin/SystemSettings";
 
 const SystemSettingsPage = () => {
   const navigate = useNavigate();
@@ -16,21 +15,18 @@ const SystemSettingsPage = () => {
   return (
     <div className="container mx-auto py-8 px-4">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-2xl font-bold">Configurações do Sistema</h1>
+        <h1 className="text-2xl font-bold text-white">Configurações do Sistema</h1>
         <Button
           variant="outline"
           className="flex items-center gap-2 rounded-xl border-chatgpt-border hover:bg-chatgpt-hover text-white"
-          onClick={() => navigate("/app")}
+          onClick={() => navigate("/admin")}
         >
           <ArrowLeft className="h-4 w-4" />
-          Voltar à Interface
+          Voltar para Prompts
         </Button>
       </div>
 
-      <div className="space-y-8">
-        <LogoSettings />
-        <UserManagement />
-      </div>
+      <SystemSettings />
     </div>
   );
 };
