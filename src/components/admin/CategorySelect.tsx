@@ -20,6 +20,8 @@ export function CategorySelect({ value, onValueChange, existingCategories = [] }
     { value: "curso", label: "Curso" },
     { value: "conteudo", label: "Conteúdo" },
     { value: "personalizar_chatgpt", label: "Personalizar ChatGPT" },
+    { value: "eixos", label: "Eixos" },
+    { value: "blocos", label: "Blocos" },
   ];
 
   // Filter out "Personalizar ChatGPT" if it already exists

@@ -90,6 +90,9 @@ export function EditPromptDialog({ open, onOpenChange, prompt, onUpdate }: EditP
     { value: "mentoria", label: "Mentoria" },
     { value: "curso", label: "Curso" },
     { value: "conteudo", label: "Conteúdo" },
+    { value: "personalizar_chatgpt", label: "Personalizar ChatGPT" },
+    { value: "eixos", label: "Eixos" },
+    { value: "blocos", label: "Blocos" },
   ];
 
   return (
