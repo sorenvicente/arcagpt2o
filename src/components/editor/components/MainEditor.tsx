@@ -30,8 +30,8 @@ export const MainEditor = ({ onClose }: MainEditorProps) => {
         onContentChange={setContent}
       />
 
-      {/* Tabs - Changed from bottom-32 to bottom-20 to move closer to the bottom bar */}
-      <div className="fixed bottom-20 left-1/2 -translate-x-1/2 bg-chatgpt-secondary rounded-xl shadow-lg">
+      {/* Tabs - Positioned at bottom-24 for better spacing */}
+      <div className="fixed bottom-24 left-1/2 -translate-x-1/2 bg-chatgpt-secondary rounded-xl shadow-lg">
         <BottomTabs activeTab={activeTab} onTabChange={setActiveTab} />
       </div>
 
