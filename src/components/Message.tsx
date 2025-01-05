@@ -32,6 +32,13 @@ const Message = ({ role, content, onRegenerate, isRegenerating }: MessageProps) 
           )}
         </div>
       </div>
+      {isRegenerating && role === 'assistant' && (
+        <div className="mt-2 flex items-center justify-center">
+          <div className="animate-pulse text-sm text-gray-400">
+            Gerando resposta...
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -9,11 +9,11 @@ export const useChatMessages = (
   setActiveAssistant: (assistant: string | null) => void
 ) => {
   const { toast } = useToast();
-  let abortController: AbortController | null = null;
+  let controller: AbortController | null = null;
 
   const stopGeneration = () => {
-    if (abortController) {
-      abortController.abort();
+    if (controller) {
+      controller.abort();
       setIsLoading(false);
       toast({
         title: "Geração interrompida",
@@ -52,14 +52,16 @@ export const useChatMessages = (
           throw new Error('No authentication token available');
         }
 
-        abortController = new AbortController();
+        controller = new AbortController();
 
         const { data, error } = await supabase.functions.invoke('chat', {
-          body: { messages: updatedMessages },
+          body: { 
+            messages: updatedMessages,
+            signal: controller.signal // This will be handled by the Edge Function
+          },
           headers: {
             Authorization: `Bearer ${session.access_token}`
-          },
-          abortSignal: abortController.signal
+          }
         });
 
         if (error) {
@@ -92,7 +94,7 @@ export const useChatMessages = (
       });
     } finally {
       setIsLoading(false);
-      abortController = null;
+      controller = null;
     }
   };
 
