@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { EditorToolbar } from './EditorToolbar';
 import { BottomTabs } from './BottomTabs';
-import { EditorContent } from './EditorContent';
+import { TipTapEditor } from './TipTapEditor';
 import { useToast } from '@/hooks/use-toast';
 
 interface MainEditorProps {
@@ -22,10 +22,8 @@ export const MainEditor = ({
   const [activeTab, setActiveTab] = useState('eixos');
   const { toast } = useToast();
 
-  // Generate a suggestive title based on content
   useEffect(() => {
     if (!title && content) {
-      // Get first line or first 50 characters
       const suggestedTitle = content.split('\n')[0]?.slice(0, 50) || 
         content.slice(0, 50);
       
@@ -46,18 +44,10 @@ export const MainEditor = ({
     });
   };
 
-  const handleTitleChange = (newTitle: string) => {
-    setTitle(newTitle);
-    // Save to localStorage to persist the title
-    if (newTitle) {
-      localStorage.setItem('editor-title', newTitle);
-    }
-  };
-
   return (
     <div className="flex flex-col h-[calc(100vh-120px)]">
-      <div className="fixed top-4 left-1/2 -translate-x-1/2 bg-chatgpt-secondary rounded-xl shadow-md z-10">
-        <div className="py-1">
+      <div className="fixed top-0 left-0 right-0 bg-chatgpt-secondary border-b border-chatgpt-border z-10">
+        <div className="max-w-[800px] mx-auto">
           <EditorToolbar 
             content={content} 
             onClose={onClose}
@@ -66,12 +56,14 @@ export const MainEditor = ({
         </div>
       </div>
 
-      <EditorContent
-        title={title}
-        content={content}
-        onTitleChange={handleTitleChange}
-        onContentChange={onContentChange}
-      />
+      <div className="flex-1 overflow-hidden pt-14">
+        <TipTapEditor
+          content={content}
+          onUpdate={(newContent) => onContentChange(newContent)}
+          title={title}
+          onTitleChange={setTitle}
+        />
+      </div>
 
       <div className="fixed bottom-[100px] left-1/2 -translate-x-1/2 bg-chatgpt-secondary rounded-xl shadow-md">
         <BottomTabs activeTab={activeTab} onTabChange={handleTabChange} />
