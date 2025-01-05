@@ -24,16 +24,14 @@ const ChatInput = ({ onSend, isLoading = false }: ChatInputProps) => {
   }, [message]);
 
   useEffect(() => {
-    // Verifica se há conteúdo salvo do editor
     const savedContent = localStorage.getItem('editor-content');
     if (savedContent) {
       setMessage(savedContent);
       localStorage.removeItem('editor-content');
       
-      // Foca e expande o textarea automaticamente
       if (textareaRef.current) {
         textareaRef.current.focus();
-        textareaRef.current.style.height = "200px"; // Altura inicial maior
+        textareaRef.current.style.height = "200px";
         adjustTextareaHeight();
       }
     }
@@ -66,7 +64,7 @@ const ChatInput = ({ onSend, isLoading = false }: ChatInputProps) => {
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Digite sua mensagem..."
-          className="w-full resize-none rounded-xl px-4 py-4 pr-12 focus:outline-none
+          className="w-full resize-none rounded-xl px-4 py-4 pr-16
             bg-chatgpt-input text-white
             placeholder:text-gray-400"
           style={{ 
@@ -78,15 +76,16 @@ const ChatInput = ({ onSend, isLoading = false }: ChatInputProps) => {
         <button 
           onClick={handleSubmit}
           disabled={isLoading || !message.trim()}
-          className="absolute right-3 top-[50%] -translate-y-[50%] p-1.5 
+          className="fixed bottom-6 right-6 p-3
             bg-gray-700 rounded-full 
             hover:bg-gray-600 
-            disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled:opacity-50 disabled:cursor-not-allowed
+            shadow-lg z-50"
         >
           {isLoading ? (
-            <Loader2 className="h-4 w-4 text-white animate-spin" />
+            <Loader2 className="h-5 w-5 text-white animate-spin" />
           ) : (
-            <ArrowUp className="h-4 w-4 text-white" />
+            <ArrowUp className="h-5 w-5 text-white" />
           )}
         </button>
       </div>
