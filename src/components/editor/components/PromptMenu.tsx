@@ -50,11 +50,11 @@ export const PromptMenu = ({
         value={promptInput}
         onChange={(e) => onPromptInputChange(e.target.value)}
         placeholder="Digite // para acionar agentes..."
-        className="w-full bg-[#343541]/80 text-white/70 border-none rounded-xl px-6 py-6 placeholder-gray-400 text-lg font-medium shadow-lg"
+        className="w-full bg-chatgpt-main text-white/70 border-none rounded-xl px-6 py-6 placeholder-gray-400 text-lg font-medium"
       />
       
       {showPromptMenu && (
-        <div className="absolute bottom-full mb-0.5 w-full bg-[#343541]/80 rounded-xl shadow-lg">
+        <div className="absolute bottom-full mb-0.5 w-full bg-chatgpt-main rounded-xl">
           <div className="p-2">
             <div className="flex items-center justify-between text-gray-400 text-sm mb-1">
               <span>Prompts {activeTab}</span>
@@ -65,7 +65,7 @@ export const PromptMenu = ({
                 <button
                   key={prompt.id}
                   onClick={() => onPromptSelect(prompt)}
-                  className="w-full text-left px-3 py-2 text-white hover:bg-[#343541] transition-all duration-200 rounded-lg"
+                  className="w-full text-left px-3 py-2 text-white hover:bg-chatgpt-hover transition-all duration-200 rounded-lg"
                 >
                   <div className="font-medium">{prompt.name}</div>
                   {prompt.description && (
