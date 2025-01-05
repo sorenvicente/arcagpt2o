@@ -15,16 +15,16 @@ const FloatingEditor = ({ isOpen, onClose }: FloatingEditorProps) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-[#1A1F2C]/90 z-50 flex items-center justify-center">
-      <div className="bg-[#1A1F2C] w-full h-full flex flex-col">
+    <div className="fixed inset-0 bg-chatgpt-main/90 z-50 flex items-center justify-center">
+      <div className="bg-chatgpt-main w-full h-full flex flex-col">
         {/* Floating Toolbar */}
-        <div className="fixed top-4 left-1/2 -translate-x-1/2 bg-[#221F26] rounded-lg shadow-lg z-10">
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 bg-chatgpt-secondary rounded-lg shadow-lg z-10">
           <div className="flex items-center px-2 h-12">
             <select className="bg-transparent text-white border-none outline-none mr-4">
               <option>Parágrafo</option>
             </select>
             
-            <div className="flex items-center gap-1 px-2 border-r border-gray-700">
+            <div className="flex items-center gap-1 px-2 border-r border-chatgpt-border">
               <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400 hover:text-white">
                 <Undo className="h-4 w-4" />
               </Button>
@@ -45,7 +45,7 @@ const FloatingEditor = ({ isOpen, onClose }: FloatingEditorProps) => {
               </Button>
             </div>
             
-            <div className="flex items-center gap-1 px-2 border-l border-r border-gray-700">
+            <div className="flex items-center gap-1 px-2 border-l border-r border-chatgpt-border">
               <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400 hover:text-white">
                 <AlignLeft className="h-4 w-4" />
               </Button>
@@ -92,7 +92,7 @@ const FloatingEditor = ({ isOpen, onClose }: FloatingEditorProps) => {
         </div>
 
         {/* Bottom Tabs */}
-        <div className="fixed bottom-4 left-1/2 -translate-x-1/2 bg-[#221F26] rounded-lg shadow-lg">
+        <div className="fixed bottom-4 left-1/2 -translate-x-1/2 bg-chatgpt-secondary rounded-lg shadow-lg">
           <div className="flex items-center gap-2 p-1">
             <Button
               variant={activeTab === 'edicao' ? 'secondary' : 'ghost'}
