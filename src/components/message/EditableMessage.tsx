@@ -17,13 +17,19 @@ const EditableMessage = ({ content, onSave }: EditableMessageProps) => {
       // Calculate the content height
       const contentHeight = textareaRef.current.scrollHeight;
       
-      // If content is very long (more than 500px), set height to half of content
-      // Otherwise, show full content
-      const finalHeight = contentHeight > 500 ? contentHeight / 2 : contentHeight;
+      // Set a reasonable max height that still allows good navigation
+      const maxHeight = Math.min(contentHeight, window.innerHeight * 0.4);
       
-      textareaRef.current.style.height = `${finalHeight}px`;
+      textareaRef.current.style.height = `${maxHeight}px`;
+      
+      // Focus and move cursor to end
+      textareaRef.current.focus();
+      textareaRef.current.setSelectionRange(
+        editedContent.length,
+        editedContent.length
+      );
     }
-  }, [content]);
+  }, [content, editedContent]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -43,8 +49,14 @@ const EditableMessage = ({ content, onSave }: EditableMessageProps) => {
       onChange={(e) => setEditedContent(e.target.value)}
       onBlur={() => onSave(editedContent)}
       onKeyDown={handleKeyDown}
-      className="w-full bg-transparent outline-none resize-none overflow-y-auto min-h-[24px] p-0"
-      style={{ maxHeight: '70vh' }}
+      className="w-full min-w-[300px] bg-transparent outline-none resize-none 
+        overflow-y-auto min-h-[24px] p-2 rounded-lg text-white
+        focus:bg-gray-700/30 transition-colors"
+      style={{
+        maxWidth: '100%',
+        maxHeight: '40vh',
+        width: 'auto',
+      }}
       autoFocus
     />
   );
