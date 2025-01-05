@@ -1,4 +1,4 @@
-import { Key, LayoutDashboard, Settings, MessageSquare, Store, Edit } from "lucide-react";
+import { Key, Settings, MessageSquare, Store, Edit } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 
