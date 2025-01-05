@@ -17,9 +17,31 @@ export const EditorContent = ({
 
   useEffect(() => {
     if (editorRef.current) {
+      const selection = window.getSelection();
+      const range = selection?.getRangeAt(0);
+      const cursorPosition = range?.startOffset || 0;
+      
       editorRef.current.innerHTML = content;
+      
+      // Restaura a posição do cursor após atualizar o conteúdo
+      if (selection && range && editorRef.current.firstChild) {
+        try {
+          range.setStart(editorRef.current.firstChild, cursorPosition);
+          range.setEnd(editorRef.current.firstChild, cursorPosition);
+          selection.removeAllRanges();
+          selection.addRange(range);
+        } catch (error) {
+          console.log('Erro ao restaurar posição do cursor:', error);
+        }
+      }
     }
   }, [content]);
+
+  const handleInput = (e: React.FormEvent<HTMLDivElement>) => {
+    const newContent = e.currentTarget.innerHTML;
+    onContentChange(newContent);
+    console.log('Conteúdo atualizado:', newContent);
+  };
 
   return (
     <div className="flex-1 p-8 pt-20">
@@ -33,11 +55,7 @@ export const EditorContent = ({
       <div
         ref={editorRef}
         contentEditable="true"
-        onInput={(e) => {
-          const newContent = e.currentTarget.innerHTML;
-          onContentChange(newContent);
-          console.log('Conteúdo atualizado:', newContent);
-        }}
+        onInput={handleInput}
         data-placeholder="Digite seu texto aqui..."
         className="w-full h-[calc(100%-12rem)] bg-transparent text-white outline-none rounded-lg overflow-auto empty:before:content-[attr(data-placeholder)] empty:before:text-gray-500"
         suppressContentEditableWarning={true}

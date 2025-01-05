@@ -12,12 +12,20 @@ const FloatingEditor = ({ isOpen, onClose }: FloatingEditorProps) => {
   const [activeTab, setActiveTab] = useState('eixos');
 
   const handlePromptSelect = (prompt: any) => {
+    const selection = window.getSelection();
+    if (!selection) return;
+
+    const range = selection.getRangeAt(0);
+    const selectedText = range.toString();
+    
+    // Insere o prompt na posição do cursor
     setContent((prevContent) => {
-      // Se já existe conteúdo, adiciona uma quebra de linha antes do novo prompt
-      const separator = prevContent ? '\n' : '';
-      return prevContent + separator + prompt.prompt;
+      const beforeCursor = prevContent.substring(0, range.startOffset);
+      const afterCursor = prevContent.substring(range.endOffset);
+      return beforeCursor + prompt.prompt + afterCursor;
     });
-    console.log('Prompt adicionado:', prompt.prompt);
+    
+    console.log('Prompt adicionado na posição do cursor:', prompt.prompt);
   };
 
   const handleTabChange = (tab: string) => {
