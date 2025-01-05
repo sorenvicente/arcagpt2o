@@ -29,6 +29,13 @@ const ChatInput = ({ onSend, isLoading = false }: ChatInputProps) => {
     if (savedContent) {
       setMessage(savedContent);
       localStorage.removeItem('editor-content');
+      
+      // Foca e expande o textarea automaticamente
+      if (textareaRef.current) {
+        textareaRef.current.focus();
+        textareaRef.current.style.height = "200px"; // Altura inicial maior
+        adjustTextareaHeight();
+      }
     }
   }, []);
 
