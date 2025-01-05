@@ -14,30 +14,30 @@ export const EditorContent = ({
   onContentChange 
 }: EditorContentProps) => {
   const editorRef = useRef<HTMLDivElement>(null);
+  const lastCaretPosition = useRef<number>(0);
 
   useEffect(() => {
     if (editorRef.current) {
       const selection = window.getSelection();
-      const range = selection?.getRangeAt(0);
-      
-      // Preserve cursor position
-      const cursorPosition = range?.startOffset || 0;
-      const cursorNode = range?.startContainer;
-      
-      // Update content
+      if (!selection) return;
+
+      // Mantém o conteúdo e a posição do cursor
+      const currentPosition = lastCaretPosition.current;
       editorRef.current.innerHTML = content;
-      
-      // Restore cursor position
-      if (selection && cursorNode && editorRef.current.contains(cursorNode)) {
-        try {
-          const newRange = document.createRange();
-          newRange.setStart(cursorNode, cursorPosition);
-          newRange.setEnd(cursorNode, cursorPosition);
-          selection.removeAllRanges();
-          selection.addRange(newRange);
-        } catch (error) {
-          console.log('Error restoring cursor position:', error);
-        }
+
+      try {
+        // Restaura a posição do cursor
+        const range = document.createRange();
+        const textNode = editorRef.current.firstChild || editorRef.current;
+        const position = Math.min(currentPosition, textNode.textContent?.length || 0);
+        
+        range.setStart(textNode, position);
+        range.setEnd(textNode, position);
+        
+        selection.removeAllRanges();
+        selection.addRange(range);
+      } catch (error) {
+        console.log('Erro ao restaurar posição do cursor:', error);
       }
     }
   }, [content]);
@@ -45,37 +45,46 @@ export const EditorContent = ({
   const handleInput = (e: React.FormEvent<HTMLDivElement>) => {
     const newContent = e.currentTarget.innerHTML;
     onContentChange(newContent);
+    
+    // Salva a posição atual do cursor
+    const selection = window.getSelection();
+    if (selection && selection.rangeCount > 0) {
+      lastCaretPosition.current = selection.getRangeAt(0).startOffset;
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    // Implementa Ctrl+Z
+    if (e.key === 'z' && (e.ctrlKey || e.metaKey)) {
+      e.preventDefault();
+      document.execCommand('undo');
+      return;
+    }
+
+    // Trata a tecla Enter
     if (e.key === 'Enter') {
       e.preventDefault();
       
       const selection = window.getSelection();
-      const range = selection?.getRangeAt(0);
+      if (!selection || !editorRef.current) return;
       
-      if (selection && range) {
-        // Insert line break at cursor position
-        const br = document.createElement('br');
-        range.deleteContents();
-        range.insertNode(br);
-        
-        // Create and insert a new text node after the break
-        const textNode = document.createTextNode('');
-        range.setStartAfter(br);
-        range.insertNode(textNode);
-        
-        // Move cursor to new line
-        range.setStart(textNode, 0);
-        range.setEnd(textNode, 0);
-        selection.removeAllRanges();
-        selection.addRange(range);
-        
-        // Update content
-        if (editorRef.current) {
-          onContentChange(editorRef.current.innerHTML);
-        }
-      }
+      const range = selection.getRangeAt(0);
+      const br = document.createElement('br');
+      
+      // Insere a quebra de linha
+      range.insertNode(br);
+      
+      // Move o cursor para depois da quebra de linha
+      range.setStartAfter(br);
+      range.setEndAfter(br);
+      selection.removeAllRanges();
+      selection.addRange(range);
+      
+      // Atualiza o conteúdo
+      onContentChange(editorRef.current.innerHTML);
+      
+      // Salva a nova posição do cursor
+      lastCaretPosition.current = range.startOffset;
     }
   };
 
@@ -84,23 +93,23 @@ export const EditorContent = ({
     
     const text = e.clipboardData.getData('text/plain');
     const selection = window.getSelection();
-    const range = selection?.getRangeAt(0);
+    if (!selection || !editorRef.current) return;
     
-    if (selection && range) {
-      range.deleteContents();
-      const textNode = document.createTextNode(text);
-      range.insertNode(textNode);
-      
-      // Move cursor to end of pasted text
-      range.setStartAfter(textNode);
-      range.setEndAfter(textNode);
-      selection.removeAllRanges();
-      selection.addRange(range);
-      
-      if (editorRef.current) {
-        onContentChange(editorRef.current.innerHTML);
-      }
-    }
+    const range = selection.getRangeAt(0);
+    const textNode = document.createTextNode(text);
+    
+    range.deleteContents();
+    range.insertNode(textNode);
+    
+    // Move o cursor para o final do texto colado
+    range.setStartAfter(textNode);
+    range.setEndAfter(textNode);
+    selection.removeAllRanges();
+    selection.addRange(range);
+    
+    // Atualiza o conteúdo e salva a posição do cursor
+    onContentChange(editorRef.current.innerHTML);
+    lastCaretPosition.current = range.startOffset;
   };
 
   return (
