@@ -18,12 +18,17 @@ export const EditorContent = ({
   useEffect(() => {
     if (editorRef.current) {
       editorRef.current.innerHTML = content;
+      // Garantir que o conteúdo seja editável
+      editorRef.current.contentEditable = 'true';
+      // Focar no editor quando ele for montado
+      editorRef.current.focus();
     }
-  }, []);
+  }, [content]);
 
   const handleInput = () => {
     if (editorRef.current) {
-      onContentChange(editorRef.current.innerHTML);
+      const newContent = editorRef.current.innerHTML;
+      onContentChange(newContent);
     }
   };
 
@@ -42,6 +47,8 @@ export const EditorContent = ({
         onInput={handleInput}
         data-placeholder="Digite seu texto aqui..."
         className="w-full h-[calc(100%-12rem)] bg-transparent text-white outline-none rounded-lg overflow-auto empty:before:content-[attr(data-placeholder)] empty:before:text-gray-500"
+        suppressContentEditableWarning={true}
+        dangerouslySetInnerHTML={{ __html: content }}
       />
     </div>
   );
