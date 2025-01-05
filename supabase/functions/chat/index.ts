@@ -19,16 +19,25 @@ serve(async (req) => {
 
     // Try OpenRouter first if configured
     if (apiKey.openrouter_key) {
-      const openRouterResponse = await callOpenRouter(apiKey, messages, temperature);
-      if (openRouterResponse) {
-        return openRouterResponse;
+      try {
+        const openRouterResponse = await callOpenRouter(apiKey, messages, temperature);
+        if (openRouterResponse) {
+          return openRouterResponse;
+        }
+      } catch (error) {
+        console.error('OpenRouter falhou:', error);
       }
-      console.error('OpenRouter falhou, tentando OpenAI...');
+      console.log('OpenRouter falhou, tentando OpenAI...');
     }
 
     // Try OpenAI if configured
     if (apiKey.openai_key) {
-      return await callOpenAI(apiKey, messages, temperature);
+      try {
+        return await callOpenAI(apiKey, messages, temperature);
+      } catch (error) {
+        console.error('OpenAI falhou:', error);
+        throw error;
+      }
     }
 
     throw new Error('Nenhuma chave API válida configurada');
