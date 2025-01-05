@@ -214,18 +214,21 @@ export type Database = {
       }
       system_settings: {
         Row: {
+          application_name: string | null
           created_at: string
           id: string
           logo_url: string | null
           updated_at: string
         }
         Insert: {
+          application_name?: string | null
           created_at?: string
           id?: string
           logo_url?: string | null
           updated_at?: string
         }
         Update: {
+          application_name?: string | null
           created_at?: string
           id?: string
           logo_url?: string | null

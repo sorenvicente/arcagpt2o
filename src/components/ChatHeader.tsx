@@ -29,6 +29,7 @@ const ChatHeader = ({ isSidebarOpen, activeCategory }: ChatHeaderProps) => {
         {/* Removed the redundant text that was showing outside the sidebar */}
       </div>
       <div className="flex items-center gap-4">
+        <span className="text-white">{settings?.application_name}</span>
         <HexLogo 
           size="32" 
           className="text-white" 

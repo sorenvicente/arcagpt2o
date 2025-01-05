@@ -6,12 +6,15 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import HexLogo from "@/components/HexLogo";
+import { Edit2 } from "lucide-react";
 
 export const LogoSettings = () => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [newAppName, setNewAppName] = useState("");
 
   const { data: settings } = useQuery({
     queryKey: ["settings"],
@@ -68,6 +71,33 @@ export const LogoSettings = () => {
     },
   });
 
+  const updateAppName = useMutation({
+    mutationFn: async (name: string) => {
+      const { error } = await supabase
+        .from("system_settings")
+        .update({ application_name: name })
+        .eq("id", settings?.id);
+
+      if (error) throw error;
+      return name;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["settings"] });
+      toast({
+        title: "Sucesso",
+        description: "Nome da aplicação atualizado com sucesso",
+      });
+      setIsEditingName(false);
+    },
+    onError: (error) => {
+      toast({
+        title: "Erro",
+        description: "Erro ao atualizar nome: " + error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
   const handleLogoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -91,8 +121,67 @@ export const LogoSettings = () => {
     setPreviewUrl(null);
   };
 
+  const handleStartEditName = () => {
+    setNewAppName(settings?.application_name || "");
+    setIsEditingName(true);
+  };
+
+  const handleSaveName = () => {
+    if (newAppName.trim()) {
+      updateAppName.mutate(newAppName.trim());
+    }
+  };
+
+  const handleCancelEditName = () => {
+    setIsEditingName(false);
+    setNewAppName("");
+  };
+
   return (
-    <div className="space-y-4">
+    <div className="space-y-8">
+      <div className="space-y-4">
+        <Label>Nome da Aplicação</Label>
+        <div className="flex items-center gap-4">
+          {isEditingName ? (
+            <div className="flex items-center gap-2">
+              <Input
+                value={newAppName}
+                onChange={(e) => setNewAppName(e.target.value)}
+                placeholder="Nome da aplicação"
+                className="max-w-xs"
+              />
+              <Button
+                onClick={handleSaveName}
+                disabled={updateAppName.isPending}
+                size="sm"
+              >
+                {updateAppName.isPending ? "Salvando..." : "Salvar"}
+              </Button>
+              <Button
+                variant="outline"
+                onClick={handleCancelEditName}
+                disabled={updateAppName.isPending}
+                size="sm"
+              >
+                Cancelar
+              </Button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <span className="text-lg">{settings?.application_name}</span>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleStartEditName}
+                className="h-8 w-8 p-0"
+              >
+                <Edit2 className="h-4 w-4" />
+              </Button>
+            </div>
+          )}
+        </div>
+      </div>
+
       <div>
         <Label>Logo</Label>
         <div className="mt-2 space-y-4">
