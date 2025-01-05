@@ -12,7 +12,7 @@ export const BottomTabs = ({ activeTab, onTabChange }: BottomTabsProps) => {
       <Button
         variant={activeTab === 'eixos' ? 'secondary' : 'ghost'}
         size="sm"
-        className="gap-2 rounded-lg"
+        className="gap-2 rounded-lg text-sm"
         onClick={() => onTabChange('eixos')}
       >
         <Target className="h-4 w-4" />
@@ -21,17 +21,17 @@ export const BottomTabs = ({ activeTab, onTabChange }: BottomTabsProps) => {
       <Button
         variant={activeTab === 'prompts' ? 'secondary' : 'ghost'}
         size="sm"
-        className="gap-2 rounded-lg"
+        className="gap-2 rounded-lg text-sm"
         onClick={() => onTabChange('prompts')}
       >
         <Lightbulb className="h-4 w-4" />
         Prompts
       </Button>
       <Button
-        variant={activeTab === 'chat' ? 'secondary' : 'ghost'}
+        variant={activeTab === 'blocos' ? 'secondary' : 'ghost'}
         size="sm"
-        className="gap-2 rounded-lg"
-        onClick={() => onTabChange('chat')}
+        className="gap-2 rounded-lg text-sm"
+        onClick={() => onTabChange('blocos')}
       >
         <MessageSquare className="h-4 w-4" />
         Blocos

@@ -35,7 +35,11 @@ export const EditorContent = ({
       <div
         ref={editorRef}
         contentEditable="true"
-        onInput={(e) => onContentChange(e.currentTarget.innerHTML)}
+        onInput={(e) => {
+          const newContent = e.currentTarget.innerHTML;
+          onContentChange(newContent);
+          console.log('Conteúdo atualizado:', newContent);
+        }}
         data-placeholder="Digite seu texto aqui..."
         className="w-full h-[calc(100%-12rem)] bg-transparent text-white outline-none rounded-lg overflow-auto empty:before:content-[attr(data-placeholder)] empty:before:text-gray-500"
         suppressContentEditableWarning={true}
