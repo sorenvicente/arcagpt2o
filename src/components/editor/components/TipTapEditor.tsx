@@ -1,6 +1,7 @@
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { EditorTitle } from './EditorTitle';
+import { Paste } from '@tiptap/extension-paste';
 
 interface TipTapEditorProps {
   content: string;
@@ -16,11 +17,25 @@ export const TipTapEditor = ({
   onTitleChange
 }: TipTapEditorProps) => {
   const editor = useEditor({
-    extensions: [StarterKit],
+    extensions: [
+      StarterKit,
+      Paste.configure({
+        plainTextOnly: true,
+      })
+    ],
     content,
     editorProps: {
       attributes: {
         class: 'prose prose-invert max-w-none focus:outline-none min-h-[calc(100vh-200px)] px-4 py-2',
+      },
+      handlePaste: (view, event) => {
+        event.preventDefault();
+        const text = event.clipboardData?.getData('text/plain') || '';
+        const { state } = view;
+        const { tr } = state;
+        tr.insertText(text);
+        view.dispatch(tr);
+        return true;
       },
     },
     onUpdate: ({ editor }) => {
