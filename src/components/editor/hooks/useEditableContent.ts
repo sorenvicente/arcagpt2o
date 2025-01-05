@@ -37,14 +37,23 @@ export const useEditableContent = (
 
   const handlePaste = (e: React.ClipboardEvent) => {
     e.preventDefault();
-    const text = e.clipboardData.getData('text/html') || e.clipboardData.getData('text/plain');
+    const selection = window.getSelection();
+    if (!selection?.rangeCount) return;
     
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = text;
+    const range = selection.getRangeAt(0);
+    const text = e.clipboardData.getData('text/plain');
     
-    // Clean up pasted content
-    const cleanText = tempDiv.innerText;
-    document.execCommand('insertText', false, cleanText);
+    range.deleteContents();
+    const textNode = document.createTextNode(text);
+    range.insertNode(textNode);
+    
+    // Move cursor to end of pasted text
+    range.setStartAfter(textNode);
+    range.setEndAfter(textNode);
+    selection.removeAllRanges();
+    selection.addRange(range);
+    
+    handleInput();
   };
 
   return {

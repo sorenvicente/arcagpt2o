@@ -1,5 +1,4 @@
 import { useRef, useEffect } from 'react';
-import { useEditableContent } from '../hooks/useEditableContent';
 
 interface ContentEditableAreaProps {
   content: string;
@@ -12,7 +11,20 @@ export const ContentEditableArea = ({ content, onContentChange }: ContentEditabl
   // Initialize editor with content
   useEffect(() => {
     if (editorRef.current && content !== editorRef.current.innerHTML) {
+      const selection = window.getSelection();
+      const range = selection?.getRangeAt(0);
+      const startOffset = range?.startOffset || 0;
+      
       editorRef.current.innerHTML = content;
+      
+      // Restore cursor position
+      if (selection && range && editorRef.current.firstChild) {
+        const newRange = document.createRange();
+        newRange.setStart(editorRef.current.firstChild, Math.min(startOffset, content.length));
+        newRange.collapse(true);
+        selection.removeAllRanges();
+        selection.addRange(newRange);
+      }
     }
   }, [content]);
 
@@ -23,12 +35,12 @@ export const ContentEditableArea = ({ content, onContentChange }: ContentEditabl
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    // Handle keyboard shortcuts
     if (e.key === 'Tab') {
       e.preventDefault();
       document.execCommand('insertHTML', false, '&nbsp;&nbsp;&nbsp;&nbsp;');
     }
 
+    // Handle formatting shortcuts
     if ((e.ctrlKey || e.metaKey) && !e.shiftKey) {
       switch (e.key.toLowerCase()) {
         case 'b':
@@ -49,14 +61,34 @@ export const ContentEditableArea = ({ content, onContentChange }: ContentEditabl
 
   const handlePaste = (e: React.ClipboardEvent) => {
     e.preventDefault();
+    
+    // Get clipboard content
     const text = e.clipboardData.getData('text/html') || e.clipboardData.getData('text/plain');
     
+    // Get current selection
+    const selection = window.getSelection();
+    if (!selection?.rangeCount) return;
+    
+    const range = selection.getRangeAt(0);
+    
+    // Create temporary div to clean pasted content
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = text;
-    
-    // Clean up pasted content
     const cleanText = tempDiv.innerText;
-    document.execCommand('insertText', false, cleanText);
+    
+    // Insert at cursor position
+    range.deleteContents();
+    const textNode = document.createTextNode(cleanText);
+    range.insertNode(textNode);
+    
+    // Move cursor to end of inserted text
+    range.setStartAfter(textNode);
+    range.setEndAfter(textNode);
+    selection.removeAllRanges();
+    selection.addRange(range);
+    
+    // Update content
+    handleInput();
   };
 
   return (
@@ -78,7 +110,8 @@ export const ContentEditableArea = ({ content, onContentChange }: ContentEditabl
         fontSize: '16px',
         lineHeight: '1.8',
         letterSpacing: '0.3px',
-        caretColor: 'white'
+        caretColor: 'white',
+        cursor: 'text'
       }}
       suppressContentEditableWarning={true}
     />
