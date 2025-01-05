@@ -17,25 +17,26 @@ export const EditorContent = ({
 
   useEffect(() => {
     if (editorRef.current) {
-      // Preserva o conteúdo HTML
+      const selection = window.getSelection();
+      const range = selection?.getRangeAt(0);
+      
+      // Preserve cursor position
+      const cursorPosition = range?.startOffset || 0;
+      const cursorNode = range?.startContainer;
+      
+      // Update content
       editorRef.current.innerHTML = content;
       
-      // Restaura a seleção do cursor
-      const selection = window.getSelection();
-      if (selection && selection.rangeCount > 0) {
-        const range = selection.getRangeAt(0);
-        const cursorPosition = range.startOffset;
-        
-        // Tenta restaurar a posição do cursor apenas se houver conteúdo
-        if (editorRef.current.firstChild) {
-          try {
-            range.setStart(editorRef.current.firstChild, cursorPosition);
-            range.setEnd(editorRef.current.firstChild, cursorPosition);
-            selection.removeAllRanges();
-            selection.addRange(range);
-          } catch (error) {
-            console.log('Erro ao restaurar posição do cursor:', error);
-          }
+      // Restore cursor position
+      if (selection && cursorNode && editorRef.current.contains(cursorNode)) {
+        try {
+          const newRange = document.createRange();
+          newRange.setStart(cursorNode, cursorPosition);
+          newRange.setEnd(cursorNode, cursorPosition);
+          selection.removeAllRanges();
+          selection.addRange(newRange);
+        } catch (error) {
+          console.log('Error restoring cursor position:', error);
         }
       }
     }
@@ -50,12 +51,30 @@ export const EditorContent = ({
     if (e.key === 'Enter') {
       e.preventDefault();
       
-      // Insere uma quebra de linha natural
-      document.execCommand('insertLineBreak', false);
+      const selection = window.getSelection();
+      const range = selection?.getRangeAt(0);
       
-      // Atualiza o conteúdo após a quebra de linha
-      if (editorRef.current) {
-        onContentChange(editorRef.current.innerHTML);
+      if (selection && range) {
+        // Insert line break at cursor position
+        const br = document.createElement('br');
+        range.deleteContents();
+        range.insertNode(br);
+        
+        // Create and insert a new text node after the break
+        const textNode = document.createTextNode('');
+        range.setStartAfter(br);
+        range.insertNode(textNode);
+        
+        // Move cursor to new line
+        range.setStart(textNode, 0);
+        range.setEnd(textNode, 0);
+        selection.removeAllRanges();
+        selection.addRange(range);
+        
+        // Update content
+        if (editorRef.current) {
+          onContentChange(editorRef.current.innerHTML);
+        }
       }
     }
   };
@@ -63,15 +82,24 @@ export const EditorContent = ({
   const handlePaste = (e: React.ClipboardEvent) => {
     e.preventDefault();
     
-    // Obtém o texto puro da área de transferência
     const text = e.clipboardData.getData('text/plain');
+    const selection = window.getSelection();
+    const range = selection?.getRangeAt(0);
     
-    // Insere o texto mantendo a formatação básica
-    document.execCommand('insertText', false, text);
-    
-    // Atualiza o conteúdo após a colagem
-    if (editorRef.current) {
-      onContentChange(editorRef.current.innerHTML);
+    if (selection && range) {
+      range.deleteContents();
+      const textNode = document.createTextNode(text);
+      range.insertNode(textNode);
+      
+      // Move cursor to end of pasted text
+      range.setStartAfter(textNode);
+      range.setEndAfter(textNode);
+      selection.removeAllRanges();
+      selection.addRange(range);
+      
+      if (editorRef.current) {
+        onContentChange(editorRef.current.innerHTML);
+      }
     }
   };
 
