@@ -83,6 +83,81 @@ const FloatingEditor = ({ isOpen, onClose }: FloatingEditorProps) => {
     }
   };
 
+  const handleFormatText = (format: string) => {
+    const textarea = document.querySelector('textarea');
+    if (!textarea) return;
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = content.substring(start, end);
+    
+    let formattedText = '';
+    switch (format) {
+      case 'bold':
+        formattedText = `**${selectedText}**`;
+        break;
+      case 'italic':
+        formattedText = `*${selectedText}*`;
+        break;
+      case 'underline':
+        formattedText = `_${selectedText}_`;
+        break;
+      default:
+        return;
+    }
+
+    const newContent = content.substring(0, start) + formattedText + content.substring(end);
+    setContent(newContent);
+  };
+
+  const handleAlignText = (alignment: string) => {
+    // Get the current line
+    const textarea = document.querySelector('textarea');
+    if (!textarea) return;
+
+    const start = textarea.selectionStart;
+    const textBeforeCursor = content.substring(0, start);
+    const textAfterCursor = content.substring(start);
+    
+    // Find the start of the current line
+    const lastNewLine = textBeforeCursor.lastIndexOf('\n');
+    const lineStart = lastNewLine === -1 ? 0 : lastNewLine + 1;
+    
+    // Find the end of the current line
+    const nextNewLine = textAfterCursor.indexOf('\n');
+    const lineEnd = nextNewLine === -1 ? content.length : start + nextNewLine;
+    
+    // Get the current line content
+    const currentLine = content.substring(lineStart, lineEnd);
+    
+    // Add alignment marker
+    let alignedLine = '';
+    switch (alignment) {
+      case 'left':
+        alignedLine = currentLine.replace(/^(\s*)(.*?)(\s*)$/, '$2');
+        break;
+      case 'center':
+        alignedLine = currentLine.replace(/^(\s*)(.*?)(\s*)$/, '    $2    ');
+        break;
+      case 'right':
+        alignedLine = currentLine.replace(/^(\s*)(.*?)(\s*)$/, '        $2');
+        break;
+      default:
+        return;
+    }
+    
+    // Replace the line in the content
+    const newContent = content.substring(0, lineStart) + alignedLine + content.substring(lineEnd);
+    setContent(newContent);
+  };
+
+  const handleSave = () => {
+    toast({
+      title: "Sucesso",
+      description: "Conteúdo salvo com sucesso!",
+    });
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -91,7 +166,11 @@ const FloatingEditor = ({ isOpen, onClose }: FloatingEditorProps) => {
         {/* Floating Toolbar */}
         <div className="fixed top-4 left-1/2 -translate-x-1/2 bg-chatgpt-secondary rounded-xl shadow-lg z-10">
           <div className="py-4">
-            <EditorToolbar />
+            <EditorToolbar 
+              onFormatText={handleFormatText}
+              onAlignText={handleAlignText}
+              onSave={handleSave}
+            />
           </div>
         </div>
 
@@ -108,7 +187,7 @@ const FloatingEditor = ({ isOpen, onClose }: FloatingEditorProps) => {
           <BottomTabs activeTab={activeTab} onTabChange={setActiveTab} />
         </div>
 
-        {/* Prompt Menu - Increased height and adjusted spacing */}
+        {/* Prompt Menu */}
         <div className="fixed bottom-4 left-1/2 -translate-x-1/2 w-[85%] max-w-3xl">
           <PromptMenu
             promptInput={promptInput}
