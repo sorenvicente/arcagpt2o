@@ -30,8 +30,8 @@ export const MainEditor = ({ onClose }: MainEditorProps) => {
         onContentChange={setContent}
       />
 
-      {/* Tabs - Positioned with minimal spacing from bottom */}
-      <div className="fixed bottom-[calc(1px)] left-1/2 -translate-x-1/2 bg-chatgpt-secondary rounded-xl shadow-lg">
+      {/* Tabs - Positioned just above the prompt input */}
+      <div className="fixed bottom-[calc(5rem+1px)] left-1/2 -translate-x-1/2 bg-chatgpt-secondary rounded-xl shadow-lg">
         <BottomTabs activeTab={activeTab} onTabChange={setActiveTab} />
       </div>
 
