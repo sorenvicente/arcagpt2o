@@ -7,6 +7,14 @@ interface EditorToolbarProps {
 }
 
 export const EditorToolbar = ({ onFormatText, onAlignText }: EditorToolbarProps) => {
+  const handleFormat = (command: string) => {
+    document.execCommand(command, false);
+  };
+
+  const handleAlign = (alignment: string) => {
+    document.execCommand('justify' + alignment.charAt(0).toUpperCase() + alignment.slice(1), false);
+  };
+
   return (
     <div className="flex items-center px-2 h-12">
       <select className="bg-transparent text-white border-none outline-none mr-4 rounded-lg">
@@ -18,7 +26,7 @@ export const EditorToolbar = ({ onFormatText, onAlignText }: EditorToolbarProps)
           variant="ghost" 
           size="icon" 
           className="h-8 w-8 text-gray-400 hover:text-white rounded-lg"
-          onClick={() => document.execCommand('undo')}
+          onClick={() => handleFormat('undo')}
         >
           <Undo className="h-4 w-4" />
         </Button>
@@ -26,7 +34,7 @@ export const EditorToolbar = ({ onFormatText, onAlignText }: EditorToolbarProps)
           variant="ghost" 
           size="icon" 
           className="h-8 w-8 text-gray-400 hover:text-white rounded-lg"
-          onClick={() => document.execCommand('redo')}
+          onClick={() => handleFormat('redo')}
         >
           <Redo className="h-4 w-4" />
         </Button>
@@ -37,7 +45,7 @@ export const EditorToolbar = ({ onFormatText, onAlignText }: EditorToolbarProps)
           variant="ghost" 
           size="icon" 
           className="h-8 w-8 text-gray-400 hover:text-white rounded-lg"
-          onClick={() => onFormatText('bold')}
+          onClick={() => handleFormat('bold')}
         >
           <Bold className="h-4 w-4" />
         </Button>
@@ -45,7 +53,7 @@ export const EditorToolbar = ({ onFormatText, onAlignText }: EditorToolbarProps)
           variant="ghost" 
           size="icon" 
           className="h-8 w-8 text-gray-400 hover:text-white rounded-lg"
-          onClick={() => onFormatText('italic')}
+          onClick={() => handleFormat('italic')}
         >
           <Italic className="h-4 w-4" />
         </Button>
@@ -53,7 +61,7 @@ export const EditorToolbar = ({ onFormatText, onAlignText }: EditorToolbarProps)
           variant="ghost" 
           size="icon" 
           className="h-8 w-8 text-gray-400 hover:text-white rounded-lg"
-          onClick={() => onFormatText('underline')}
+          onClick={() => handleFormat('underline')}
         >
           <Underline className="h-4 w-4" />
         </Button>
@@ -64,7 +72,7 @@ export const EditorToolbar = ({ onFormatText, onAlignText }: EditorToolbarProps)
           variant="ghost" 
           size="icon" 
           className="h-8 w-8 text-gray-400 hover:text-white rounded-lg"
-          onClick={() => onAlignText('left')}
+          onClick={() => handleAlign('left')}
         >
           <AlignLeft className="h-4 w-4" />
         </Button>
@@ -72,7 +80,7 @@ export const EditorToolbar = ({ onFormatText, onAlignText }: EditorToolbarProps)
           variant="ghost" 
           size="icon" 
           className="h-8 w-8 text-gray-400 hover:text-white rounded-lg"
-          onClick={() => onAlignText('center')}
+          onClick={() => handleAlign('center')}
         >
           <AlignCenter className="h-4 w-4" />
         </Button>
@@ -80,7 +88,7 @@ export const EditorToolbar = ({ onFormatText, onAlignText }: EditorToolbarProps)
           variant="ghost" 
           size="icon" 
           className="h-8 w-8 text-gray-400 hover:text-white rounded-lg"
-          onClick={() => onAlignText('right')}
+          onClick={() => handleAlign('right')}
         >
           <AlignRight className="h-4 w-4" />
         </Button>
