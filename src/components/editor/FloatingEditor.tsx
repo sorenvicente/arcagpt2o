@@ -46,6 +46,14 @@ const FloatingEditor = ({ isOpen, onClose }: FloatingEditorProps) => {
     setShowPromptMenu(false);
   };
 
+  const handleFormatText = (format: string) => {
+    document.execCommand(format, false);
+  };
+
+  const handleAlignText = (alignment: string) => {
+    document.execCommand('justify' + alignment.charAt(0).toUpperCase() + alignment.slice(1), false);
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -54,7 +62,10 @@ const FloatingEditor = ({ isOpen, onClose }: FloatingEditorProps) => {
         {/* Floating Toolbar */}
         <div className="fixed top-4 left-1/2 -translate-x-1/2 bg-chatgpt-secondary rounded-xl shadow-lg z-10">
           <div className="py-4">
-            <EditorToolbar />
+            <EditorToolbar 
+              onFormatText={handleFormatText}
+              onAlignText={handleAlignText}
+            />
           </div>
         </div>
 
@@ -66,12 +77,12 @@ const FloatingEditor = ({ isOpen, onClose }: FloatingEditorProps) => {
           onContentChange={setContent}
         />
 
-        {/* Bottom Tabs - Adjusted spacing */}
+        {/* Bottom Tabs */}
         <div className="fixed bottom-20 left-1/2 -translate-x-1/2 bg-chatgpt-secondary rounded-xl shadow-lg">
           <BottomTabs activeTab={activeTab} onTabChange={setActiveTab} />
         </div>
 
-        {/* Prompt Menu - Increased height and adjusted spacing */}
+        {/* Prompt Menu */}
         <div className="fixed bottom-4 left-1/2 -translate-x-1/2 w-[85%] max-w-3xl">
           <PromptMenu
             promptInput={promptInput}

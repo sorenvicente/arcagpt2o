@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useEffect } from 'react';
 
 interface EditorContentProps {
   title: string;
@@ -13,6 +13,20 @@ export const EditorContent = ({
   onTitleChange, 
   onContentChange 
 }: EditorContentProps) => {
+  const editorRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (editorRef.current) {
+      editorRef.current.innerHTML = content;
+    }
+  }, []);
+
+  const handleInput = () => {
+    if (editorRef.current) {
+      onContentChange(editorRef.current.innerHTML);
+    }
+  };
+
   return (
     <div className="flex-1 p-8 pt-20">
       <input
@@ -22,11 +36,12 @@ export const EditorContent = ({
         placeholder="Digite seu título aqui..."
         className="w-full bg-transparent text-white text-2xl font-medium placeholder-gray-500 outline-none mb-4 rounded-lg"
       />
-      <textarea
-        value={content}
-        onChange={(e) => onContentChange(e.target.value)}
+      <div
+        ref={editorRef}
+        contentEditable
+        onInput={handleInput}
         placeholder="Digite seu texto aqui..."
-        className="w-full h-[calc(100%-12rem)] bg-transparent text-white placeholder-gray-500 outline-none resize-none rounded-lg"
+        className="w-full h-[calc(100%-12rem)] bg-transparent text-white placeholder-gray-500 outline-none rounded-lg overflow-auto"
       />
     </div>
   );
