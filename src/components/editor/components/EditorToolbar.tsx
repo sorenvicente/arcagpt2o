@@ -7,7 +7,7 @@ export const EditorToolbar = () => {
 
   return (
     <div className="flex items-center px-2 h-10">
-      <div className="flex items-center gap-1 px-1 bg-[#1A1F2C]/80 rounded-xl py-1">
+      <div className="flex items-center gap-1 px-1 bg-[#403E43]/80 rounded-xl py-1">
         <Button 
           variant="ghost" 
           size="icon" 
@@ -34,7 +34,7 @@ export const EditorToolbar = () => {
         </Button>
       </div>
       
-      <div className="flex items-center gap-1 px-1 mx-1 bg-[#1A1F2C]/80 rounded-xl py-1">
+      <div className="flex items-center gap-1 px-1 mx-1 bg-[#403E43]/80 rounded-xl py-1">
         <Button 
           variant="ghost" 
           size="icon" 
@@ -65,7 +65,7 @@ export const EditorToolbar = () => {
         <Button 
           variant="ghost"
           size="sm" 
-          className="h-7 bg-[#1A1F2C]/80 hover:bg-[#1A1F2C] text-gray-300 hover:text-white rounded-xl text-xs px-4"
+          className="h-7 bg-[#403E43]/80 hover:bg-[#403E43] text-gray-300 hover:text-white rounded-xl text-xs px-4"
         >
           Salvar
         </Button>
