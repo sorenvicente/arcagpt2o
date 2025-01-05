@@ -1,9 +1,10 @@
 import { Key, Settings, MessageSquare, Store, Edit } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 
 export function AdminMenuItems() {
   const navigate = useNavigate();
+  const location = useLocation();
   
   return (
     <>
@@ -16,7 +17,9 @@ export function AdminMenuItems() {
       </DropdownMenuItem>
       <DropdownMenuItem 
         onClick={() => navigate("/admin")}
-        className="px-3 py-2 text-gray-200 hover:bg-chatgpt-hover hover:text-white focus:bg-chatgpt-hover cursor-pointer rounded-lg mx-1"
+        className={`px-3 py-2 text-gray-200 hover:bg-chatgpt-hover hover:text-white focus:bg-chatgpt-hover cursor-pointer rounded-lg mx-1 ${
+          location.pathname === "/admin" ? "bg-chatgpt-hover" : ""
+        }`}
       >
         <Settings className="mr-2 h-4 w-4" />
         <span>Gerenciar Prompts</span>
@@ -37,7 +40,9 @@ export function AdminMenuItems() {
       </DropdownMenuItem>
       <DropdownMenuItem 
         onClick={() => navigate("/admin/settings")}
-        className="px-3 py-2 text-gray-200 hover:bg-chatgpt-hover hover:text-white focus:bg-chatgpt-hover cursor-pointer rounded-lg mx-1"
+        className={`px-3 py-2 text-gray-200 hover:bg-chatgpt-hover hover:text-white focus:bg-chatgpt-hover cursor-pointer rounded-lg mx-1 ${
+          location.pathname === "/admin/settings" ? "bg-chatgpt-hover" : ""
+        }`}
       >
         <Settings className="mr-2 h-4 w-4" />
         <span>Configurações</span>
