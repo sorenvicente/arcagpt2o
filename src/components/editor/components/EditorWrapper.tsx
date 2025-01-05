@@ -5,7 +5,14 @@ import { BottomTabs } from './BottomTabs';
 import { PromptMenu } from './PromptMenu';
 import { usePrompts } from '../hooks/usePrompts';
 
-export const EditorWrapper = () => {
+interface EditorWrapperProps {
+  onClose: () => void;
+}
+
+export const EditorWrapper = ({ onClose }: EditorWrapperProps) => {
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+  const [activeTab, setActiveTab] = useState('eixos');
   const [promptInput, setPromptInput] = useState('');
   const [showPromptMenu, setShowPromptMenu] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -54,7 +61,12 @@ export const EditorWrapper = () => {
       />
       
       <div className="flex-1 overflow-auto">
-        <EditorContent />
+        <EditorContent 
+          title={title}
+          content={content}
+          onTitleChange={setTitle}
+          onContentChange={setContent}
+        />
       </div>
 
       <div className="p-4">
@@ -69,7 +81,10 @@ export const EditorWrapper = () => {
         />
       </div>
 
-      <BottomTabs />
+      <BottomTabs 
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+      />
     </div>
   );
 };
