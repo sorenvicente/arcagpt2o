@@ -15,7 +15,33 @@ export const EditorWrapper = ({ isOpen, onClose }: EditorWrapperProps) => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [activeTab, setActiveTab] = useState('chat');
+  const [promptInput, setPromptInput] = useState('');
+  const [showPromptMenu, setShowPromptMenu] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
   const { prompts } = usePrompts();
+
+  const handlePromptInputChange = (value: string) => {
+    setPromptInput(value);
+    setShowPromptMenu(value.startsWith('//'));
+  };
+
+  const handlePromptSelect = (prompt: any) => {
+    setPromptInput(prompt.content);
+    setShowPromptMenu(false);
+  };
+
+  const handleGenerateText = async () => {
+    setIsGenerating(true);
+    try {
+      // Here you would implement the actual text generation logic
+      // For now, we'll just simulate a delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      setContent(prev => prev + '\n' + promptInput);
+      setPromptInput('');
+    } finally {
+      setIsGenerating(false);
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -33,7 +59,15 @@ export const EditorWrapper = ({ isOpen, onClose }: EditorWrapperProps) => {
           <BottomTabs activeTab={activeTab} onTabChange={setActiveTab} />
         </div>
         <div className="fixed bottom-4 left-1/2 -translate-x-1/2 w-[85%] max-w-3xl">
-          <PromptMenu prompts={prompts} />
+          <PromptMenu 
+            prompts={prompts}
+            promptInput={promptInput}
+            showPromptMenu={showPromptMenu}
+            onPromptInputChange={handlePromptInputChange}
+            onPromptSelect={handlePromptSelect}
+            onGenerateText={handleGenerateText}
+            isGenerating={isGenerating}
+          />
         </div>
         <button 
           onClick={onClose}
