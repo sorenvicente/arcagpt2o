@@ -16,8 +16,8 @@ export const MainEditor = ({ onClose }: MainEditorProps) => {
   return (
     <div className="bg-chatgpt-main w-full h-full flex flex-col">
       {/* Floating Toolbar */}
-      <div className="fixed top-4 left-1/2 -translate-x-1/2 bg-chatgpt-secondary rounded-xl shadow-lg z-10">
-        <div className="py-2">
+      <div className="fixed top-4 left-1/2 -translate-x-1/2 bg-chatgpt-secondary rounded-xl shadow-md z-10">
+        <div className="py-1">
           <EditorToolbar />
         </div>
       </div>
