@@ -1,5 +1,7 @@
-import { useState, useRef, useEffect } from "react";
-import { ArrowUp, Loader2, Square } from "lucide-react";
+import { useState, useEffect } from "react";
+import TextArea from "./chat-input/TextArea";
+import SendButton from "./chat-input/SendButton";
+import { useTextArea } from "@/hooks/useTextArea";
 
 interface ChatInputProps {
   onSend: (message: string) => void;
@@ -9,27 +11,14 @@ interface ChatInputProps {
 
 const ChatInput = ({ onSend, isLoading = false, onStop }: ChatInputProps) => {
   const [message, setMessage] = useState("");
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-
-  const adjustTextareaHeight = () => {
-    const textarea = textareaRef.current;
-    if (textarea) {
-      textarea.style.height = "0px";
-      const scrollHeight = textarea.scrollHeight;
-      textarea.style.height = `${scrollHeight}px`;
-    }
-  };
+  const { textareaRef, adjustTextareaHeight } = useTextArea(message);
 
   useEffect(() => {
-    adjustTextareaHeight();
-  }, [message]);
-
-  useEffect(() => {
-    // Verificar localStorage ao montar
+    // Check localStorage on mount
     const savedContent = localStorage.getItem('editor-content');
     if (savedContent) {
       setMessage(savedContent);
-      localStorage.removeItem('editor-content'); // Remove o conteúdo após carregar
+      localStorage.removeItem('editor-content');
       
       if (textareaRef.current) {
         textareaRef.current.focus();
@@ -38,7 +27,7 @@ const ChatInput = ({ onSend, isLoading = false, onStop }: ChatInputProps) => {
       }
     }
 
-    // Adicionar listener para o evento customizado
+    // Add listener for custom event
     const handleEditorContentSaved = (event: CustomEvent<{ content: string }>) => {
       setMessage(event.detail.content);
       if (textareaRef.current) {
@@ -53,15 +42,15 @@ const ChatInput = ({ onSend, isLoading = false, onStop }: ChatInputProps) => {
     return () => {
       window.removeEventListener('editor-content-saved', handleEditorContentSaved as EventListener);
     };
-  }, []);
+  }, [adjustTextareaHeight]);
 
   const handleSubmit = () => {
     if (message.trim() && !isLoading) {
       const trimmedMessage = message.trim();
       onSend(trimmedMessage);
-      setMessage(""); // Limpa o textarea após enviar
+      setMessage("");
       if (textareaRef.current) {
-        textareaRef.current.style.height = "auto"; // Reset altura do textarea
+        textareaRef.current.style.height = "auto";
       }
     }
   };
@@ -76,48 +65,18 @@ const ChatInput = ({ onSend, isLoading = false, onStop }: ChatInputProps) => {
   return (
     <div className="relative flex w-full flex-col items-center">
       <div className="relative w-full">
-        <textarea
+        <TextArea
           ref={textareaRef}
-          rows={1}
           value={message}
-          onChange={(e) => setMessage(e.target.value)}
+          onChange={setMessage}
           onKeyDown={handleKeyDown}
-          placeholder="Digite sua mensagem..."
-          className="w-full resize-none rounded-xl px-4 py-4 pr-16
-            bg-chatgpt-input text-white
-            placeholder:text-gray-400"
-          style={{ 
-            maxHeight: "50vh",
-            overflowY: "auto",
-            paddingBottom: "40px" // Espaço extra para o botão
-          }}
           disabled={isLoading}
         />
-        {isLoading ? (
-          <button 
-            onClick={onStop}
-            className="absolute right-4 bottom-3 p-2
-              bg-red-600 rounded-full 
-              hover:bg-red-700
-              transition-colors duration-200
-              shadow-lg"
-            title="Parar geração"
-          >
-            <Square className="h-5 w-5 text-white" />
-          </button>
-        ) : (
-          <button 
-            onClick={handleSubmit}
-            disabled={isLoading || !message.trim()}
-            className="absolute right-4 bottom-3 p-2
-              bg-gray-700 rounded-full 
-              hover:bg-gray-600 
-              disabled:opacity-50 disabled:cursor-not-allowed
-              shadow-lg"
-          >
-            <ArrowUp className="h-5 w-5 text-white" />
-          </button>
-        )}
+        <SendButton
+          onClick={isLoading ? onStop! : handleSubmit}
+          isLoading={isLoading}
+          disabled={isLoading ? false : !message.trim()}
+        />
       </div>
     </div>
   );

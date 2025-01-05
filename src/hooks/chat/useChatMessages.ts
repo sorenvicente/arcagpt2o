@@ -59,7 +59,7 @@ export const useChatMessages = (
           headers: {
             Authorization: `Bearer ${session.access_token}`
           },
-          signal: abortController.signal
+          abortSignal: abortController.signal
         });
 
         if (error) {
