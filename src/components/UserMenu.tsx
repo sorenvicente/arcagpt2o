@@ -14,6 +14,14 @@ export function UserMenu() {
     queryKey: ["profile", user?.id],
     queryFn: async () => {
       if (!user?.id) return null;
+      
+      // Get current session
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        throw new Error('No active session');
+      }
+
       const { data, error } = await supabase
         .from("profiles")
         .select("*")
@@ -24,6 +32,8 @@ export function UserMenu() {
       return data;
     },
     enabled: !!user?.id,
+    retry: 1,
+    staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
   const isAdmin = profile?.role === "admin";
