@@ -45,12 +45,12 @@ export const PromptMenu = ({
   });
 
   return (
-    <div className="relative w-full max-w-2xl mx-auto">
+    <div className="relative w-full max-w-xl mx-auto">
       <Input
         value={promptInput}
         onChange={(e) => onPromptInputChange(e.target.value)}
         placeholder="Digite // para acionar agentes..."
-        className="w-full bg-chatgpt-main text-white border-chatgpt-border rounded-xl px-4 py-3 placeholder-gray-400 text-base font-normal shadow-lg"
+        className="w-full bg-chatgpt-main text-white border-chatgpt-border rounded-xl px-4 py-4 placeholder-gray-400 text-base font-normal shadow-lg"
       />
       
       {showPromptMenu && (
