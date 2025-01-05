@@ -14,11 +14,40 @@ export const ContentEditableArea = ({ content, onContentChange }: ContentEditabl
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      
+      const selection = window.getSelection();
+      if (!selection?.rangeCount) return;
+      
+      const range = selection.getRangeAt(0);
+      const br = document.createElement('br');
+      
+      range.deleteContents();
+      range.insertNode(br);
+      
+      // Create and insert a text node after the br
+      const textNode = document.createTextNode('\u00a0');
+      range.setStartAfter(br);
+      range.insertNode(textNode);
+      
+      // Position cursor after the space
+      range.setStartAfter(textNode);
+      range.setEndAfter(textNode);
+      selection.removeAllRanges();
+      selection.addRange(range);
+      
+      handleInput();
+    }
+  };
+
   return (
     <div
       ref={editorRef}
       contentEditable="true"
       onInput={handleInput}
+      onKeyDown={handleKeyDown}
       suppressContentEditableWarning={true}
       className="w-full min-h-[calc(100vh-200px)] max-w-[800px] mx-auto 
         bg-transparent text-white outline-none rounded-lg overflow-y-auto 
