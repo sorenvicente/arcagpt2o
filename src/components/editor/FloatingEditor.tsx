@@ -51,7 +51,7 @@ const FloatingEditor = ({ isOpen, onClose }: FloatingEditorProps) => {
   return (
     <div className="fixed inset-0 bg-chatgpt-main/90 z-50 flex items-center justify-center">
       <div className="bg-chatgpt-main w-full h-full flex flex-col">
-        {/* Floating Toolbar - Increased thickness */}
+        {/* Floating Toolbar */}
         <div className="fixed top-4 left-1/2 -translate-x-1/2 bg-chatgpt-secondary rounded-xl shadow-lg z-10">
           <div className="py-4">
             <EditorToolbar />
@@ -67,12 +67,12 @@ const FloatingEditor = ({ isOpen, onClose }: FloatingEditorProps) => {
         />
 
         {/* Bottom Tabs - Adjusted spacing */}
-        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 bg-chatgpt-secondary rounded-xl shadow-lg">
+        <div className="fixed bottom-20 left-1/2 -translate-x-1/2 bg-chatgpt-secondary rounded-xl shadow-lg">
           <BottomTabs activeTab={activeTab} onTabChange={setActiveTab} />
         </div>
 
-        {/* Prompt Menu - Increased height and spacing */}
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[85%] max-w-3xl">
+        {/* Prompt Menu - Increased height and adjusted spacing */}
+        <div className="fixed bottom-4 left-1/2 -translate-x-1/2 w-[85%] max-w-3xl">
           <PromptMenu
             promptInput={promptInput}
             showPromptMenu={showPromptMenu}
