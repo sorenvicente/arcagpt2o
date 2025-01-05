@@ -54,7 +54,7 @@ export const PromptMenu = ({
       />
       
       {showPromptMenu && (
-        <div className="absolute bottom-full mb-0.5 w-full bg-chatgpt-secondary rounded-xl shadow-lg border border-chatgpt-border">
+        <div className="absolute bottom-full mb-0.5 w-full bg-[#1A1F2C] rounded-xl shadow-lg">
           <div className="p-2">
             <div className="flex items-center justify-between text-gray-400 text-sm mb-1">
               <span>Prompts {activeTab}</span>
@@ -65,7 +65,7 @@ export const PromptMenu = ({
                 <button
                   key={prompt.id}
                   onClick={() => onPromptSelect(prompt)}
-                  className="w-full text-left px-3 py-2 text-white hover:bg-chatgpt-hover hover:shadow-lg transition-all duration-200 rounded-lg"
+                  className="w-full text-left px-3 py-2 text-white hover:bg-chatgpt-hover transition-all duration-200 rounded-lg"
                 >
                   <div className="font-medium">{prompt.name}</div>
                   {prompt.description && (
