@@ -65,7 +65,7 @@ export const PromptMenu = ({
                 <button
                   key={prompt.id}
                   onClick={() => onPromptSelect(prompt)}
-                  className="w-full text-left px-3 py-2 text-white hover:bg-chatgpt-hover transition-all duration-200 rounded-lg"
+                  className="w-full text-left px-3 py-2 text-white hover:bg-white/10 transition-all duration-200 rounded-lg"
                 >
                   <div className="font-medium">{prompt.name}</div>
                   {prompt.description && (
