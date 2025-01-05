@@ -1,5 +1,5 @@
-import { Book, Brain, GraduationCap, School, Target } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { Book, Brain, GraduationCap, School, Target, Settings } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
 import ActionButton from "./ActionButton";
 import { usePromptLoader } from "./usePromptLoader";
 
@@ -28,8 +28,16 @@ const ActionButtons = ({ onSelectPrompt, activeCategory }: ActionButtonsProps) =
     
     if (selectedPrompt) {
       console.log('Prompt encontrado:', selectedPrompt);
-      const systemMessage = `Você acionou a assistente de ${category}`;
-      onSelectPrompt(systemMessage, category);
+      // Se for a categoria "personalizar_chatgpt", vamos usar o prompt específico dela
+      if (category === "personalizar_chatgpt") {
+        const systemMessage = selectedPrompt.prompt;
+        onSelectPrompt(systemMessage, category);
+        console.log('Prompt de personalização selecionado:', systemMessage);
+      } else {
+        const systemMessage = `Você acionou a assistente de ${category}`;
+        onSelectPrompt(systemMessage, category);
+        console.log('Prompt selecionado:', selectedPrompt.prompt, 'Categoria:', category);
+      }
     } else {
       console.log('Nenhum prompt encontrado para categoria:', category);
       console.log('Categorias disponíveis:', prompts.map(p => p.category));
@@ -47,6 +55,7 @@ const ActionButtons = ({ onSelectPrompt, activeCategory }: ActionButtonsProps) =
     { icon: <School className="h-4 w-4 text-green-400" />, label: "Mentoria", category: "mentoria" },
     { icon: <GraduationCap className="h-4 w-4 text-yellow-400" />, label: "Curso", category: "curso" },
     { icon: <Book className="h-4 w-4 text-red-400" />, label: "Conteúdo", category: "conteudo" },
+    { icon: <Settings className="h-4 w-4 text-gray-400" />, label: "Personalizar ChatGPT", category: "personalizar_chatgpt" },
   ];
 
   return (
