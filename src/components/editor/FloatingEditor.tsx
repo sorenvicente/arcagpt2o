@@ -12,8 +12,12 @@ const FloatingEditor = ({ isOpen, onClose }: FloatingEditorProps) => {
   const [activeTab, setActiveTab] = useState('eixos');
 
   const handlePromptSelect = (prompt: any) => {
-    setContent(prompt.prompt);
-    console.log('Prompt selecionado:', prompt.prompt);
+    setContent((prevContent) => {
+      // Se já existe conteúdo, adiciona uma quebra de linha antes do novo prompt
+      const separator = prevContent ? '\n' : '';
+      return prevContent + separator + prompt.prompt;
+    });
+    console.log('Prompt adicionado:', prompt.prompt);
   };
 
   const handleTabChange = (tab: string) => {
