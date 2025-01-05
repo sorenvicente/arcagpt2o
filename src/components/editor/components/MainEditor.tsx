@@ -31,7 +31,7 @@ export const MainEditor = ({ onClose }: MainEditorProps) => {
       />
 
       {/* Tabs - Positioned above the prompt input */}
-      <div className="fixed bottom-[84px] left-1/2 -translate-x-1/2 bg-chatgpt-secondary rounded-xl shadow-lg">
+      <div className="fixed bottom-[120px] left-1/2 -translate-x-1/2 bg-chatgpt-secondary rounded-xl shadow-lg">
         <BottomTabs activeTab={activeTab} onTabChange={setActiveTab} />
       </div>
 
