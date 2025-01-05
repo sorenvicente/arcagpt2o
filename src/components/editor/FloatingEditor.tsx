@@ -25,12 +25,30 @@ const FloatingEditor = ({ isOpen, onClose }: FloatingEditorProps) => {
     }
   }, [showPromptMenu]);
 
-  if (!isOpen) return null;
-
   const handlePromptInput = (value: string) => {
     setPromptInput(value);
     setShowPromptMenu(value.includes('//'));
   };
+
+  const handlePromptSelect = (prompt: any) => {
+    setContent((prevContent) => {
+      // Get cursor position or end of content
+      const cursorPosition = document.activeElement instanceof HTMLTextAreaElement 
+        ? document.activeElement.selectionStart 
+        : prevContent.length;
+
+      // Insert prompt at cursor position or end
+      const newContent = prevContent.slice(0, cursorPosition) + 
+        prompt.prompt + 
+        prevContent.slice(cursorPosition);
+
+      return newContent;
+    });
+    setPromptInput('');
+    setShowPromptMenu(false);
+  };
+
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-chatgpt-main/90 z-50 flex items-center justify-center">
@@ -83,6 +101,7 @@ const FloatingEditor = ({ isOpen, onClose }: FloatingEditorProps) => {
                   {prompts.map((prompt) => (
                     <button
                       key={prompt.id}
+                      onClick={() => handlePromptSelect(prompt)}
                       className="w-full text-left px-3 py-2 text-white hover:bg-chatgpt-hover rounded-lg transition-colors"
                     >
                       {prompt.name}
