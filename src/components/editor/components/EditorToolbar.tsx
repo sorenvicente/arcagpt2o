@@ -1,148 +1,100 @@
 import { 
-  Undo, 
-  Redo, 
   Bold, 
   Italic, 
   Underline, 
   AlignLeft, 
   AlignCenter, 
-  AlignRight, 
-  Link as LinkIcon, 
-  FileInput 
+  AlignRight,
+  Save,
+  Circle
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface EditorToolbarProps {
-  onFormatText?: (format: string) => void;
-  onAlignText?: (alignment: string) => void;
-  onUndo?: () => void;
-  onRedo?: () => void;
-  onAddLink?: () => void;
-  onAddFile?: () => void;
-  onSave?: () => void;
+  onFormatText: (format: string) => void;
+  onAlignText: (alignment: string) => void;
+  onSave: () => void;
 }
 
-export const EditorToolbar = ({
-  onFormatText = () => {},
-  onAlignText = () => {},
-  onUndo = () => {},
-  onRedo = () => {},
-  onAddLink = () => {},
-  onAddFile = () => {},
-  onSave = () => {},
-}: EditorToolbarProps) => {
+export const EditorToolbar = ({ onFormatText, onAlignText, onSave }: EditorToolbarProps) => {
+  const currentColor = '#9b87f5'; // This will be the default color
+
   return (
-    <div className="flex items-center px-2 h-10 bg-chatgpt-secondary/95 backdrop-blur-sm">
-      <select 
-        className="bg-transparent text-white border-none outline-none mr-4 text-sm rounded-lg"
-        defaultValue="paragraph"
-      >
-        <option value="paragraph">Parágrafo</option>
-        <option value="h1">Título 1</option>
-        <option value="h2">Título 2</option>
-        <option value="h3">Título 3</option>
-      </select>
-      
-      <div className="flex items-center gap-0.5 px-2 border-r border-chatgpt-border">
+    <div className="flex items-center gap-2 px-4">
+      <div className="flex items-center gap-1 border-r border-chatgpt-border pr-2">
         <Button 
           variant="ghost" 
-          size="icon" 
-          className="h-7 w-7 text-gray-400 hover:text-white rounded-lg"
-          onClick={() => onUndo()}
-        >
-          <Undo className="h-3.5 w-3.5" />
-        </Button>
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          className="h-7 w-7 text-gray-400 hover:text-white rounded-lg"
-          onClick={() => onRedo()}
-        >
-          <Redo className="h-3.5 w-3.5" />
-        </Button>
-      </div>
-      
-      <div className="flex items-center gap-0.5 px-2">
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          className="h-7 w-7 text-gray-400 hover:text-white rounded-lg"
+          size="sm" 
           onClick={() => onFormatText('bold')}
+          className="h-8 w-8 p-0"
         >
-          <Bold className="h-3.5 w-3.5" />
+          <Bold className="h-4 w-4" />
         </Button>
         <Button 
           variant="ghost" 
-          size="icon" 
-          className="h-7 w-7 text-gray-400 hover:text-white rounded-lg"
+          size="sm" 
           onClick={() => onFormatText('italic')}
+          className="h-8 w-8 p-0"
         >
-          <Italic className="h-3.5 w-3.5" />
+          <Italic className="h-4 w-4" />
         </Button>
         <Button 
           variant="ghost" 
-          size="icon" 
-          className="h-7 w-7 text-gray-400 hover:text-white rounded-lg"
+          size="sm" 
           onClick={() => onFormatText('underline')}
+          className="h-8 w-8 p-0"
         >
-          <Underline className="h-3.5 w-3.5" />
-        </Button>
-      </div>
-      
-      <div className="flex items-center gap-0.5 px-2 border-l border-r border-chatgpt-border">
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          className="h-7 w-7 text-gray-400 hover:text-white rounded-lg"
-          onClick={() => onAlignText('left')}
-        >
-          <AlignLeft className="h-3.5 w-3.5" />
-        </Button>
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          className="h-7 w-7 text-gray-400 hover:text-white rounded-lg"
-          onClick={() => onAlignText('center')}
-        >
-          <AlignCenter className="h-3.5 w-3.5" />
-        </Button>
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          className="h-7 w-7 text-gray-400 hover:text-white rounded-lg"
-          onClick={() => onAlignText('right')}
-        >
-          <AlignRight className="h-3.5 w-3.5" />
-        </Button>
-      </div>
-      
-      <div className="flex items-center gap-0.5 px-2">
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          className="h-7 w-7 text-gray-400 hover:text-white rounded-lg"
-          onClick={onAddLink}
-        >
-          <LinkIcon className="h-3.5 w-3.5" />
-        </Button>
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          className="h-7 w-7 text-gray-400 hover:text-white rounded-lg"
-          onClick={onAddFile}
-        >
-          <FileInput className="h-3.5 w-3.5" />
+          <Underline className="h-4 w-4" />
         </Button>
       </div>
 
-      <div className="ml-auto">
+      <div className="flex items-center gap-1 border-r border-chatgpt-border pr-2">
         <Button 
-          variant="secondary" 
+          variant="ghost" 
+          size="sm" 
+          onClick={() => onAlignText('left')}
+          className="h-8 w-8 p-0"
+        >
+          <AlignLeft className="h-4 w-4" />
+        </Button>
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          onClick={() => onAlignText('center')}
+          className="h-8 w-8 p-0"
+        >
+          <AlignCenter className="h-4 w-4" />
+        </Button>
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          onClick={() => onAlignText('right')}
+          className="h-8 w-8 p-0"
+        >
+          <AlignRight className="h-4 w-4" />
+        </Button>
+      </div>
+
+      <div className="flex items-center gap-2">
+        <div className="relative flex items-center">
+          <Circle 
+            className="h-6 w-6" 
+            style={{ color: currentColor }}
+            fill={currentColor}
+          />
+          <div 
+            className="absolute -right-1 -top-1 h-3 w-3 rounded-full"
+            style={{ backgroundColor: currentColor }}
+          />
+        </div>
+        <Button 
+          variant="ghost" 
           size="sm" 
           onClick={onSave}
-          className="h-7 text-sm font-medium rounded-lg px-3"
+          className="h-8 px-3"
         >
-          Salvar
+          <Save className="mr-2 h-4 w-4" />
+          Save
         </Button>
       </div>
     </div>
