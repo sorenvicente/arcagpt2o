@@ -17,6 +17,11 @@ export const EditorToolbar = ({ content, onClose }: EditorToolbarProps) => {
     const plainText = content.replace(/<[^>]*>/g, '');
     localStorage.setItem('editor-content', plainText);
     
+    // Dispatch custom event
+    window.dispatchEvent(new CustomEvent('editor-content-saved', {
+      detail: { content: plainText }
+    }));
+    
     toast({
       title: "Conteúdo salvo",
       description: "O texto foi transferido para a área de chat",

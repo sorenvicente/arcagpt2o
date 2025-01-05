@@ -24,6 +24,7 @@ const ChatInput = ({ onSend, isLoading = false }: ChatInputProps) => {
   }, [message]);
 
   useEffect(() => {
+    // Verificar localStorage ao montar
     const savedContent = localStorage.getItem('editor-content');
     if (savedContent) {
       setMessage(savedContent);
@@ -35,6 +36,22 @@ const ChatInput = ({ onSend, isLoading = false }: ChatInputProps) => {
         adjustTextareaHeight();
       }
     }
+
+    // Adicionar listener para o evento customizado
+    const handleEditorContentSaved = (event: CustomEvent<{ content: string }>) => {
+      setMessage(event.detail.content);
+      if (textareaRef.current) {
+        textareaRef.current.focus();
+        textareaRef.current.style.height = "200px";
+        adjustTextareaHeight();
+      }
+    };
+
+    window.addEventListener('editor-content-saved', handleEditorContentSaved as EventListener);
+
+    return () => {
+      window.removeEventListener('editor-content-saved', handleEditorContentSaved as EventListener);
+    };
   }, []);
 
   const handleSubmit = () => {
