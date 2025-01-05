@@ -51,7 +51,24 @@ export const useEditableContent = (
   const handlePaste = (e: React.ClipboardEvent) => {
     e.preventDefault();
     const text = e.clipboardData.getData('text/plain');
-    document.execCommand('insertText', false, text);
+    
+    // Pega a seleção atual
+    const selection = window.getSelection();
+    if (!selection || !selection.rangeCount) return;
+    
+    const range = selection.getRangeAt(0);
+    
+    // Insere o texto na posição atual do cursor
+    const textNode = document.createTextNode(text);
+    range.deleteContents();
+    range.insertNode(textNode);
+    
+    // Move o cursor para o final do texto colado
+    range.setStartAfter(textNode);
+    range.setEndAfter(textNode);
+    selection.removeAllRanges();
+    selection.addRange(range);
+    
     handleInput();
   };
 
