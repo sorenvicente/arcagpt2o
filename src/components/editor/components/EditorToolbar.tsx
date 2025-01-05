@@ -13,8 +13,9 @@ export const EditorToolbar = ({ content, onClose }: EditorToolbarProps) => {
   const { toast } = useToast();
 
   const handleSave = () => {
-    // Armazena o conteúdo no localStorage temporariamente
-    localStorage.setItem('editor-content', content);
+    // Remove any HTML tags from the content before saving
+    const plainText = content.replace(/<[^>]*>/g, '');
+    localStorage.setItem('editor-content', plainText);
     
     toast({
       title: "Conteúdo salvo",
