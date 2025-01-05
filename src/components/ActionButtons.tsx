@@ -99,9 +99,16 @@ const ActionButtons = ({ onSelectPrompt, activeCategory }: ActionButtonsProps) =
     );
     
     if (selectedPrompt) {
-      const systemMessage = `Você acionou a assistente de ${category}`;
-      onSelectPrompt(systemMessage, category);
-      console.log('Prompt selecionado:', selectedPrompt.prompt, 'Categoria:', category);
+      // Se for a categoria "personalizar_chatgpt", vamos usar o prompt específico dela
+      if (category === "personalizar_chatgpt") {
+        const systemMessage = selectedPrompt.prompt;
+        onSelectPrompt(systemMessage, category);
+        console.log('Prompt de personalização selecionado:', systemMessage);
+      } else {
+        const systemMessage = `Você acionou a assistente de ${category}`;
+        onSelectPrompt(systemMessage, category);
+        console.log('Prompt selecionado:', selectedPrompt.prompt, 'Categoria:', category);
+      }
     } else {
       console.log('Nenhum prompt encontrado para categoria:', category);
       toast({
