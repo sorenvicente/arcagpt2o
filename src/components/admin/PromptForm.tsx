@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -13,6 +13,22 @@ export function PromptForm() {
   const [prompt, setPrompt] = useState("");
   const [category, setCategory] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [existingCategories, setExistingCategories] = useState<string[]>([]);
+
+  useEffect(() => {
+    const loadExistingCategories = async () => {
+      const { data, error } = await supabase
+        .from('prompt_blocks')
+        .select('category');
+      
+      if (!error && data) {
+        const categories = data.map(item => item.category);
+        setExistingCategories(categories);
+      }
+    };
+
+    loadExistingCategories();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,6 +38,17 @@ export function PromptForm() {
       toast({
         title: "Erro",
         description: "Por favor, preencha todos os campos.",
+        variant: "destructive",
+      });
+      setIsSubmitting(false);
+      return;
+    }
+
+    // Check if trying to create a second "Personalizar ChatGPT" prompt
+    if (category === "personalizar_chatgpt" && existingCategories.includes("personalizar_chatgpt")) {
+      toast({
+        title: "Erro",
+        description: "Já existe um prompt de Personalização do ChatGPT. Você pode editá-lo, mas não criar outro.",
         variant: "destructive",
       });
       setIsSubmitting(false);
@@ -97,7 +124,11 @@ export function PromptForm() {
         />
       </div>
       
-      <CategorySelect value={category} onValueChange={setCategory} />
+      <CategorySelect 
+        value={category} 
+        onValueChange={setCategory} 
+        existingCategories={existingCategories}
+      />
 
       <Button 
         type="submit" 

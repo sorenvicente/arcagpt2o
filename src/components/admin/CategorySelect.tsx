@@ -9,16 +9,26 @@ import {
 interface CategorySelectProps {
   value: string;
   onValueChange: (value: string) => void;
+  existingCategories?: string[];
 }
 
-export function CategorySelect({ value, onValueChange }: CategorySelectProps) {
+export function CategorySelect({ value, onValueChange, existingCategories = [] }: CategorySelectProps) {
   const categories = [
     { value: "proposito", label: "Propósito" },
     { value: "metodo", label: "Método" },
     { value: "mentoria", label: "Mentoria" },
     { value: "curso", label: "Curso" },
     { value: "conteudo", label: "Conteúdo" },
+    { value: "personalizar_chatgpt", label: "Personalizar ChatGPT" },
   ];
+
+  // Filter out "Personalizar ChatGPT" if it already exists
+  const availableCategories = categories.filter(cat => {
+    if (cat.value === "personalizar_chatgpt") {
+      return !existingCategories.includes("personalizar_chatgpt");
+    }
+    return true;
+  });
 
   return (
     <Select value={value} onValueChange={onValueChange}>
@@ -26,7 +36,7 @@ export function CategorySelect({ value, onValueChange }: CategorySelectProps) {
         <SelectValue placeholder="Selecione uma categoria" />
       </SelectTrigger>
       <SelectContent className="bg-chatgpt-secondary border-chatgpt-border rounded-xl">
-        {categories.map((cat) => (
+        {availableCategories.map((cat) => (
           <SelectItem 
             key={cat.value} 
             value={cat.value}

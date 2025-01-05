@@ -1,4 +1,4 @@
-import { Book, Brain, GraduationCap, School, Target } from "lucide-react";
+import { Book, Brain, GraduationCap, School, Target, Settings } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -118,6 +118,7 @@ const ActionButtons = ({ onSelectPrompt, activeCategory }: ActionButtonsProps) =
     { icon: <School className="h-4 w-4 text-green-400" />, label: "Mentoria", category: "mentoria" },
     { icon: <GraduationCap className="h-4 w-4 text-yellow-400" />, label: "Curso", category: "curso" },
     { icon: <Book className="h-4 w-4 text-red-400" />, label: "Conteúdo", category: "conteudo" },
+    { icon: <Settings className="h-4 w-4 text-gray-400" />, label: "Personalizar ChatGPT", category: "personalizar_chatgpt" },
   ];
 
   return (
