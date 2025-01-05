@@ -17,7 +17,7 @@ export const PromptMenu = ({
   onPromptSelect,
 }: PromptMenuProps) => {
   return (
-    <div className="relative">
+    <div className="relative w-3/4 mx-auto">
       <Input
         value={promptInput}
         onChange={(e) => onPromptInputChange(e.target.value)}
