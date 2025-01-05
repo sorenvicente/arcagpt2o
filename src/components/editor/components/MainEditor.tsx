@@ -31,7 +31,7 @@ export const MainEditor = ({ onClose }: MainEditorProps) => {
       />
 
       {/* Tabs - Positioned with minimal spacing from bottom */}
-      <div className="fixed bottom-[calc(2rem+1px)] left-1/2 -translate-x-1/2 bg-chatgpt-secondary rounded-xl shadow-lg">
+      <div className="fixed bottom-[calc(1px)] left-1/2 -translate-x-1/2 bg-chatgpt-secondary rounded-xl shadow-lg">
         <BottomTabs activeTab={activeTab} onTabChange={setActiveTab} />
       </div>
 
