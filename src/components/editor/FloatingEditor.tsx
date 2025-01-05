@@ -12,9 +12,7 @@ const FloatingEditor = ({ isOpen, onClose }: FloatingEditorProps) => {
   const [activeTab, setActiveTab] = useState('eixos');
 
   const handlePromptSelect = (prompt: any) => {
-    setContent((prevContent) => {
-      return prevContent + prompt.prompt;
-    });
+    setContent(prompt.prompt);
     console.log('Prompt selecionado:', prompt.prompt);
   };
 
