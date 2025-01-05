@@ -1,53 +1,77 @@
-import { RefObject, useEffect } from 'react';
+import { RefObject, useEffect, useRef } from 'react';
 
 export const useEditableContent = (
   editorRef: RefObject<HTMLDivElement>,
   content: string,
   onContentChange: (content: string) => void
 ) => {
+  const lastCursorPosition = useRef<number>(0);
+  const isUpdating = useRef(false);
+
+  // Save cursor position before any content update
+  const saveCursorPosition = () => {
+    const selection = window.getSelection();
+    if (selection && selection.rangeCount > 0) {
+      const range = selection.getRangeAt(0);
+      lastCursorPosition.current = range.startOffset;
+    }
+  };
+
+  // Restore cursor position after content update
+  const restoreCursorPosition = () => {
+    if (!editorRef.current) return;
+    
+    const selection = window.getSelection();
+    if (!selection) return;
+
+    try {
+      const range = document.createRange();
+      const textNode = editorRef.current.firstChild || editorRef.current;
+      const position = Math.min(lastCursorPosition.current, textNode.textContent?.length || 0);
+      
+      range.setStart(textNode, position);
+      range.setEnd(textNode, position);
+      
+      selection.removeAllRanges();
+      selection.addRange(range);
+    } catch (error) {
+      console.log('Error restoring cursor position:', error);
+    }
+  };
+
   useEffect(() => {
-    if (editorRef.current && content !== editorRef.current.innerHTML) {
-      const selection = window.getSelection();
-      const range = selection?.getRangeAt(0);
-      const cursorPosition = range?.startOffset || 0;
-      
-      editorRef.current.innerHTML = content;
-      
-      // Restore cursor position
-      if (selection && editorRef.current.firstChild) {
-        try {
-          const newRange = document.createRange();
-          const textNode = editorRef.current.firstChild;
-          const newPosition = Math.min(cursorPosition, textNode.textContent?.length || 0);
-          
-          newRange.setStart(textNode, newPosition);
-          newRange.setEnd(textNode, newPosition);
-          selection.removeAllRanges();
-          selection.addRange(newRange);
-        } catch (error) {
-          console.log('Error restoring cursor position:', error);
-        }
-      }
+    if (isUpdating.current) return;
+    
+    if (editorRef.current && content !== editorRef.current.innerText) {
+      isUpdating.current = true;
+      saveCursorPosition();
+      editorRef.current.innerText = content;
+      restoreCursorPosition();
+      isUpdating.current = false;
     }
   }, [content]);
 
   const handleInput = () => {
-    if (editorRef.current) {
-      onContentChange(editorRef.current.innerHTML);
+    if (editorRef.current && !isUpdating.current) {
+      saveCursorPosition();
+      onContentChange(editorRef.current.innerText);
     }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === 'z' && (e.ctrlKey || e.metaKey)) {
-      e.preventDefault();
-      document.execCommand('undo');
-      handleInput();
-      return;
-    }
-
     if (e.key === 'Enter') {
       e.preventDefault();
-      document.execCommand('insertLineBreak');
+      const selection = window.getSelection();
+      if (!selection || !editorRef.current) return;
+
+      const range = selection.getRangeAt(0);
+      const lineBreak = document.createTextNode('\n');
+      range.insertNode(lineBreak);
+      range.setStartAfter(lineBreak);
+      range.setEndAfter(lineBreak);
+      selection.removeAllRanges();
+      selection.addRange(range);
+      
       handleInput();
     }
   };
@@ -60,13 +84,13 @@ export const useEditableContent = (
     if (!selection || !selection.rangeCount) return;
     
     const range = selection.getRangeAt(0);
-    const cursorPosition = range.startOffset;
-    
-    // Insert text at cursor position
     const textNode = document.createTextNode(text);
+    
+    saveCursorPosition();
+    range.deleteContents();
     range.insertNode(textNode);
     
-    // Move cursor to end of inserted text
+    // Move cursor to end of pasted text
     range.setStartAfter(textNode);
     range.setEndAfter(textNode);
     selection.removeAllRanges();

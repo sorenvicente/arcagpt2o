@@ -11,12 +11,22 @@ export const ContentEditableArea = ({
   onContentChange 
 }: ContentEditableAreaProps) => {
   const editorRef = useRef<HTMLDivElement>(null);
-  const { handleInput, handleKeyDown, handlePaste } = useEditableContent(editorRef, content, onContentChange);
+  const { handleInput, handleKeyDown, handlePaste } = useEditableContent(
+    editorRef, 
+    content, 
+    onContentChange
+  );
 
-  // Função para rolar até o final quando o conteúdo mudar
+  // Scroll to bottom when content changes
   useEffect(() => {
     if (editorRef.current) {
-      editorRef.current.scrollTop = editorRef.current.scrollHeight;
+      const shouldScroll = 
+        editorRef.current.scrollHeight - editorRef.current.scrollTop === 
+        editorRef.current.clientHeight;
+
+      if (shouldScroll) {
+        editorRef.current.scrollTop = editorRef.current.scrollHeight;
+      }
     }
   }, [content]);
 
