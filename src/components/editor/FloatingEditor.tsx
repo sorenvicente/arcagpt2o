@@ -66,19 +66,21 @@ const FloatingEditor = ({ isOpen, onClose }: FloatingEditorProps) => {
           onContentChange={setContent}
         />
 
-        {/* Bottom Tabs */}
-        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 bg-chatgpt-secondary rounded-xl shadow-lg">
+        {/* Bottom Tabs - Moved closer to input */}
+        <div className="fixed bottom-16 left-1/2 -translate-x-1/2 bg-chatgpt-secondary rounded-xl shadow-lg">
           <BottomTabs activeTab={activeTab} onTabChange={setActiveTab} />
         </div>
 
-        {/* Prompt Menu */}
-        <PromptMenu
-          promptInput={promptInput}
-          showPromptMenu={showPromptMenu}
-          prompts={prompts}
-          onPromptInputChange={handlePromptInput}
-          onPromptSelect={handlePromptSelect}
-        />
+        {/* Prompt Menu - Increased input height */}
+        <div className="fixed bottom-4 left-1/2 -translate-x-1/2 w-[95%] max-w-3xl">
+          <PromptMenu
+            promptInput={promptInput}
+            showPromptMenu={showPromptMenu}
+            prompts={prompts}
+            onPromptInputChange={handlePromptInput}
+            onPromptSelect={handlePromptSelect}
+          />
+        </div>
 
         {/* Close Button */}
         <button 
