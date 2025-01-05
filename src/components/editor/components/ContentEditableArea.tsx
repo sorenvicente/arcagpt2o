@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 
 interface ContentEditableAreaProps {
   content: string;
@@ -7,9 +7,18 @@ interface ContentEditableAreaProps {
 
 export const ContentEditableArea = ({ content, onContentChange }: ContentEditableAreaProps) => {
   const editorRef = useRef<HTMLDivElement>(null);
+  let lastScrollPosition = 0;
+
+  // Maintain scroll position when content changes
+  useEffect(() => {
+    if (editorRef.current) {
+      editorRef.current.scrollTop = lastScrollPosition;
+    }
+  }, [content]);
 
   const handleInput = () => {
     if (editorRef.current) {
+      lastScrollPosition = editorRef.current.scrollTop;
       onContentChange(editorRef.current.innerText);
     }
   };
@@ -21,30 +30,32 @@ export const ContentEditableArea = ({ content, onContentChange }: ContentEditabl
       const selection = window.getSelection();
       if (!selection?.rangeCount) return;
       
+      // Store current scroll and cursor position
+      lastScrollPosition = editorRef.current?.scrollTop || 0;
       const range = selection.getRangeAt(0);
+      
+      // Create and insert line break
       const br = document.createElement('br');
-      
-      // Store current scroll position
-      const scrollTop = editorRef.current?.scrollTop || 0;
-      
       range.deleteContents();
       range.insertNode(br);
       
-      // Create and insert a text node after the br
+      // Add a space after the break to ensure proper cursor positioning
       const textNode = document.createTextNode('\u00a0');
       range.setStartAfter(br);
       range.insertNode(textNode);
       
-      // Position cursor after the space
+      // Set cursor position after the space
       range.setStartAfter(textNode);
       range.setEndAfter(textNode);
       selection.removeAllRanges();
       selection.addRange(range);
-      
-      // Restore scroll position
-      if (editorRef.current) {
-        editorRef.current.scrollTop = scrollTop;
-      }
+
+      // Ensure scroll position is maintained
+      requestAnimationFrame(() => {
+        if (editorRef.current) {
+          editorRef.current.scrollTop = lastScrollPosition;
+        }
+      });
       
       handleInput();
     }
@@ -67,7 +78,8 @@ export const ContentEditableArea = ({ content, onContentChange }: ContentEditabl
         fontSize: '16px',
         lineHeight: '1.8',
         letterSpacing: '0.3px',
-        caretColor: 'white'
+        caretColor: 'white',
+        overscrollBehavior: 'none'
       }}
     >
       {content}
