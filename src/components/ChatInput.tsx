@@ -76,11 +76,11 @@ const ChatInput = ({ onSend, isLoading = false }: ChatInputProps) => {
         <button 
           onClick={handleSubmit}
           disabled={isLoading || !message.trim()}
-          className="fixed bottom-6 right-6 p-3
+          className="absolute right-3 top-[50%] -translate-y-[50%] p-2
             bg-gray-700 rounded-full 
             hover:bg-gray-600 
             disabled:opacity-50 disabled:cursor-not-allowed
-            shadow-lg z-50"
+            shadow-lg"
         >
           {isLoading ? (
             <Loader2 className="h-5 w-5 text-white animate-spin" />
