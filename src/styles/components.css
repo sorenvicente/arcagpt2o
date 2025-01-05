@@ -23,3 +23,12 @@
 .link {
   @apply transition-all duration-200 hover:shadow-md;
 }
+
+/* Round mouse shadow */
+.editor-shadow {
+  @apply absolute -z-10 rounded-full bg-black/10 blur-md;
+  width: 100px;
+  height: 100px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
