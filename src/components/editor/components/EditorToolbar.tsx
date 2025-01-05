@@ -13,13 +13,12 @@ export const EditorToolbar = ({ content, onClose }: EditorToolbarProps) => {
   const { toast } = useToast();
 
   const handleSave = () => {
-    // Remove any HTML tags from the content before saving
-    const plainText = content.replace(/<[^>]*>/g, '');
-    localStorage.setItem('editor-content', plainText);
+    // Agora salvamos o conteúdo com a formatação HTML
+    localStorage.setItem('editor-content', content);
     
-    // Dispatch custom event
+    // Dispatch custom event com o conteúdo formatado
     window.dispatchEvent(new CustomEvent('editor-content-saved', {
-      detail: { content: plainText }
+      detail: { content: content }
     }));
     
     toast({
