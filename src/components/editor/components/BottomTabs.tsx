@@ -8,7 +8,7 @@ interface BottomTabsProps {
 
 export const BottomTabs = ({ activeTab, onTabChange }: BottomTabsProps) => {
   return (
-    <div className="flex items-center gap-2 p-2 min-w-[300px]">
+    <div className="flex items-center gap-1.5 p-1 min-w-[300px]">
       <Button
         variant={activeTab === 'eixos' ? 'secondary' : 'ghost'}
         size="sm"
