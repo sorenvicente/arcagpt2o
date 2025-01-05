@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react';
-import { X, ArrowBigUp } from 'lucide-react';
+import { X } from 'lucide-react';
 import { EditorToolbar } from './components/EditorToolbar';
 import { BottomTabs } from './components/BottomTabs';
 import { EditorContent } from './components/EditorContent';
 import { PromptMenu } from './components/PromptMenu';
 import { usePrompts } from './hooks/usePrompts';
-import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 
 interface FloatingEditorProps {
@@ -19,6 +18,7 @@ const FloatingEditor = ({ isOpen, onClose }: FloatingEditorProps) => {
   const [activeTab, setActiveTab] = useState('chat');
   const [promptInput, setPromptInput] = useState('');
   const [showPromptMenu, setShowPromptMenu] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
   const { prompts, loadPrompts } = usePrompts();
   const { toast } = useToast();
 
@@ -59,14 +59,28 @@ const FloatingEditor = ({ isOpen, onClose }: FloatingEditorProps) => {
       return;
     }
 
-    // Here you would typically make an API call to generate text
-    toast({
-      title: "Gerando texto...",
-      description: "Aguarde enquanto processamos seu prompt.",
-    });
-    
-    // TODO: Implement the actual API call
-    console.log("Generating text with prompt:", content);
+    setIsGenerating(true);
+    try {
+      toast({
+        title: "Gerando texto...",
+        description: "Aguarde enquanto processamos seu prompt.",
+      });
+      
+      // TODO: Implement the actual API call
+      console.log("Generating text with prompt:", content);
+      
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+    } catch (error) {
+      toast({
+        title: "Erro",
+        description: "Não foi possível gerar o texto.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   if (!isOpen) return null;
@@ -89,19 +103,9 @@ const FloatingEditor = ({ isOpen, onClose }: FloatingEditorProps) => {
           onContentChange={setContent}
         />
 
-        {/* Bottom Tabs - Adjusted spacing */}
+        {/* Bottom Tabs */}
         <div className="fixed bottom-28 left-1/2 -translate-x-1/2 bg-chatgpt-secondary rounded-xl shadow-lg">
           <BottomTabs activeTab={activeTab} onTabChange={setActiveTab} />
-        </div>
-
-        {/* Generate Text Button */}
-        <div className="fixed bottom-16 left-1/2 -translate-x-1/2">
-          <Button
-            onClick={handleGenerateText}
-            className="bg-chatgpt-secondary hover:bg-chatgpt-hover text-white px-4 py-2 rounded-xl shadow-lg transition-colors"
-          >
-            <ArrowBigUp className="h-6 w-6" />
-          </Button>
         </div>
 
         {/* Prompt Menu - Increased height and adjusted spacing */}
@@ -112,6 +116,8 @@ const FloatingEditor = ({ isOpen, onClose }: FloatingEditorProps) => {
             prompts={prompts}
             onPromptInputChange={handlePromptInput}
             onPromptSelect={handlePromptSelect}
+            onGenerateText={handleGenerateText}
+            isGenerating={isGenerating}
           />
         </div>
 
