@@ -8,11 +8,17 @@ import { useToast } from '@/components/ui/use-toast';
 interface MainEditorProps {
   onClose: () => void;
   onTabChange: (tab: string) => void;
+  content: string;
+  onContentChange: (content: string) => void;
 }
 
-export const MainEditor = ({ onClose, onTabChange }: MainEditorProps) => {
+export const MainEditor = ({ 
+  onClose, 
+  onTabChange, 
+  content,
+  onContentChange 
+}: MainEditorProps) => {
   const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
   const [activeTab, setActiveTab] = useState('eixos');
   const { toast } = useToast();
 
@@ -29,27 +35,23 @@ export const MainEditor = ({ onClose, onTabChange }: MainEditorProps) => {
 
   return (
     <div className="bg-chatgpt-main w-full h-full flex flex-col">
-      {/* Floating Toolbar */}
       <div className="fixed top-4 left-1/2 -translate-x-1/2 bg-chatgpt-secondary rounded-xl shadow-md z-10">
         <div className="py-1">
           <EditorToolbar />
         </div>
       </div>
 
-      {/* Main Content */}
       <EditorContent
         title={title}
         content={content}
         onTitleChange={setTitle}
-        onContentChange={setContent}
+        onContentChange={onContentChange}
       />
 
-      {/* Tabs - Positioned above the prompt input */}
       <div className="fixed bottom-[100px] left-1/2 -translate-x-1/2 bg-chatgpt-secondary rounded-xl shadow-md">
         <BottomTabs activeTab={activeTab} onTabChange={handleTabChange} />
       </div>
 
-      {/* Close Button */}
       <button 
         onClick={onClose}
         className="fixed top-4 right-4 text-gray-400 hover:text-white transition-colors rounded-lg"

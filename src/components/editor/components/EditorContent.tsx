@@ -1,5 +1,4 @@
-import { useEffect } from 'react';
-import { useRichTextEditor } from '../hooks/useRichTextEditor';
+import { useEffect, useRef } from 'react';
 
 interface EditorContentProps {
   title: string;
@@ -14,11 +13,10 @@ export const EditorContent = ({
   onTitleChange, 
   onContentChange 
 }: EditorContentProps) => {
-  const { editorRef, setContent } = useRichTextEditor();
+  const editorRef = useRef<HTMLDivElement>(null);
 
-  // Sincroniza o conteúdo inicial
   useEffect(() => {
-    if (editorRef.current && content) {
+    if (editorRef.current) {
       editorRef.current.innerHTML = content;
     }
   }, [content]);

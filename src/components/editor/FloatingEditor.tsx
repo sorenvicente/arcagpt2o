@@ -13,16 +13,9 @@ const FloatingEditor = ({ isOpen, onClose }: FloatingEditorProps) => {
 
   const handlePromptSelect = (prompt: any) => {
     setContent((prevContent) => {
-      const cursorPosition = document.activeElement instanceof HTMLTextAreaElement 
-        ? document.activeElement.selectionStart 
-        : prevContent.length;
-
-      const newContent = prevContent.slice(0, cursorPosition) + 
-        prompt.prompt + 
-        prevContent.slice(cursorPosition);
-
-      return newContent;
+      return prevContent + prompt.prompt;
     });
+    console.log('Prompt selecionado:', prompt.prompt);
   };
 
   const handleTabChange = (tab: string) => {
@@ -34,7 +27,12 @@ const FloatingEditor = ({ isOpen, onClose }: FloatingEditorProps) => {
 
   return (
     <div className="fixed inset-0 bg-chatgpt-main/90 z-50 flex items-center justify-center">
-      <MainEditor onClose={onClose} onTabChange={handleTabChange} />
+      <MainEditor 
+        onClose={onClose} 
+        onTabChange={handleTabChange}
+        content={content}
+        onContentChange={setContent}
+      />
       <PromptManager onPromptSelect={handlePromptSelect} activeTab={activeTab} />
     </div>
   );
