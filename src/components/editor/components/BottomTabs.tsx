@@ -10,13 +10,13 @@ export const BottomTabs = ({ activeTab, onTabChange }: BottomTabsProps) => {
   return (
     <div className="flex items-center gap-2 p-2 min-w-[300px]">
       <Button
-        variant={activeTab === 'chat' ? 'secondary' : 'ghost'}
+        variant={activeTab === 'eixos' ? 'secondary' : 'ghost'}
         size="sm"
         className="gap-2 rounded-lg"
-        onClick={() => onTabChange('chat')}
+        onClick={() => onTabChange('eixos')}
       >
-        <MessageSquare className="h-4 w-4" />
-        Chat
+        <Target className="h-4 w-4" />
+        Eixos
       </Button>
       <Button
         variant={activeTab === 'prompts' ? 'secondary' : 'ghost'}
@@ -28,13 +28,13 @@ export const BottomTabs = ({ activeTab, onTabChange }: BottomTabsProps) => {
         Prompts
       </Button>
       <Button
-        variant={activeTab === 'eixos' ? 'secondary' : 'ghost'}
+        variant={activeTab === 'chat' ? 'secondary' : 'ghost'}
         size="sm"
         className="gap-2 rounded-lg"
-        onClick={() => onTabChange('eixos')}
+        onClick={() => onTabChange('chat')}
       >
-        <Target className="h-4 w-4" />
-        Eixos
+        <MessageSquare className="h-4 w-4" />
+        Blocos
       </Button>
     </div>
   );

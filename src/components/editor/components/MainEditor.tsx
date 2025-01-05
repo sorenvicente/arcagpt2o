@@ -11,7 +11,7 @@ interface MainEditorProps {
 export const MainEditor = ({ onClose }: MainEditorProps) => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [activeTab, setActiveTab] = useState('chat');
+  const [activeTab, setActiveTab] = useState('eixos');
 
   return (
     <div className="bg-chatgpt-main w-full h-full flex flex-col">
@@ -30,8 +30,8 @@ export const MainEditor = ({ onClose }: MainEditorProps) => {
         onContentChange={setContent}
       />
 
-      {/* Bottom Tabs */}
-      <div className="fixed bottom-20 left-1/2 -translate-x-1/2 bg-chatgpt-secondary rounded-xl shadow-lg">
+      {/* Tabs - Moved higher up from bottom-20 to bottom-32 */}
+      <div className="fixed bottom-32 left-1/2 -translate-x-1/2 bg-chatgpt-secondary rounded-xl shadow-lg">
         <BottomTabs activeTab={activeTab} onTabChange={setActiveTab} />
       </div>
 
