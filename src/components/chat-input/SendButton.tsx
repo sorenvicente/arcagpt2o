@@ -1,4 +1,4 @@
-import { ArrowUp, StopCircle } from "lucide-react";
+import { ArrowUp, Stop } from "lucide-react";
 
 interface SendButtonProps {
   onClick: () => void;
@@ -19,7 +19,7 @@ const SendButton = ({ onClick, isLoading, disabled }: SendButtonProps) => {
       title={isLoading ? "Parar geração" : "Enviar mensagem"}
     >
       {isLoading ? (
-        <StopCircle className="h-4 w-4 text-white" />
+        <Stop className="h-4 w-4 text-white" />
       ) : (
         <ArrowUp className="h-5 w-5 text-white" />
       )}
