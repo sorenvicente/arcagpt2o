@@ -18,15 +18,12 @@ export const EditorContent = ({
   useEffect(() => {
     if (editorRef.current) {
       editorRef.current.innerHTML = content;
-      editorRef.current.contentEditable = 'true';
-      editorRef.current.focus();
     }
   }, [content]);
 
   const handleInput = () => {
     if (editorRef.current) {
-      const newContent = editorRef.current.innerHTML;
-      onContentChange(newContent);
+      onContentChange(editorRef.current.innerHTML);
     }
   };
 
@@ -41,7 +38,7 @@ export const EditorContent = ({
       />
       <div
         ref={editorRef}
-        contentEditable
+        contentEditable="true"
         onInput={handleInput}
         data-placeholder="Digite seu texto aqui..."
         className="w-full h-[calc(100%-12rem)] bg-transparent text-white outline-none rounded-lg overflow-auto empty:before:content-[attr(data-placeholder)] empty:before:text-gray-500"

@@ -12,15 +12,11 @@ export const EditorToolbar = ({ onFormatText, onAlignText }: EditorToolbarProps)
   };
 
   const handleAlign = (alignment: string) => {
-    document.execCommand('justify' + alignment.charAt(0).toUpperCase() + alignment.slice(1), false);
+    document.execCommand('justify' + alignment, false);
   };
 
   return (
     <div className="flex items-center px-2 h-12">
-      <select className="bg-transparent text-white border-none outline-none mr-4 rounded-lg">
-        <option>Parágrafo</option>
-      </select>
-      
       <div className="flex items-center gap-1 px-2 border-r border-chatgpt-border">
         <Button 
           variant="ghost" 
@@ -72,7 +68,7 @@ export const EditorToolbar = ({ onFormatText, onAlignText }: EditorToolbarProps)
           variant="ghost" 
           size="icon" 
           className="h-8 w-8 text-gray-400 hover:text-white rounded-lg"
-          onClick={() => handleAlign('left')}
+          onClick={() => handleAlign('Left')}
         >
           <AlignLeft className="h-4 w-4" />
         </Button>
@@ -80,7 +76,7 @@ export const EditorToolbar = ({ onFormatText, onAlignText }: EditorToolbarProps)
           variant="ghost" 
           size="icon" 
           className="h-8 w-8 text-gray-400 hover:text-white rounded-lg"
-          onClick={() => handleAlign('center')}
+          onClick={() => handleAlign('Center')}
         >
           <AlignCenter className="h-4 w-4" />
         </Button>
@@ -88,18 +84,9 @@ export const EditorToolbar = ({ onFormatText, onAlignText }: EditorToolbarProps)
           variant="ghost" 
           size="icon" 
           className="h-8 w-8 text-gray-400 hover:text-white rounded-lg"
-          onClick={() => handleAlign('right')}
+          onClick={() => handleAlign('Right')}
         >
           <AlignRight className="h-4 w-4" />
-        </Button>
-      </div>
-      
-      <div className="flex items-center gap-1 px-2">
-        <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400 hover:text-white rounded-lg">
-          <LinkIcon className="h-4 w-4" />
-        </Button>
-        <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400 hover:text-white rounded-lg">
-          <FileInput className="h-4 w-4" />
         </Button>
       </div>
 

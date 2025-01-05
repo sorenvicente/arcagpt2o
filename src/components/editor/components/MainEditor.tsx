@@ -3,7 +3,6 @@ import { X } from 'lucide-react';
 import { EditorToolbar } from './EditorToolbar';
 import { BottomTabs } from './BottomTabs';
 import { EditorContent } from './EditorContent';
-import { PromptMenu } from './PromptMenu';
 
 interface MainEditorProps {
   onClose: () => void;
@@ -19,7 +18,7 @@ export const MainEditor = ({ onClose }: MainEditorProps) => {
   };
 
   const handleAlignText = (alignment: string) => {
-    document.execCommand('justify' + alignment.charAt(0).toUpperCase() + alignment.slice(1), false);
+    document.execCommand('justify' + alignment, false);
   };
 
   return (
