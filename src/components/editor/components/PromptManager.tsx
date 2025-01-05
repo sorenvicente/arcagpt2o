@@ -13,10 +13,9 @@ export const PromptManager = ({ onPromptSelect, activeTab }: PromptManagerProps)
   const { prompts, loadPrompts } = usePrompts();
 
   useEffect(() => {
-    if (showPromptMenu) {
-      loadPrompts();
-    }
-  }, [showPromptMenu]);
+    loadPrompts();
+    console.log('Aba ativa:', activeTab);
+  }, [activeTab]);
 
   const handlePromptInput = (value: string) => {
     setPromptInput(value);

@@ -31,14 +31,14 @@ export const usePrompts = () => {
       }
 
       if (data) {
+        console.log('Prompts carregados:', data);
         setPrompts(data);
-        console.log('Prompts loaded:', data);
       }
     } catch (error) {
       console.error('Error loading prompts:', error);
       toast({
-        title: "Error",
-        description: "Could not load prompts. Please try again.",
+        title: "Erro",
+        description: "Não foi possível carregar os prompts.",
         variant: "destructive",
       });
     }

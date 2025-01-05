@@ -26,19 +26,29 @@ export const PromptMenu = ({
   onPromptInputChange,
   onPromptSelect,
 }: PromptMenuProps) => {
+  // Mapeia as abas para as categorias correspondentes
+  const getCategoryForTab = (tab: string) => {
+    switch (tab.toLowerCase()) {
+      case 'eixos':
+        return 'eixos';
+      case 'blocos':
+        return 'blocos';
+      case 'prompts':
+        return 'proposito';
+      default:
+        return '';
+    }
+  };
+
   // Filtra os prompts baseado na aba ativa
   const filteredPrompts = prompts.filter(prompt => {
-    switch (activeTab) {
-      case 'eixos':
-        return prompt.category.toLowerCase() === 'eixo';
-      case 'blocos':
-        return prompt.category.toLowerCase() === 'bloco';
-      case 'prompts':
-        return prompt.category.toLowerCase() === 'prompt';
-      default:
-        return true;
-    }
+    const categoryForTab = getCategoryForTab(activeTab);
+    console.log('Filtrando prompts para categoria:', categoryForTab);
+    console.log('Prompt categoria:', prompt.category);
+    return prompt.category.toLowerCase() === categoryForTab;
   });
+
+  console.log('Prompts filtrados:', filteredPrompts);
 
   return (
     <div className="relative w-3/4 mx-auto">
@@ -53,7 +63,7 @@ export const PromptMenu = ({
         <div className="absolute bottom-full mb-1 w-full bg-chatgpt-secondary rounded-xl shadow-lg border border-chatgpt-border">
           <div className="p-2">
             <div className="flex items-center justify-between text-gray-400 text-sm mb-1">
-              <span>Prompts {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}</span>
+              <span>Prompts {activeTab}</span>
               <ChevronUp className="h-4 w-4" />
             </div>
             {filteredPrompts.length > 0 ? (
