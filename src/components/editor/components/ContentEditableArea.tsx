@@ -11,21 +11,28 @@ export const ContentEditableArea = ({
   onContentChange 
 }: ContentEditableAreaProps) => {
   const editorRef = useRef<HTMLDivElement>(null);
-  const { handleInput, handleKeyDown, handlePaste } = useEditableContent(
-    editorRef, 
-    content, 
-    onContentChange
-  );
+  const { 
+    handleInput, 
+    handleKeyDown, 
+    handlePaste,
+    handleCompositionStart,
+    handleCompositionEnd
+  } = useEditableContent(editorRef, content, onContentChange);
 
-  // Scroll to bottom when content changes
+  // Auto-scroll to cursor position
   useEffect(() => {
     if (editorRef.current) {
-      const shouldScroll = 
-        editorRef.current.scrollHeight - editorRef.current.scrollTop === 
-        editorRef.current.clientHeight;
+      const selection = window.getSelection();
+      if (!selection || !selection.rangeCount) return;
 
-      if (shouldScroll) {
-        editorRef.current.scrollTop = editorRef.current.scrollHeight;
+      const range = selection.getRangeAt(0);
+      const rect = range.getBoundingClientRect();
+      const containerRect = editorRef.current.getBoundingClientRect();
+
+      if (rect.bottom > containerRect.bottom) {
+        editorRef.current.scrollTop += rect.bottom - containerRect.bottom + 20;
+      } else if (rect.top < containerRect.top) {
+        editorRef.current.scrollTop -= containerRect.top - rect.top + 20;
       }
     }
   }, [content]);
@@ -37,14 +44,21 @@ export const ContentEditableArea = ({
       onInput={handleInput}
       onKeyDown={handleKeyDown}
       onPaste={handlePaste}
+      onCompositionStart={handleCompositionStart}
+      onCompositionEnd={handleCompositionEnd}
       data-placeholder="Digite seu texto aqui..."
       className="w-full min-h-[calc(100vh-200px)] max-w-[800px] mx-auto 
         bg-transparent text-white outline-none rounded-lg overflow-y-auto 
         empty:before:content-[attr(data-placeholder)] empty:before:text-gray-500 
-        whitespace-pre-wrap break-words p-6"
+        whitespace-pre-wrap break-words p-6 leading-relaxed
+        focus:outline-none selection:bg-blue-500/30"
       style={{
         minHeight: 'calc(100vh - 200px)',
         maxHeight: 'calc(100vh - 200px)',
+        fontSize: '16px',
+        lineHeight: '1.6',
+        letterSpacing: '0.3px',
+        caretColor: 'white'
       }}
       suppressContentEditableWarning={true}
     />

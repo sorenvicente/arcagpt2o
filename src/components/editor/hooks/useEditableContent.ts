@@ -5,89 +5,116 @@ export const useEditableContent = (
   content: string,
   onContentChange: (content: string) => void
 ) => {
-  const lastCursorPosition = useRef<number>(0);
-  const isUpdating = useRef(false);
+  const isComposing = useRef(false);
+  const lastSelection = useRef<{ start: number; end: number }>({ start: 0, end: 0 });
 
-  // Save cursor position before any content update
-  const saveCursorPosition = () => {
+  // Save selection state
+  const saveSelection = () => {
     const selection = window.getSelection();
-    if (selection && selection.rangeCount > 0) {
-      const range = selection.getRangeAt(0);
-      lastCursorPosition.current = range.startOffset;
-    }
+    if (!selection || !selection.rangeCount) return;
+
+    const range = selection.getRangeAt(0);
+    lastSelection.current = {
+      start: range.startOffset,
+      end: range.endOffset
+    };
   };
 
-  // Restore cursor position after content update
-  const restoreCursorPosition = () => {
+  // Restore selection state
+  const restoreSelection = () => {
     if (!editorRef.current) return;
-    
+
     const selection = window.getSelection();
     if (!selection) return;
 
     try {
       const range = document.createRange();
-      const textNode = editorRef.current.firstChild || editorRef.current;
-      const position = Math.min(lastCursorPosition.current, textNode.textContent?.length || 0);
+      let textNode = editorRef.current.firstChild;
       
-      range.setStart(textNode, position);
-      range.setEnd(textNode, position);
+      // If there's no text node, create one
+      if (!textNode) {
+        textNode = document.createTextNode('');
+        editorRef.current.appendChild(textNode);
+      }
+
+      const start = Math.min(lastSelection.current.start, textNode.textContent?.length || 0);
+      const end = Math.min(lastSelection.current.end, textNode.textContent?.length || 0);
+
+      range.setStart(textNode, start);
+      range.setEnd(textNode, end);
       
       selection.removeAllRanges();
       selection.addRange(range);
     } catch (error) {
-      console.log('Error restoring cursor position:', error);
+      console.error('Error restoring selection:', error);
     }
   };
 
+  // Handle content updates
   useEffect(() => {
-    if (isUpdating.current) return;
-    
     if (editorRef.current && content !== editorRef.current.innerText) {
-      isUpdating.current = true;
-      saveCursorPosition();
+      const selection = window.getSelection();
+      if (!selection) return;
+
+      saveSelection();
       editorRef.current.innerText = content;
-      restoreCursorPosition();
-      isUpdating.current = false;
+      restoreSelection();
     }
   }, [content]);
 
-  const handleInput = () => {
-    if (editorRef.current && !isUpdating.current) {
-      saveCursorPosition();
-      onContentChange(editorRef.current.innerText);
+  const handleInput = (e: React.FormEvent<HTMLDivElement>) => {
+    if (isComposing.current) return;
+    
+    const newContent = e.currentTarget.innerText;
+    if (content !== newContent) {
+      saveSelection();
+      onContentChange(newContent);
     }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === 'Enter') {
+    // Handle tab key
+    if (e.key === 'Tab') {
       e.preventDefault();
-      const selection = window.getSelection();
-      if (!selection || !editorRef.current) return;
+      document.execCommand('insertText', false, '    ');
+      return;
+    }
 
-      const range = selection.getRangeAt(0);
-      const lineBreak = document.createTextNode('\n');
-      range.insertNode(lineBreak);
-      range.setStartAfter(lineBreak);
-      range.setEndAfter(lineBreak);
-      selection.removeAllRanges();
-      selection.addRange(range);
-      
-      handleInput();
+    // Handle standard keyboard shortcuts
+    if (e.ctrlKey || e.metaKey) {
+      switch (e.key) {
+        case 'b':
+          e.preventDefault();
+          document.execCommand('bold', false);
+          break;
+        case 'i':
+          e.preventDefault();
+          document.execCommand('italic', false);
+          break;
+        case 'u':
+          e.preventDefault();
+          document.execCommand('underline', false);
+          break;
+      }
     }
   };
 
   const handlePaste = (e: React.ClipboardEvent) => {
     e.preventDefault();
+    
+    // Get text content from clipboard
     const text = e.clipboardData.getData('text/plain');
     
+    // Get current selection
     const selection = window.getSelection();
     if (!selection || !selection.rangeCount) return;
     
+    // Get the range and delete any selected content
     const range = selection.getRangeAt(0);
-    const textNode = document.createTextNode(text);
-    
-    saveCursorPosition();
     range.deleteContents();
+    
+    // Insert the text at cursor position
+    const textNode = document.createTextNode(text);
     range.insertNode(textNode);
     
     // Move cursor to end of pasted text
@@ -96,12 +123,28 @@ export const useEditableContent = (
     selection.removeAllRanges();
     selection.addRange(range);
     
-    handleInput();
+    // Update content
+    if (editorRef.current) {
+      onContentChange(editorRef.current.innerText);
+    }
+  };
+
+  const handleCompositionStart = () => {
+    isComposing.current = true;
+  };
+
+  const handleCompositionEnd = () => {
+    isComposing.current = false;
+    if (editorRef.current) {
+      onContentChange(editorRef.current.innerText);
+    }
   };
 
   return {
     handleInput,
     handleKeyDown,
-    handlePaste
+    handlePaste,
+    handleCompositionStart,
+    handleCompositionEnd
   };
 };
