@@ -28,7 +28,7 @@ export const ContentEditableArea = ({
       onKeyDown={handleKeyDown}
       onPaste={handlePaste}
       data-placeholder="Digite seu texto aqui..."
-      className="w-full h-[calc(100vh-280px)] bg-transparent text-white outline-none rounded-lg overflow-y-auto empty:before:content-[attr(data-placeholder)] empty:before:text-gray-500 whitespace-pre-wrap p-4"
+      className="w-full h-[calc(100vh-280px)] bg-transparent text-white outline-none rounded-lg overflow-y-auto empty:before:content-[attr(data-placeholder)] empty:before:text-gray-500 whitespace-pre-wrap break-words p-4"
       suppressContentEditableWarning={true}
     />
   );
