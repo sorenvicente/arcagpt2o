@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import { X, ChevronUp } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { X } from 'lucide-react';
 import { EditorToolbar } from './components/EditorToolbar';
 import { BottomTabs } from './components/BottomTabs';
+import { EditorContent } from './components/EditorContent';
+import { PromptMenu } from './components/PromptMenu';
 import { usePrompts } from './hooks/usePrompts';
 
 interface FloatingEditorProps {
@@ -32,12 +32,10 @@ const FloatingEditor = ({ isOpen, onClose }: FloatingEditorProps) => {
 
   const handlePromptSelect = (prompt: any) => {
     setContent((prevContent) => {
-      // Get cursor position or end of content
       const cursorPosition = document.activeElement instanceof HTMLTextAreaElement 
         ? document.activeElement.selectionStart 
         : prevContent.length;
 
-      // Insert prompt at cursor position or end
       const newContent = prevContent.slice(0, cursorPosition) + 
         prompt.prompt + 
         prevContent.slice(cursorPosition);
@@ -53,7 +51,7 @@ const FloatingEditor = ({ isOpen, onClose }: FloatingEditorProps) => {
   return (
     <div className="fixed inset-0 bg-chatgpt-main/90 z-50 flex items-center justify-center">
       <div className="bg-chatgpt-main w-full h-full flex flex-col">
-        {/* Floating Toolbar - Increased thickness with py-4 */}
+        {/* Floating Toolbar - Increased thickness */}
         <div className="fixed top-4 left-1/2 -translate-x-1/2 bg-chatgpt-secondary rounded-xl shadow-lg z-10">
           <div className="py-4">
             <EditorToolbar />
@@ -61,59 +59,26 @@ const FloatingEditor = ({ isOpen, onClose }: FloatingEditorProps) => {
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 p-8 pt-20">
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="Digite seu título aqui..."
-            className="w-full bg-transparent text-white text-2xl font-medium placeholder-gray-500 outline-none mb-4 rounded-lg"
-          />
-          <textarea
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            placeholder="Digite seu texto aqui..."
-            className="w-full h-[calc(100%-12rem)] bg-transparent text-white placeholder-gray-500 outline-none resize-none rounded-lg"
-          />
-        </div>
+        <EditorContent
+          title={title}
+          content={content}
+          onTitleChange={setTitle}
+          onContentChange={setContent}
+        />
 
         {/* Bottom Tabs */}
         <div className="fixed bottom-24 left-1/2 -translate-x-1/2 bg-chatgpt-secondary rounded-xl shadow-lg">
           <BottomTabs activeTab={activeTab} onTabChange={setActiveTab} />
         </div>
 
-        {/* Prompt Input Area */}
-        <div className="fixed bottom-4 left-1/2 -translate-x-1/2 w-[95%] max-w-3xl">
-          <div className="relative">
-            <Input
-              value={promptInput}
-              onChange={(e) => handlePromptInput(e.target.value)}
-              placeholder="Digite // para acionar agentes..."
-              className="w-full bg-chatgpt-secondary text-white border-none rounded-xl pl-4 pr-10 py-4 placeholder-gray-400"
-            />
-            
-            {/* Prompt Menu - Moved closer to input with mb-1 */}
-            {showPromptMenu && (
-              <div className="absolute bottom-full mb-1 w-full bg-chatgpt-secondary rounded-xl shadow-lg border border-chatgpt-border">
-                <div className="p-2">
-                  <div className="flex items-center justify-between text-gray-400 text-sm mb-2">
-                    <span>Prompts Disponíveis</span>
-                    <ChevronUp className="h-4 w-4" />
-                  </div>
-                  {prompts.map((prompt) => (
-                    <button
-                      key={prompt.id}
-                      onClick={() => handlePromptSelect(prompt)}
-                      className="w-full text-left px-3 py-2 text-white hover:bg-chatgpt-hover rounded-lg transition-colors"
-                    >
-                      {prompt.name}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
+        {/* Prompt Menu */}
+        <PromptMenu
+          promptInput={promptInput}
+          showPromptMenu={showPromptMenu}
+          prompts={prompts}
+          onPromptInputChange={handlePromptInput}
+          onPromptSelect={handlePromptSelect}
+        />
 
         {/* Close Button */}
         <button 
