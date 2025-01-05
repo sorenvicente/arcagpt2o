@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react';
+import { useRichTextEditor } from '../hooks/useRichTextEditor';
 
 interface EditorContentProps {
   title: string;
@@ -13,19 +13,14 @@ export const EditorContent = ({
   onTitleChange, 
   onContentChange 
 }: EditorContentProps) => {
-  const editorRef = useRef<HTMLDivElement>(null);
+  const { editorRef, setContent } = useRichTextEditor();
 
+  // Sincroniza o conteúdo inicial
   useEffect(() => {
-    if (editorRef.current) {
+    if (editorRef.current && content) {
       editorRef.current.innerHTML = content;
     }
   }, [content]);
-
-  const handleInput = () => {
-    if (editorRef.current) {
-      onContentChange(editorRef.current.innerHTML);
-    }
-  };
 
   return (
     <div className="flex-1 p-8 pt-20">
@@ -39,7 +34,7 @@ export const EditorContent = ({
       <div
         ref={editorRef}
         contentEditable="true"
-        onInput={handleInput}
+        onInput={(e) => onContentChange(e.currentTarget.innerHTML)}
         data-placeholder="Digite seu texto aqui..."
         className="w-full h-[calc(100%-12rem)] bg-transparent text-white outline-none rounded-lg overflow-auto empty:before:content-[attr(data-placeholder)] empty:before:text-gray-500"
         suppressContentEditableWarning={true}

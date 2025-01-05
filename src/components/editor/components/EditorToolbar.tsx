@@ -1,47 +1,18 @@
-import { Undo, Redo, Bold, Italic, Underline, AlignLeft, AlignCenter, AlignRight, Link as LinkIcon, FileInput } from 'lucide-react';
+import { Undo, Redo, Bold, Italic, Underline, AlignLeft, AlignCenter, AlignRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useRichTextEditor } from '../hooks/useRichTextEditor';
 
-interface EditorToolbarProps {
-  onFormatText: (format: string) => void;
-  onAlignText: (alignment: string) => void;
-}
-
-export const EditorToolbar = ({ onFormatText, onAlignText }: EditorToolbarProps) => {
-  const handleFormat = (command: string) => {
-    document.execCommand(command, false);
-  };
-
-  const handleAlign = (alignment: string) => {
-    document.execCommand('justify' + alignment, false);
-  };
+export const EditorToolbar = () => {
+  const { formatText, alignText } = useRichTextEditor();
 
   return (
     <div className="flex items-center px-2 h-12">
-      <div className="flex items-center gap-1 px-2 border-r border-chatgpt-border">
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          className="h-8 w-8 text-gray-400 hover:text-white rounded-lg"
-          onClick={() => handleFormat('undo')}
-        >
-          <Undo className="h-4 w-4" />
-        </Button>
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          className="h-8 w-8 text-gray-400 hover:text-white rounded-lg"
-          onClick={() => handleFormat('redo')}
-        >
-          <Redo className="h-4 w-4" />
-        </Button>
-      </div>
-      
       <div className="flex items-center gap-1 px-2">
         <Button 
           variant="ghost" 
           size="icon" 
           className="h-8 w-8 text-gray-400 hover:text-white rounded-lg"
-          onClick={() => handleFormat('bold')}
+          onClick={() => formatText('bold')}
         >
           <Bold className="h-4 w-4" />
         </Button>
@@ -49,7 +20,7 @@ export const EditorToolbar = ({ onFormatText, onAlignText }: EditorToolbarProps)
           variant="ghost" 
           size="icon" 
           className="h-8 w-8 text-gray-400 hover:text-white rounded-lg"
-          onClick={() => handleFormat('italic')}
+          onClick={() => formatText('italic')}
         >
           <Italic className="h-4 w-4" />
         </Button>
@@ -57,7 +28,7 @@ export const EditorToolbar = ({ onFormatText, onAlignText }: EditorToolbarProps)
           variant="ghost" 
           size="icon" 
           className="h-8 w-8 text-gray-400 hover:text-white rounded-lg"
-          onClick={() => handleFormat('underline')}
+          onClick={() => formatText('underline')}
         >
           <Underline className="h-4 w-4" />
         </Button>
@@ -68,7 +39,7 @@ export const EditorToolbar = ({ onFormatText, onAlignText }: EditorToolbarProps)
           variant="ghost" 
           size="icon" 
           className="h-8 w-8 text-gray-400 hover:text-white rounded-lg"
-          onClick={() => handleAlign('Left')}
+          onClick={() => alignText('left')}
         >
           <AlignLeft className="h-4 w-4" />
         </Button>
@@ -76,7 +47,7 @@ export const EditorToolbar = ({ onFormatText, onAlignText }: EditorToolbarProps)
           variant="ghost" 
           size="icon" 
           className="h-8 w-8 text-gray-400 hover:text-white rounded-lg"
-          onClick={() => handleAlign('Center')}
+          onClick={() => alignText('center')}
         >
           <AlignCenter className="h-4 w-4" />
         </Button>
@@ -84,7 +55,7 @@ export const EditorToolbar = ({ onFormatText, onAlignText }: EditorToolbarProps)
           variant="ghost" 
           size="icon" 
           className="h-8 w-8 text-gray-400 hover:text-white rounded-lg"
-          onClick={() => handleAlign('Right')}
+          onClick={() => alignText('right')}
         >
           <AlignRight className="h-4 w-4" />
         </Button>
