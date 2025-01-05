@@ -50,11 +50,11 @@ export const PromptMenu = ({
         value={promptInput}
         onChange={(e) => onPromptInputChange(e.target.value)}
         placeholder="Digite // para acionar agentes..."
-        className="w-full bg-[#403E43] text-white/70 border-none rounded-xl px-6 py-6 placeholder-gray-400 text-lg font-medium"
+        className="w-full bg-[#343541] text-white/70 border-none rounded-xl px-6 py-6 placeholder-gray-400 text-lg font-medium"
       />
       
       {showPromptMenu && (
-        <div className="absolute bottom-full mb-0.5 w-full bg-[#403E43] rounded-xl shadow-lg">
+        <div className="absolute bottom-full mb-0.5 w-full bg-[#343541] rounded-xl shadow-lg">
           <div className="p-2">
             <div className="flex items-center justify-between text-gray-400 text-sm mb-1">
               <span>Prompts {activeTab}</span>
