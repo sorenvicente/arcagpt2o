@@ -1,4 +1,4 @@
-import { Tab } from '@radix-ui/react-tabs';
+import * as Tabs from '@radix-ui/react-tabs';
 
 interface BottomTabsProps {
   activeTab: string;
@@ -8,7 +8,7 @@ interface BottomTabsProps {
 export const BottomTabs = ({ activeTab, onTabChange }: BottomTabsProps) => {
   return (
     <div className="flex items-center gap-1 p-0.5 min-w-[300px]">
-      <Tab
+      <Tabs.Trigger
         value="eixos"
         onClick={() => onTabChange('eixos')}
         className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
@@ -18,8 +18,8 @@ export const BottomTabs = ({ activeTab, onTabChange }: BottomTabsProps) => {
         }`}
       >
         Eixos
-      </Tab>
-      <Tab
+      </Tabs.Trigger>
+      <Tabs.Trigger
         value="blocos"
         onClick={() => onTabChange('blocos')}
         className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
@@ -29,8 +29,8 @@ export const BottomTabs = ({ activeTab, onTabChange }: BottomTabsProps) => {
         }`}
       >
         Blocos
-      </Tab>
-      <Tab
+      </Tabs.Trigger>
+      <Tabs.Trigger
         value="prompts"
         onClick={() => onTabChange('prompts')}
         className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
@@ -40,7 +40,7 @@ export const BottomTabs = ({ activeTab, onTabChange }: BottomTabsProps) => {
         }`}
       >
         Prompts
-      </Tab>
+      </Tabs.Trigger>
     </div>
   );
 };
