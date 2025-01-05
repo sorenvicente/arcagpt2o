@@ -28,7 +28,7 @@ const ChatInput = ({ onSend, isLoading = false }: ChatInputProps) => {
     const savedContent = localStorage.getItem('editor-content');
     if (savedContent) {
       setMessage(savedContent);
-      localStorage.removeItem('editor-content');
+      localStorage.removeItem('editor-content'); // Remove o conteúdo após carregar
       
       if (textareaRef.current) {
         textareaRef.current.focus();
@@ -56,7 +56,8 @@ const ChatInput = ({ onSend, isLoading = false }: ChatInputProps) => {
 
   const handleSubmit = () => {
     if (message.trim() && !isLoading) {
-      onSend(message);
+      const trimmedMessage = message.trim();
+      onSend(trimmedMessage);
       setMessage(""); // Limpa o textarea após enviar
       if (textareaRef.current) {
         textareaRef.current.style.height = "auto"; // Reset altura do textarea
