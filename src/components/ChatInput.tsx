@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { ArrowUp, Loader2, Circle } from "lucide-react";
+import { ArrowUp, Loader2 } from "lucide-react";
 
 interface ChatInputProps {
   onSend: (message: string) => void;
@@ -50,7 +50,7 @@ const ChatInput = ({ onSend, isLoading = false }: ChatInputProps) => {
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Digite sua mensagem..."
-          className="w-full resize-none rounded-xl px-4 py-4 pr-24 focus:outline-none
+          className="w-full resize-none rounded-xl px-4 py-4 pr-12 focus:outline-none
             bg-chatgpt-input text-white
             placeholder:text-gray-400"
           style={{ 
@@ -59,26 +59,20 @@ const ChatInput = ({ onSend, isLoading = false }: ChatInputProps) => {
           }}
           disabled={isLoading}
         />
-        <div className="absolute right-3 top-[50%] -translate-y-[50%] flex items-center gap-2">
-          <div className="relative">
-            <Circle className="h-6 w-6 text-gray-400" />
-            <Circle className="absolute inset-0 h-4 w-4 text-purple-400 translate-x-1 translate-y-1" />
-          </div>
-          <button 
-            onClick={handleSubmit}
-            disabled={isLoading || !message.trim()}
-            className="p-1.5 
-              bg-gray-700 rounded-full 
-              hover:bg-gray-600 
-              disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isLoading ? (
-              <Loader2 className="h-4 w-4 text-white animate-spin" />
-            ) : (
-              <ArrowUp className="h-4 w-4 text-white" />
-            )}
-          </button>
-        </div>
+        <button 
+          onClick={handleSubmit}
+          disabled={isLoading || !message.trim()}
+          className="absolute right-3 top-[50%] -translate-y-[50%] p-1.5 
+            bg-gray-700 rounded-full 
+            hover:bg-gray-600 
+            disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {isLoading ? (
+            <Loader2 className="h-4 w-4 text-white animate-spin" />
+          ) : (
+            <ArrowUp className="h-4 w-4 text-white" />
+          )}
+        </button>
       </div>
     </div>
   );
