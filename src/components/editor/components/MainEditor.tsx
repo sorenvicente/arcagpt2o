@@ -17,7 +17,7 @@ export const MainEditor = ({ onClose }: MainEditorProps) => {
     <div className="bg-chatgpt-main w-full h-full flex flex-col">
       {/* Floating Toolbar */}
       <div className="fixed top-4 left-1/2 -translate-x-1/2 bg-chatgpt-secondary rounded-xl shadow-lg z-10">
-        <div className="py-4">
+        <div className="py-2">
           <EditorToolbar />
         </div>
       </div>
@@ -30,7 +30,7 @@ export const MainEditor = ({ onClose }: MainEditorProps) => {
         onContentChange={setContent}
       />
 
-      {/* Tabs - Moved higher up from bottom-20 to bottom-32 */}
+      {/* Tabs */}
       <div className="fixed bottom-32 left-1/2 -translate-x-1/2 bg-chatgpt-secondary rounded-xl shadow-lg">
         <BottomTabs activeTab={activeTab} onTabChange={setActiveTab} />
       </div>
