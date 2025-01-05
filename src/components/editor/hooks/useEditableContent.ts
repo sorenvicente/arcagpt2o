@@ -9,19 +9,23 @@ export const useEditableContent = (
     if (editorRef.current && content !== editorRef.current.innerHTML) {
       const selection = window.getSelection();
       const range = selection?.getRangeAt(0);
-      const start = range?.startOffset || 0;
+      const cursorPosition = range?.startOffset || 0;
       
       editorRef.current.innerHTML = content;
       
-      if (selection && range && editorRef.current.firstChild) {
+      // Restore cursor position
+      if (selection && editorRef.current.firstChild) {
         try {
           const newRange = document.createRange();
-          newRange.setStart(editorRef.current.firstChild, start);
-          newRange.setEnd(editorRef.current.firstChild, start);
+          const textNode = editorRef.current.firstChild;
+          const newPosition = Math.min(cursorPosition, textNode.textContent?.length || 0);
+          
+          newRange.setStart(textNode, newPosition);
+          newRange.setEnd(textNode, newPosition);
           selection.removeAllRanges();
           selection.addRange(newRange);
         } catch (error) {
-          console.log('Erro ao restaurar posição do cursor:', error);
+          console.log('Error restoring cursor position:', error);
         }
       }
     }
@@ -52,18 +56,17 @@ export const useEditableContent = (
     e.preventDefault();
     const text = e.clipboardData.getData('text/plain');
     
-    // Pega a seleção atual
     const selection = window.getSelection();
     if (!selection || !selection.rangeCount) return;
     
     const range = selection.getRangeAt(0);
+    const cursorPosition = range.startOffset;
     
-    // Insere o texto na posição atual do cursor
+    // Insert text at cursor position
     const textNode = document.createTextNode(text);
-    range.deleteContents();
     range.insertNode(textNode);
     
-    // Move o cursor para o final do texto colado
+    // Move cursor to end of inserted text
     range.setStartAfter(textNode);
     range.setEndAfter(textNode);
     selection.removeAllRanges();
