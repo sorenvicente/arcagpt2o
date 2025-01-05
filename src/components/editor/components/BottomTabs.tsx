@@ -8,12 +8,12 @@ interface BottomTabsProps {
 export const BottomTabs = ({ activeTab, onTabChange }: BottomTabsProps) => {
   return (
     <Tabs.Root value={activeTab} onValueChange={onTabChange}>
-      <Tabs.List className="inline-flex h-8 items-center bg-[#403E43]/80 rounded-xl overflow-hidden">
+      <Tabs.List className="inline-flex h-8 items-center bg-[#343541]/80 rounded-xl overflow-hidden">
         <Tabs.Trigger
           value="eixos"
           className={`h-full px-4 text-sm transition-colors duration-200 ${
             activeTab === 'eixos'
-              ? 'bg-[#403E43] text-white'
+              ? 'bg-[#343541] text-white'
               : 'text-gray-400 hover:text-white'
           }`}
         >
@@ -23,7 +23,7 @@ export const BottomTabs = ({ activeTab, onTabChange }: BottomTabsProps) => {
           value="blocos"
           className={`h-full px-4 text-sm transition-colors duration-200 ${
             activeTab === 'blocos'
-              ? 'bg-[#403E43] text-white'
+              ? 'bg-[#343541] text-white'
               : 'text-gray-400 hover:text-white'
           }`}
         >
@@ -33,7 +33,7 @@ export const BottomTabs = ({ activeTab, onTabChange }: BottomTabsProps) => {
           value="prompts"
           className={`h-full px-4 text-sm transition-colors duration-200 ${
             activeTab === 'prompts'
-              ? 'bg-[#403E43] text-white'
+              ? 'bg-[#343541] text-white'
               : 'text-gray-400 hover:text-white'
           }`}
         >
