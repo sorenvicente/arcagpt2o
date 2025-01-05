@@ -17,13 +17,17 @@ export function PromptForm() {
 
   useEffect(() => {
     const loadExistingCategories = async () => {
+      console.log('Carregando categorias existentes...');
       const { data, error } = await supabase
         .from('prompt_blocks')
         .select('category');
       
       if (!error && data) {
         const categories = data.map(item => item.category);
+        console.log('Categorias carregadas:', categories);
         setExistingCategories(categories);
+      } else if (error) {
+        console.error('Erro ao carregar categorias:', error);
       }
     };
 
@@ -32,6 +36,8 @@ export function PromptForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('Iniciando submissão do prompt...');
+    console.log('Categoria selecionada:', category);
     setIsSubmitting(true);
 
     if (!name || !description || !prompt || !category) {
@@ -46,6 +52,7 @@ export function PromptForm() {
 
     // Check if trying to create a second "Personalizar ChatGPT" prompt
     if (category === "personalizar_chatgpt" && existingCategories.includes("personalizar_chatgpt")) {
+      console.log('Tentativa de criar segundo prompt de Personalizar ChatGPT');
       toast({
         title: "Erro",
         description: "Já existe um prompt de Personalização do ChatGPT. Você pode editá-lo, mas não criar outro.",
@@ -56,6 +63,7 @@ export function PromptForm() {
     }
 
     try {
+      console.log('Enviando dados para o Supabase...');
       const { data, error } = await supabase
         .from('prompt_blocks')
         .insert({
@@ -66,8 +74,12 @@ export function PromptForm() {
         })
         .select();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Erro ao criar prompt:', error);
+        throw error;
+      }
       
+      console.log('Prompt criado com sucesso:', data);
       toast({
         title: "Sucesso",
         description: "Prompt criado com sucesso!",
