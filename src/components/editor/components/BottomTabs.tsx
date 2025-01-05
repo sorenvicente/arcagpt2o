@@ -1,4 +1,4 @@
-import { MessageSquare, Blocks, Target } from 'lucide-react';
+import { MessageSquare, Lightbulb, Target } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface BottomTabsProps {
@@ -10,13 +10,13 @@ export const BottomTabs = ({ activeTab, onTabChange }: BottomTabsProps) => {
   return (
     <div className="flex items-center gap-2 p-1">
       <Button
-        variant={activeTab === 'eixos' ? 'secondary' : 'ghost'}
+        variant={activeTab === 'chat' ? 'secondary' : 'ghost'}
         size="sm"
         className="gap-2 rounded-lg"
-        onClick={() => onTabChange('eixos')}
+        onClick={() => onTabChange('chat')}
       >
-        <Target className="h-4 w-4" />
-        Eixos
+        <MessageSquare className="h-4 w-4" />
+        Chat
       </Button>
       <Button
         variant={activeTab === 'prompts' ? 'secondary' : 'ghost'}
@@ -24,17 +24,17 @@ export const BottomTabs = ({ activeTab, onTabChange }: BottomTabsProps) => {
         className="gap-2 rounded-lg"
         onClick={() => onTabChange('prompts')}
       >
-        <MessageSquare className="h-4 w-4" />
+        <Lightbulb className="h-4 w-4" />
         Prompts
       </Button>
       <Button
-        variant={activeTab === 'blocos' ? 'secondary' : 'ghost'}
+        variant={activeTab === 'eixos' ? 'secondary' : 'ghost'}
         size="sm"
         className="gap-2 rounded-lg"
-        onClick={() => onTabChange('blocos')}
+        onClick={() => onTabChange('eixos')}
       >
-        <Blocks className="h-4 w-4" />
-        Blocos
+        <Target className="h-4 w-4" />
+        Eixos
       </Button>
     </div>
   );
