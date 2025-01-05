@@ -69,14 +69,15 @@ const ChatInput = ({ onSend, isLoading = false }: ChatInputProps) => {
             placeholder:text-gray-400"
           style={{ 
             maxHeight: "50vh",
-            overflowY: "auto"
+            overflowY: "auto",
+            paddingBottom: "40px" // Espaço extra para o botão
           }}
           disabled={isLoading}
         />
         <button 
           onClick={handleSubmit}
           disabled={isLoading || !message.trim()}
-          className="absolute right-3 top-[50%] -translate-y-[50%] p-2
+          className="absolute right-4 bottom-3 p-2
             bg-gray-700 rounded-full 
             hover:bg-gray-600 
             disabled:opacity-50 disabled:cursor-not-allowed
