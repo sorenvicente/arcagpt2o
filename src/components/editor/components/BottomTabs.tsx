@@ -1,5 +1,4 @@
-import { MessageSquare, Lightbulb, Target } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Tab } from '@radix-ui/react-tabs';
 
 interface BottomTabsProps {
   activeTab: string;
@@ -8,34 +7,40 @@ interface BottomTabsProps {
 
 export const BottomTabs = ({ activeTab, onTabChange }: BottomTabsProps) => {
   return (
-    <div className="flex items-center gap-1.5 p-1 min-w-[300px]">
-      <Button
-        variant={activeTab === 'eixos' ? 'secondary' : 'ghost'}
-        size="sm"
-        className="gap-2 rounded-lg text-sm"
+    <div className="flex items-center gap-1 p-0.5 min-w-[300px]">
+      <Tab
+        value="eixos"
         onClick={() => onTabChange('eixos')}
+        className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
+          activeTab === 'eixos'
+            ? 'bg-chatgpt-hover text-white'
+            : 'text-gray-400 hover:text-white'
+        }`}
       >
-        <Target className="h-4 w-4" />
         Eixos
-      </Button>
-      <Button
-        variant={activeTab === 'prompts' ? 'secondary' : 'ghost'}
-        size="sm"
-        className="gap-2 rounded-lg text-sm"
-        onClick={() => onTabChange('prompts')}
-      >
-        <Lightbulb className="h-4 w-4" />
-        Prompts
-      </Button>
-      <Button
-        variant={activeTab === 'blocos' ? 'secondary' : 'ghost'}
-        size="sm"
-        className="gap-2 rounded-lg text-sm"
+      </Tab>
+      <Tab
+        value="blocos"
         onClick={() => onTabChange('blocos')}
+        className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
+          activeTab === 'blocos'
+            ? 'bg-chatgpt-hover text-white'
+            : 'text-gray-400 hover:text-white'
+        }`}
       >
-        <MessageSquare className="h-4 w-4" />
         Blocos
-      </Button>
+      </Tab>
+      <Tab
+        value="prompts"
+        onClick={() => onTabChange('prompts')}
+        className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
+          activeTab === 'prompts'
+            ? 'bg-chatgpt-hover text-white'
+            : 'text-gray-400 hover:text-white'
+        }`}
+      >
+        Prompts
+      </Tab>
     </div>
   );
 };
