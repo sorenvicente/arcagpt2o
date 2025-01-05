@@ -9,7 +9,7 @@ const EditorButton = () => {
     <>
       <button
         onClick={() => setIsEditorOpen(true)}
-        className="fixed bottom-4 right-4 bg-chatgpt-secondary hover:bg-chatgpt-hover text-white p-2 rounded-lg shadow-lg transition-colors"
+        className="fixed bottom-4 right-4 bg-chatgpt-secondary hover:bg-chatgpt-hover text-white p-2 rounded-xl shadow-lg transition-colors"
         title="Abrir Editor"
       >
         <Edit className="h-5 w-5" />
