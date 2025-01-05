@@ -1,21 +1,45 @@
 import { ChevronUp } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 
+interface Prompt {
+  id: string;
+  name: string;
+  description?: string;
+  prompt: string;
+  category: string;
+}
+
 interface PromptMenuProps {
   promptInput: string;
   showPromptMenu: boolean;
-  prompts: any[];
+  prompts: Prompt[];
+  activeTab: string;
   onPromptInputChange: (value: string) => void;
-  onPromptSelect: (prompt: any) => void;
+  onPromptSelect: (prompt: Prompt) => void;
 }
 
 export const PromptMenu = ({
   promptInput,
   showPromptMenu,
   prompts,
+  activeTab,
   onPromptInputChange,
   onPromptSelect,
 }: PromptMenuProps) => {
+  // Filtra os prompts baseado na aba ativa
+  const filteredPrompts = prompts.filter(prompt => {
+    switch (activeTab) {
+      case 'eixos':
+        return prompt.category.toLowerCase() === 'eixo';
+      case 'blocos':
+        return prompt.category.toLowerCase() === 'bloco';
+      case 'prompts':
+        return prompt.category.toLowerCase() === 'prompt';
+      default:
+        return true;
+    }
+  });
+
   return (
     <div className="relative w-3/4 mx-auto">
       <Input
@@ -29,18 +53,27 @@ export const PromptMenu = ({
         <div className="absolute bottom-full mb-1 w-full bg-chatgpt-secondary rounded-xl shadow-lg border border-chatgpt-border">
           <div className="p-2">
             <div className="flex items-center justify-between text-gray-400 text-sm mb-1">
-              <span>Prompts Disponíveis</span>
+              <span>Prompts {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}</span>
               <ChevronUp className="h-4 w-4" />
             </div>
-            {prompts.map((prompt) => (
-              <button
-                key={prompt.id}
-                onClick={() => onPromptSelect(prompt)}
-                className="w-full text-left px-3 py-2 text-white hover:bg-chatgpt-hover rounded-lg transition-colors"
-              >
-                {prompt.name}
-              </button>
-            ))}
+            {filteredPrompts.length > 0 ? (
+              filteredPrompts.map((prompt) => (
+                <button
+                  key={prompt.id}
+                  onClick={() => onPromptSelect(prompt)}
+                  className="w-full text-left px-3 py-2 text-white hover:bg-chatgpt-hover rounded-lg transition-colors"
+                >
+                  <div className="font-medium">{prompt.name}</div>
+                  {prompt.description && (
+                    <div className="text-sm text-gray-400">{prompt.description}</div>
+                  )}
+                </button>
+              ))
+            ) : (
+              <div className="text-gray-400 text-sm px-3 py-2">
+                Nenhum prompt disponível para {activeTab}
+              </div>
+            )}
           </div>
         </div>
       )}

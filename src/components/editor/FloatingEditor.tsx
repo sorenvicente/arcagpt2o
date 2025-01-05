@@ -9,6 +9,7 @@ interface FloatingEditorProps {
 
 const FloatingEditor = ({ isOpen, onClose }: FloatingEditorProps) => {
   const [content, setContent] = useState('');
+  const [activeTab, setActiveTab] = useState('eixos');
 
   const handlePromptSelect = (prompt: any) => {
     setContent((prevContent) => {
@@ -24,12 +25,17 @@ const FloatingEditor = ({ isOpen, onClose }: FloatingEditorProps) => {
     });
   };
 
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+    console.log('Tab alterada para:', tab);
+  };
+
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-chatgpt-main/90 z-50 flex items-center justify-center">
-      <MainEditor onClose={onClose} />
-      <PromptManager onPromptSelect={handlePromptSelect} />
+      <MainEditor onClose={onClose} onTabChange={handleTabChange} />
+      <PromptManager onPromptSelect={handlePromptSelect} activeTab={activeTab} />
     </div>
   );
 };

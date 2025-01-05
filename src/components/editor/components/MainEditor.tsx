@@ -7,9 +7,10 @@ import { useToast } from '@/components/ui/use-toast';
 
 interface MainEditorProps {
   onClose: () => void;
+  onTabChange: (tab: string) => void;
 }
 
-export const MainEditor = ({ onClose }: MainEditorProps) => {
+export const MainEditor = ({ onClose, onTabChange }: MainEditorProps) => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [activeTab, setActiveTab] = useState('eixos');
@@ -17,9 +18,9 @@ export const MainEditor = ({ onClose }: MainEditorProps) => {
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
+    onTabChange(tab);
     console.log('Tab alterada para:', tab);
     
-    // Feedback visual para o usuário
     toast({
       title: `${tab.charAt(0).toUpperCase() + tab.slice(1)} selecionado`,
       description: `Você está agora no modo ${tab}`,

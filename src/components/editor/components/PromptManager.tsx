@@ -4,9 +4,10 @@ import { PromptMenu } from './PromptMenu';
 
 interface PromptManagerProps {
   onPromptSelect: (prompt: any) => void;
+  activeTab: string;
 }
 
-export const PromptManager = ({ onPromptSelect }: PromptManagerProps) => {
+export const PromptManager = ({ onPromptSelect, activeTab }: PromptManagerProps) => {
   const [promptInput, setPromptInput] = useState('');
   const [showPromptMenu, setShowPromptMenu] = useState(false);
   const { prompts, loadPrompts } = usePrompts();
@@ -28,6 +29,7 @@ export const PromptManager = ({ onPromptSelect }: PromptManagerProps) => {
         promptInput={promptInput}
         showPromptMenu={showPromptMenu}
         prompts={prompts}
+        activeTab={activeTab}
         onPromptInputChange={handlePromptInput}
         onPromptSelect={onPromptSelect}
       />
