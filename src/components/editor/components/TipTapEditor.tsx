@@ -20,24 +20,27 @@ export const TipTapEditor = ({
     content,
     editorProps: {
       attributes: {
-        class: 'prose prose-invert max-w-none focus:outline-none min-h-[calc(100vh-200px)]',
+        class: 'prose prose-invert max-w-none focus:outline-none min-h-[calc(100vh-200px)] px-4 py-2',
       },
     },
     onUpdate: ({ editor }) => {
       onUpdate(editor.getText());
+      console.log('Editor content updated:', editor.getText());
     },
   });
 
   return (
-    <div className="w-full max-w-[800px] mx-auto px-8">
+    <div className="w-full max-w-[800px] mx-auto">
       <EditorTitle 
         title={title}
         onTitleChange={onTitleChange}
       />
-      <EditorContent 
-        editor={editor} 
-        className="min-h-[calc(100vh-200px)] text-white"
-      />
+      <div className="bg-chatgpt-main rounded-lg shadow-lg">
+        <EditorContent 
+          editor={editor} 
+          className="min-h-[calc(100vh-200px)] text-white"
+        />
+      </div>
     </div>
   );
 };

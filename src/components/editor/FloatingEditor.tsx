@@ -36,8 +36,8 @@ const FloatingEditor = ({ isOpen, onClose }: FloatingEditorProps) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-chatgpt-main z-50 flex flex-col items-center">
-      <div className="w-full max-w-[800px] mx-auto">
+    <div className="fixed inset-0 bg-chatgpt-main/95 backdrop-blur-sm z-50 flex flex-col items-center">
+      <div className="w-full max-w-[800px] mx-auto flex-1 overflow-hidden">
         <MainEditor 
           onClose={onClose} 
           onTabChange={handleTabChange}
@@ -45,7 +45,7 @@ const FloatingEditor = ({ isOpen, onClose }: FloatingEditorProps) => {
           onContentChange={setContent}
         />
       </div>
-      <div className="fixed bottom-0 left-0 right-0 bg-chatgpt-main border-t border-chatgpt-border">
+      <div className="fixed bottom-0 left-0 right-0 bg-chatgpt-main/95 backdrop-blur-sm border-t border-chatgpt-border">
         <PromptManager onPromptSelect={handlePromptSelect} activeTab={activeTab} />
       </div>
     </div>

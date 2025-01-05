@@ -33,13 +33,13 @@ export const EditorToolbar = ({ content, onClose, title }: EditorToolbarProps) =
   };
 
   return (
-    <div className="flex items-center justify-between px-4 h-14">
+    <div className="flex items-center justify-between px-4 h-12 bg-chatgpt-secondary/50 backdrop-blur-sm">
       <div className="flex items-center space-x-1">
-        <div className="flex items-center gap-0.5 px-1 bg-white/5 rounded-lg py-1">
+        <div className="flex items-center gap-0.5 px-1 bg-chatgpt-main/50 rounded-lg py-1">
           <Button 
             variant="ghost" 
             size="icon" 
-            className="h-8 w-8 text-gray-400 hover:text-white hover:bg-white/10 rounded-lg"
+            className="h-7 w-7 text-gray-400 hover:text-white hover:bg-white/10 rounded-lg"
             onClick={() => formatText('bold')}
           >
             <Bold className="h-4 w-4" />
@@ -47,7 +47,7 @@ export const EditorToolbar = ({ content, onClose, title }: EditorToolbarProps) =
           <Button 
             variant="ghost" 
             size="icon" 
-            className="h-8 w-8 text-gray-400 hover:text-white hover:bg-white/10 rounded-lg"
+            className="h-7 w-7 text-gray-400 hover:text-white hover:bg-white/10 rounded-lg"
             onClick={() => formatText('italic')}
           >
             <Italic className="h-4 w-4" />
@@ -55,18 +55,18 @@ export const EditorToolbar = ({ content, onClose, title }: EditorToolbarProps) =
           <Button 
             variant="ghost" 
             size="icon" 
-            className="h-8 w-8 text-gray-400 hover:text-white hover:bg-white/10 rounded-lg"
+            className="h-7 w-7 text-gray-400 hover:text-white hover:bg-white/10 rounded-lg"
             onClick={() => formatText('underline')}
           >
             <Underline className="h-4 w-4" />
           </Button>
         </div>
         
-        <div className="flex items-center gap-0.5 px-1 bg-white/5 rounded-lg py-1">
+        <div className="flex items-center gap-0.5 px-1 bg-chatgpt-main/50 rounded-lg py-1">
           <Button 
             variant="ghost" 
             size="icon" 
-            className="h-8 w-8 text-gray-400 hover:text-white hover:bg-white/10 rounded-lg"
+            className="h-7 w-7 text-gray-400 hover:text-white hover:bg-white/10 rounded-lg"
             onClick={() => alignText('left')}
           >
             <AlignLeft className="h-4 w-4" />
@@ -74,7 +74,7 @@ export const EditorToolbar = ({ content, onClose, title }: EditorToolbarProps) =
           <Button 
             variant="ghost" 
             size="icon" 
-            className="h-8 w-8 text-gray-400 hover:text-white hover:bg-white/10 rounded-lg"
+            className="h-7 w-7 text-gray-400 hover:text-white hover:bg-white/10 rounded-lg"
             onClick={() => alignText('center')}
           >
             <AlignCenter className="h-4 w-4" />
@@ -82,7 +82,7 @@ export const EditorToolbar = ({ content, onClose, title }: EditorToolbarProps) =
           <Button 
             variant="ghost" 
             size="icon" 
-            className="h-8 w-8 text-gray-400 hover:text-white hover:bg-white/10 rounded-lg"
+            className="h-7 w-7 text-gray-400 hover:text-white hover:bg-white/10 rounded-lg"
             onClick={() => alignText('right')}
           >
             <AlignRight className="h-4 w-4" />
@@ -93,7 +93,7 @@ export const EditorToolbar = ({ content, onClose, title }: EditorToolbarProps) =
       <Button 
         variant="ghost"
         size="sm" 
-        className="h-8 bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white rounded-lg text-xs px-4"
+        className="h-7 bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white rounded-lg text-xs px-4"
         onClick={handleSave}
       >
         Salvar
