@@ -15,9 +15,13 @@ export const useAuth = (requiredRole?: 'admin' | 'user') => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
+        console.log('🔄 Checking authentication...');
+        setIsLoading(true);
+        
         const currentSession = await getActiveSession();
         
         if (!currentSession) {
+          console.log('⚠️ No active session found');
           navigate('/login');
           return;
         }
@@ -25,9 +29,11 @@ export const useAuth = (requiredRole?: 'admin' | 'user') => {
         setUser(currentSession.user);
 
         if (requiredRole === 'admin') {
+          console.log('🔍 Checking admin role...');
           const isAdmin = await checkAdminRole(currentSession.user.id);
           
           if (!isAdmin) {
+            console.log('🚫 User is not an admin');
             toast({
               title: "Acesso negado",
               description: "Você não tem permissão para acessar esta área.",
@@ -36,9 +42,10 @@ export const useAuth = (requiredRole?: 'admin' | 'user') => {
             navigate('/');
             return;
           }
+          console.log('✅ Admin role confirmed');
         }
       } catch (error) {
-        console.error('Auth error:', error);
+        console.error('❌ Auth error:', error);
         toast({
           title: "Erro de autenticação",
           description: "Por favor, faça login novamente.",

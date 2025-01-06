@@ -2,8 +2,29 @@ import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LogoSettings } from "./settings/LogoSettings";
 import { UserManagement } from "./settings/UserManagement";
+import { useAuth } from "@/hooks/useAuth";
+import { LoadingSpinner } from "@/components/auth/LoadingSpinner";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 export const SystemSettings = () => {
+  const { isLoading, user } = useAuth('admin');
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isLoading && !user) {
+      navigate('/login');
+    }
+  }, [isLoading, user, navigate]);
+
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
+
+  if (!user) {
+    return null;
+  }
+
   return (
     <Card className="w-full max-w-4xl mx-auto bg-[#343541] border-0 shadow">
       <Tabs defaultValue="users" className="space-y-2">

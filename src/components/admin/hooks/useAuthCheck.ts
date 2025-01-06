@@ -7,6 +7,7 @@ export const useAuthCheck = () => {
   const { toast } = useToast();
 
   const handleAuthError = () => {
+    console.log('🚫 Authentication error detected');
     toast({
       title: "Sessão expirada",
       description: "Por favor, faça login novamente.",
@@ -16,12 +17,29 @@ export const useAuthCheck = () => {
   };
 
   const checkSession = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
+    try {
+      console.log('🔍 Checking session...');
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      
+      if (sessionError) {
+        console.error('❌ Session error:', sessionError);
+        handleAuthError();
+        return false;
+      }
+
+      if (!session) {
+        console.log('⚠️ No active session found');
+        handleAuthError();
+        return false;
+      }
+
+      console.log('✅ Valid session found');
+      return true;
+    } catch (error) {
+      console.error('❌ Error checking session:', error);
       handleAuthError();
       return false;
     }
-    return true;
   };
 
   return {
