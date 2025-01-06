@@ -1,5 +1,4 @@
-import { OpenAIStream } from './openai';
-import { corsHeaders } from './config';
+import { corsHeaders } from './config.ts';
 
 interface OpenRouterResponse {
   id: string;
@@ -10,16 +9,18 @@ interface OpenRouterResponse {
   }[];
 }
 
-export async function handleOpenRouterRequest(req: Request, apiKey: string, model: string) {
+export async function handleOpenRouterRequest(req: Request) {
   console.log('🔄 Iniciando requisição OpenRouter...');
-  console.log(`🤖 Modelo selecionado: ${model}`);
-
+  
   try {
+    const { openrouter_key, model, messages } = await req.json();
+    console.log(`🤖 Modelo selecionado: ${model}`);
+
     // Primeiro, vamos verificar os créditos disponíveis
     const creditsResponse = await fetch('https://openrouter.ai/api/v1/auth/key', {
       method: 'GET',
       headers: {
-        'Authorization': `Bearer ${apiKey}`,
+        'Authorization': `Bearer ${openrouter_key}`,
         'HTTP-Referer': 'https://arcagpt.lovable.dev',
         'X-Title': 'ArcaGPT'
       }
@@ -39,24 +40,23 @@ export async function handleOpenRouterRequest(req: Request, apiKey: string, mode
     }
 
     // Se temos créditos, prosseguir com a requisição
-    const body = await req.json();
     console.log('📝 Corpo da requisição:', {
       model,
-      messages: body.messages.length + ' mensagens',
-      firstMessage: body.messages[0]?.content.slice(0, 100) + '...'
+      messages: messages.length + ' mensagens',
+      firstMessage: messages[0]?.content.slice(0, 100) + '...'
     });
 
     const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${apiKey}`,
+        'Authorization': `Bearer ${openrouter_key}`,
         'Content-Type': 'application/json',
         'HTTP-Referer': 'https://arcagpt.lovable.dev',
         'X-Title': 'ArcaGPT'
       },
       body: JSON.stringify({
         model: model,
-        messages: body.messages,
+        messages: messages,
       }),
     });
 

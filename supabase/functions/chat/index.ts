@@ -1,5 +1,5 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
-import { handleOpenAIRequest } from './openai.ts';
+import { callOpenAI } from './openai.ts';
 import { handleOpenRouterRequest } from './openrouter.ts';
 import { corsHeaders } from './config.ts';
 
@@ -40,14 +40,14 @@ serve(async (req) => {
         throw new Error('Chave OpenRouter é necessária para este modelo');
       }
       console.log('🔄 Redirecionando para OpenRouter');
-      return await handleOpenRouterRequest(req, openrouter_key, model);
+      return await handleOpenRouterRequest(req);
     } else {
       if (!openai_key) {
         console.error('❌ Chave OpenAI necessária para este modelo');
         throw new Error('Chave OpenAI é necessária para este modelo');
       }
       console.log('🔄 Redirecionando para OpenAI');
-      return await handleOpenAIRequest(req, openai_key, model);
+      return await callOpenAI(openai_key, messages, 0.7);
     }
 
   } catch (error: any) {

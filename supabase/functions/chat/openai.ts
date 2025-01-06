@@ -1,14 +1,14 @@
 import { corsHeaders, defaultConfig } from './config.ts';
 
-export async function callOpenAI(apiKey: any, messages: any[], temperature: number) {
+export async function callOpenAI(apiKey: string, messages: any[], temperature: number) {
   console.log('🔄 Iniciando chamada OpenAI...');
   try {
-    if (!apiKey.openai_key) {
+    if (!apiKey) {
       console.log('❌ OpenAI key não encontrada');
       throw new Error('OpenAI key não configurada');
     }
 
-    const model = apiKey.selected_openai_model || defaultConfig.defaultOpenAIModel;
+    const model = defaultConfig.defaultOpenAIModel;
     console.log(`📝 Enviando requisição para OpenAI usando modelo: ${model}`);
     
     const requestBody = {
@@ -22,7 +22,7 @@ export async function callOpenAI(apiKey: any, messages: any[], temperature: numb
     const openaiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${apiKey.openai_key}`,
+        'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(requestBody),
