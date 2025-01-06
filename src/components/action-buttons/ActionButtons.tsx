@@ -24,7 +24,7 @@ const ActionButtons = ({ onSelectPrompt, activeCategory }: ActionButtonsProps) =
     );
     
     if (selectedPrompt) {
-      // Usar o prompt real do banco de dados em vez de uma mensagem genérica
+      // Usar o prompt real do banco de dados
       onSelectPrompt(selectedPrompt.prompt, category);
       console.log('Prompt selecionado:', selectedPrompt.prompt, 'Categoria:', category);
     } else {
