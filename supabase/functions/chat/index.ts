@@ -11,17 +11,26 @@ serve(async (req) => {
   }
 
   try {
+    console.log('Iniciando processamento da requisição de chat...');
+    
     const { supabaseClient } = await authenticateUser(req.headers.get('Authorization'));
     const apiKey = await getApiKeys(supabaseClient);
     
+    if (!apiKey) {
+      console.error('Nenhuma chave API encontrada');
+      throw new Error('Por favor, configure suas chaves API na página de Configurações.');
+    }
+
     const { messages, temperature = 0.7 } = await req.json();
     console.log('Processando requisição de chat com mensagens:', messages);
 
-    // Try OpenRouter first if configured
+    // Tenta OpenRouter primeiro se configurado
     if (apiKey.openrouter_key) {
       try {
+        console.log('Tentando usar OpenRouter primeiro...');
         const openRouterResponse = await callOpenRouter(apiKey, messages, temperature);
         if (openRouterResponse) {
+          console.log('OpenRouter respondeu com sucesso');
           return openRouterResponse;
         }
       } catch (error) {
@@ -30,9 +39,10 @@ serve(async (req) => {
       console.log('OpenRouter falhou, tentando OpenAI...');
     }
 
-    // Try OpenAI if configured
+    // Tenta OpenAI se OpenRouter falhou ou não está configurado
     if (apiKey.openai_key) {
       try {
+        console.log('Tentando usar OpenAI...');
         return await callOpenAI(apiKey, messages, temperature);
       } catch (error) {
         console.error('OpenAI falhou:', error);
