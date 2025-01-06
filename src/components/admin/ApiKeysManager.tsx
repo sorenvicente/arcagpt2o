@@ -11,13 +11,30 @@ import {
 } from "@/components/ui/card";
 import { Shield } from "lucide-react";
 import { useApiKeys } from "./hooks/useApiKeys";
+import { supabase } from "@/integrations/supabase/client";
+import { useNavigate } from "react-router-dom";
 
 const ApiKeysManager = () => {
   const { keys, setKeys, fetchApiKeys, handleSaveKeys } = useApiKeys();
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   useEffect(() => {
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        toast({
+          title: "Sessão expirada",
+          description: "Por favor, faça login novamente.",
+          variant: "destructive",
+        });
+        navigate('/login');
+        return;
+      }
+    };
+
     const loadKeys = async () => {
+      await checkSession();
       await fetchApiKeys();
       if (!keys.openai_key && !keys.openrouter_key) {
         toast({
@@ -30,6 +47,16 @@ const ApiKeysManager = () => {
     };
 
     loadKeys();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'SIGNED_OUT' || !session) {
+        navigate('/login');
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   return (

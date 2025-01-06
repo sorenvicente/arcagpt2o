@@ -2,6 +2,7 @@ import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { OpenAIModel, OpenRouterModel } from "@/config/aiModels";
+import { useNavigate } from "react-router-dom";
 
 interface ApiKeys {
   openai_key: string;
@@ -16,10 +17,27 @@ export const useApiKeys = () => {
     openrouter_key: "",
   });
   const { toast } = useToast();
+  const navigate = useNavigate();
+
+  const handleAuthError = () => {
+    toast({
+      title: "Sessão expirada",
+      description: "Por favor, faça login novamente.",
+      variant: "destructive",
+    });
+    navigate('/login');
+  };
 
   const fetchApiKeys = async () => {
     try {
       console.log('Fetching API keys...');
+      const { data: session } = await supabase.auth.getSession();
+      
+      if (!session.session) {
+        handleAuthError();
+        return;
+      }
+
       const { data, error } = await supabase
         .from("api_keys")
         .select("*")
@@ -28,6 +46,10 @@ export const useApiKeys = () => {
         .maybeSingle();
 
       if (error) {
+        if (error.message.includes('jwt expired') || error.code === '401') {
+          handleAuthError();
+          return;
+        }
         console.error("Error fetching API keys:", error);
         toast({
           title: "Erro",
@@ -54,6 +76,10 @@ export const useApiKeys = () => {
       }
     } catch (error: any) {
       console.error("Error fetching API keys:", error);
+      if (error.message?.includes('jwt expired') || error.status === 401) {
+        handleAuthError();
+        return;
+      }
       toast({
         title: "Erro",
         description: "Falha ao buscar as chaves API",
@@ -65,6 +91,13 @@ export const useApiKeys = () => {
   const handleSaveKeys = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      const { data: session } = await supabase.auth.getSession();
+      
+      if (!session.session) {
+        handleAuthError();
+        return;
+      }
+
       console.log("Saving keys:", keys);
 
       const { data: existingKeys, error: fetchError } = await supabase
@@ -75,6 +108,10 @@ export const useApiKeys = () => {
         .maybeSingle();
 
       if (fetchError) {
+        if (fetchError.message.includes('jwt expired') || fetchError.code === '401') {
+          handleAuthError();
+          return;
+        }
         console.error("Error fetching existing keys:", fetchError);
         throw fetchError;
       }
@@ -103,7 +140,13 @@ export const useApiKeys = () => {
         saveError = error;
       }
 
-      if (saveError) throw saveError;
+      if (saveError) {
+        if (saveError.message.includes('jwt expired') || saveError.code === '401') {
+          handleAuthError();
+          return;
+        }
+        throw saveError;
+      }
 
       toast({
         title: "Sucesso",
@@ -111,6 +154,10 @@ export const useApiKeys = () => {
       });
     } catch (error: any) {
       console.error("Error saving API keys:", error);
+      if (error.message?.includes('jwt expired') || error.status === 401) {
+        handleAuthError();
+        return;
+      }
       toast({
         title: "Erro",
         description: "Falha ao salvar as chaves API",
