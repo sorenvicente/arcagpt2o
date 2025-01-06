@@ -1,53 +1,97 @@
-import { corsHeaders, defaultConfig } from './config.ts';
+import { OpenAIStream } from './openai';
+import { corsHeaders } from './config';
 
-export async function callOpenRouter(apiKey: any, messages: any[], temperature: number) {
-  console.log('🔄 Iniciando chamada OpenRouter...');
-  try {
-    if (!apiKey.openrouter_key) {
-      console.log('❌ OpenRouter key não encontrada');
-      return null;
-    }
-
-    const model = apiKey.selected_openrouter_model || defaultConfig.defaultOpenRouterModel;
-    console.log(`📝 Enviando requisição para OpenRouter usando modelo: ${model}`);
-    
-    const requestBody = {
-      model: model,
-      messages: messages,
-      max_tokens: defaultConfig.max_tokens,
-      temperature: temperature,
+interface OpenRouterResponse {
+  id: string;
+  choices: {
+    message: {
+      content: string;
     };
-    console.log('📦 Corpo da requisição:', JSON.stringify(requestBody, null, 2));
+  }[];
+}
 
-    const openRouterResponse = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-      method: 'POST',
+export async function handleOpenRouterRequest(req: Request, apiKey: string, model: string) {
+  console.log('🔄 Iniciando requisição OpenRouter...');
+  console.log(`🤖 Modelo selecionado: ${model}`);
+
+  try {
+    // Primeiro, vamos verificar os créditos disponíveis
+    const creditsResponse = await fetch('https://openrouter.ai/api/v1/auth/key', {
+      method: 'GET',
       headers: {
-        'Authorization': `Bearer ${apiKey.openrouter_key}`,
-        'Content-Type': 'application/json',
-        'HTTP-Referer': Deno.env.get('SUPABASE_URL') || 'http://localhost:5173',
-        'X-Title': 'Lovable Chat App',
-      },
-      body: JSON.stringify(requestBody),
+        'Authorization': `Bearer ${apiKey}`,
+        'HTTP-Referer': 'https://arcagpt.lovable.dev',
+        'X-Title': 'ArcaGPT'
+      }
     });
 
-    const responseData = await openRouterResponse.json();
-    console.log(`📊 OpenRouter status: ${openRouterResponse.status}`);
-
-    if (!openRouterResponse.ok) {
-      console.error('❌ Erro OpenRouter:', responseData);
-      return null;
+    if (!creditsResponse.ok) {
+      console.error('❌ Erro ao verificar créditos OpenRouter:', await creditsResponse.text());
+      throw new Error('Falha ao verificar créditos OpenRouter');
     }
 
-    console.log('✨ OpenRouter respondeu com sucesso');
-    const content = responseData.choices[0].message.content;
-    console.log('📝 Conteúdo da resposta:', content.substring(0, 100) + '...');
+    const creditsData = await creditsResponse.json();
+    console.log('💰 Créditos OpenRouter disponíveis:', creditsData.credits);
 
+    if (creditsData.credits <= 0) {
+      console.error('❌ Sem créditos OpenRouter disponíveis');
+      throw new Error('Sem créditos OpenRouter disponíveis');
+    }
+
+    // Se temos créditos, prosseguir com a requisição
+    const body = await req.json();
+    console.log('📝 Corpo da requisição:', {
+      model,
+      messages: body.messages.length + ' mensagens',
+      firstMessage: body.messages[0]?.content.slice(0, 100) + '...'
+    });
+
+    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+        'HTTP-Referer': 'https://arcagpt.lovable.dev',
+        'X-Title': 'ArcaGPT'
+      },
+      body: JSON.stringify({
+        model: model,
+        messages: body.messages,
+      }),
+    });
+
+    if (!response.ok) {
+      console.error('❌ Erro na resposta OpenRouter:', await response.text());
+      throw new Error(`OpenRouter retornou status ${response.status}`);
+    }
+
+    const data = await response.json() as OpenRouterResponse;
+    console.log('✅ Resposta OpenRouter recebida:', {
+      id: data.id,
+      content: data.choices[0]?.message?.content?.slice(0, 100) + '...'
+    });
+
+    return new Response(JSON.stringify(data), {
+      headers: {
+        ...corsHeaders,
+        'Content-Type': 'application/json',
+      },
+    });
+
+  } catch (error: any) {
+    console.error('❌ Erro ao processar requisição OpenRouter:', error);
     return new Response(
-      JSON.stringify({ content }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      JSON.stringify({
+        error: error.message || 'Erro ao processar requisição OpenRouter',
+        details: error.toString()
+      }),
+      {
+        status: 500,
+        headers: {
+          ...corsHeaders,
+          'Content-Type': 'application/json',
+        },
+      }
     );
-  } catch (error) {
-    console.error('❌ Erro ao chamar OpenRouter:', error);
-    return null;
   }
 }

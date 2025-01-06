@@ -1,69 +1,68 @@
-import "https://deno.land/x/xhr@0.1.0/mod.ts";
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
+import { handleOpenAIRequest } from './openai.ts';
+import { handleOpenRouterRequest } from './openrouter.ts';
 import { corsHeaders } from './config.ts';
-import { authenticateUser, getApiKeys } from './auth.ts';
-import { callOpenRouter } from './openrouter.ts';
-import { callOpenAI } from './openai.ts';
+
+console.log('🚀 Chat Edge Function iniciada');
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+    return new Response('ok', { headers: corsHeaders });
   }
 
   try {
-    console.log('🚀 Iniciando nova requisição de chat...');
+    const { openai_key, openrouter_key, model, messages } = await req.json();
+    console.log('📨 Requisição recebida:', { 
+      hasOpenAIKey: !!openai_key,
+      hasOpenRouterKey: !!openrouter_key,
+      model,
+      messagesCount: messages?.length 
+    });
+
+    // Verificar se temos as chaves necessárias
+    if (!openai_key && !openrouter_key) {
+      console.error('❌ Nenhuma chave API fornecida');
+      throw new Error('É necessário fornecer pelo menos uma chave API (OpenAI ou OpenRouter)');
+    }
+
+    // Verificar se o modelo foi especificado
+    if (!model) {
+      console.error('❌ Nenhum modelo especificado');
+      throw new Error('É necessário especificar um modelo');
+    }
+
+    // Determinar qual serviço usar baseado no modelo e chaves disponíveis
+    const isOpenRouterModel = model.includes('/') || model.includes('anthropic') || model.includes('claude');
     
-    const { supabaseClient } = await authenticateUser(req.headers.get('Authorization'));
-    console.log('✅ Usuário autenticado com sucesso');
-    
-    const apiKey = await getApiKeys(supabaseClient);
-    if (!apiKey) {
-      console.error('❌ Nenhuma chave API encontrada');
-      throw new Error('Por favor, configure suas chaves API na página de Configurações.');
-    }
-    console.log('✅ Chaves API carregadas com sucesso');
-
-    const { messages, temperature = 0.7 } = await req.json();
-    console.log(`📝 Processando ${messages.length} mensagens com temperatura ${temperature}`);
-
-    // Tenta OpenRouter primeiro se configurado
-    if (apiKey.openrouter_key) {
-      try {
-        console.log('🔄 Tentando OpenRouter primeiro...');
-        const openRouterResponse = await callOpenRouter(apiKey, messages, temperature);
-        if (openRouterResponse) {
-          console.log('✨ OpenRouter respondeu com sucesso');
-          return openRouterResponse;
-        }
-      } catch (error) {
-        console.error('⚠️ OpenRouter falhou:', error);
+    if (isOpenRouterModel) {
+      if (!openrouter_key) {
+        console.error('❌ Chave OpenRouter necessária para este modelo');
+        throw new Error('Chave OpenRouter é necessária para este modelo');
       }
-      console.log('↪️ OpenRouter falhou, tentando OpenAI...');
-    }
-
-    // Tenta OpenAI se OpenRouter falhou ou não está configurado
-    if (apiKey.openai_key) {
-      try {
-        console.log('🔄 Tentando OpenAI...');
-        return await callOpenAI(apiKey, messages, temperature);
-      } catch (error) {
-        console.error('❌ OpenAI falhou:', error);
-        throw error;
+      console.log('🔄 Redirecionando para OpenRouter');
+      return await handleOpenRouterRequest(req, openrouter_key, model);
+    } else {
+      if (!openai_key) {
+        console.error('❌ Chave OpenAI necessária para este modelo');
+        throw new Error('Chave OpenAI é necessária para este modelo');
       }
+      console.log('🔄 Redirecionando para OpenAI');
+      return await handleOpenAIRequest(req, openai_key, model);
     }
 
-    throw new Error('Nenhuma chave API válida configurada');
-
-  } catch (error) {
-    console.error('❌ Erro na função de chat:', error);
+  } catch (error: any) {
+    console.error('❌ Erro no processamento:', error);
     return new Response(
-      JSON.stringify({ 
-        error: error.message,
-        details: 'Por favor, verifique suas chaves API e cotas na página de Chaves API.'
+      JSON.stringify({
+        error: error.message || 'Erro interno no servidor',
+        details: error.toString()
       }),
-      { 
+      {
         status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        headers: {
+          ...corsHeaders,
+          'Content-Type': 'application/json',
+        },
       }
     );
   }
