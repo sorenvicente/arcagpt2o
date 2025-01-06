@@ -1,6 +1,6 @@
 import { Book, Brain, GraduationCap, School, Target } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
 interface ActionButtonsProps {
