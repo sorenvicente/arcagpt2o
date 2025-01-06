@@ -2,6 +2,7 @@ import { Book, Brain, GraduationCap, School, Target } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import ActionButton from "./ActionButton";
 import { usePromptLoader } from "./usePromptLoader";
+import { useState } from "react";
 
 interface ActionButtonsProps {
   onSelectPrompt: (prompt: string, category: string) => void;
@@ -11,6 +12,7 @@ interface ActionButtonsProps {
 const ActionButtons = ({ onSelectPrompt, activeCategory }: ActionButtonsProps) => {
   const { prompts } = usePromptLoader();
   const { toast } = useToast();
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   const normalizeString = (str: string) => {
     return str.toLowerCase()
@@ -18,21 +20,25 @@ const ActionButtons = ({ onSelectPrompt, activeCategory }: ActionButtonsProps) =
       .replace(/[\u0300-\u036f]/g, '');
   };
 
-  const handlePromptSelect = (category: string) => {
-    const selectedPrompt = prompts.find(p => 
-      normalizeString(p.category) === normalizeString(category)
-    );
+  const handleCategorySelect = (category: string) => {
+    const isCurrentlySelected = normalizeString(selectedCategory || '') === normalizeString(category);
     
-    if (selectedPrompt) {
-      onSelectPrompt(selectedPrompt.prompt, category);
-      console.log('Prompt selecionado:', selectedPrompt.prompt, 'Categoria:', category);
+    if (isCurrentlySelected) {
+      setSelectedCategory(null);
     } else {
-      console.log('Nenhum prompt encontrado para categoria:', category);
-      toast({
-        title: "Prompt não encontrado",
-        description: `Nenhum prompt configurado para a categoria ${category}`,
-        variant: "destructive",
-      });
+      setSelectedCategory(category);
+      const selectedPrompt = prompts.find(p => 
+        normalizeString(p.category) === normalizeString(category)
+      );
+      
+      if (!selectedPrompt) {
+        console.log('Nenhum prompt encontrado para categoria:', category);
+        toast({
+          title: "Prompt não encontrado",
+          description: `Nenhum prompt configurado para a categoria ${category}`,
+          variant: "destructive",
+        });
+      }
     }
   };
 
@@ -51,8 +57,8 @@ const ActionButtons = ({ onSelectPrompt, activeCategory }: ActionButtonsProps) =
           key={action.label}
           icon={action.icon}
           label={action.label}
-          isActive={normalizeString(activeCategory || '') === normalizeString(action.category)}
-          onClick={() => handlePromptSelect(action.category)}
+          isActive={normalizeString(selectedCategory || '') === normalizeString(action.category)}
+          onClick={() => handleCategorySelect(action.category)}
         />
       ))}
     </div>
