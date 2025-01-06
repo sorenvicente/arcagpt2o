@@ -26,37 +26,37 @@ const ActionButtons = ({ onSelectPrompt, activeCategory }: ActionButtonsProps) =
     );
     
     if (categorySubPrompts.length > 0) {
-      // Mostrar menu de sub-prompts
+      // Mostrar menu de sub-prompts em um toast
       toast({
         title: `Sub-prompts de ${category}`,
         description: (
           <SubPromptsMenu
             subPrompts={categorySubPrompts}
             onSelect={(subPrompt) => {
-              onSelectPrompt(subPrompt.prompt, subPrompt.category);
+              onSelectPrompt(subPrompt.prompt, category);
               console.log('Sub-prompt selecionado:', subPrompt.prompt, 'Categoria:', subPrompt.category);
             }}
           />
         ),
-        duration: 10000,
+        duration: 10000, // 10 segundos para escolher
       });
+    }
+
+    // Sempre selecionar o prompt principal da categoria
+    const selectedPrompt = prompts.find(p => 
+      normalizeString(p.category) === normalizeString(category)
+    );
+    
+    if (selectedPrompt) {
+      onSelectPrompt(selectedPrompt.prompt, category);
+      console.log('Prompt selecionado:', selectedPrompt.prompt, 'Categoria:', category);
     } else {
-      // Se não houver sub-prompts, usar o prompt principal
-      const selectedPrompt = prompts.find(p => 
-        normalizeString(p.category) === normalizeString(category)
-      );
-      
-      if (selectedPrompt) {
-        onSelectPrompt(selectedPrompt.prompt, category);
-        console.log('Prompt selecionado:', selectedPrompt.prompt, 'Categoria:', category);
-      } else {
-        console.log('Nenhum prompt encontrado para categoria:', category);
-        toast({
-          title: "Erro",
-          description: `Nenhum prompt encontrado para ${category}`,
-          variant: "destructive",
-        });
-      }
+      console.log('Nenhum prompt encontrado para categoria:', category);
+      toast({
+        title: "Erro",
+        description: `Nenhum prompt encontrado para ${category}`,
+        variant: "destructive",
+      });
     }
   };
 
