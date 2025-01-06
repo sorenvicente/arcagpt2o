@@ -7,7 +7,7 @@ export const checkAdminRole = async (userId: string) => {
       .from('profiles')
       .select('role')
       .eq('id', userId)
-      .maybeSingle(); // Changed from single() to maybeSingle()
+      .maybeSingle();
 
     if (error) {
       console.error('❌ Error fetching profile:', error);
@@ -19,8 +19,9 @@ export const checkAdminRole = async (userId: string) => {
       return false;
     }
 
-    console.log('✅ Admin role check complete:', profile.role === 'admin');
-    return profile.role === 'admin';
+    const isAdmin = profile.role === 'admin';
+    console.log('✅ Admin role check complete:', isAdmin);
+    return isAdmin;
   } catch (error) {
     console.error('❌ Error checking admin role:', error);
     return false;
@@ -38,7 +39,7 @@ export const handleSignOut = async () => {
     return { success: true };
   } catch (error) {
     console.error('❌ Logout error:', error);
-    localStorage.clear(); // Ensure local cleanup even on error
+    localStorage.clear();
     return { success: false, error };
   }
 };
