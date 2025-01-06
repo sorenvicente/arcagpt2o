@@ -1,7 +1,8 @@
 import { Book, Brain, GraduationCap, School, Target } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import ActionButton from "./ActionButton";
 import { usePromptLoader } from "./usePromptLoader";
+import { SubPromptsMenu } from "./SubPromptsMenu";
 
 interface ActionButtonsProps {
   onSelectPrompt: (prompt: string, category: string) => void;
@@ -9,7 +10,7 @@ interface ActionButtonsProps {
 }
 
 const ActionButtons = ({ onSelectPrompt, activeCategory }: ActionButtonsProps) => {
-  const { prompts } = usePromptLoader();
+  const { prompts, subPrompts } = usePromptLoader();
   const { toast } = useToast();
 
   const normalizeString = (str: string) => {
@@ -19,21 +20,43 @@ const ActionButtons = ({ onSelectPrompt, activeCategory }: ActionButtonsProps) =
   };
 
   const handlePromptSelect = (category: string) => {
-    const selectedPrompt = prompts.find(p => 
-      normalizeString(p.category) === normalizeString(category)
+    // Filtrar sub-prompts da categoria selecionada
+    const categorySubPrompts = subPrompts.filter(p => 
+      normalizeString(p.parent_category || '') === normalizeString(category)
     );
     
-    if (selectedPrompt) {
-      // Usar o prompt real do banco de dados em vez de uma mensagem genérica
-      onSelectPrompt(selectedPrompt.prompt, category);
-      console.log('Prompt selecionado:', selectedPrompt.prompt, 'Categoria:', category);
-    } else {
-      console.log('Nenhum prompt encontrado para categoria:', category);
+    if (categorySubPrompts.length > 0) {
+      // Mostrar menu de sub-prompts
       toast({
-        title: "Prompt não encontrado",
-        description: `Nenhum prompt configurado para a categoria ${category}`,
-        variant: "destructive",
+        title: `Sub-prompts de ${category}`,
+        description: (
+          <SubPromptsMenu
+            subPrompts={categorySubPrompts}
+            onSelect={(subPrompt) => {
+              onSelectPrompt(subPrompt.prompt, subPrompt.category);
+              console.log('Sub-prompt selecionado:', subPrompt.prompt, 'Categoria:', subPrompt.category);
+            }}
+          />
+        ),
+        duration: 10000,
       });
+    } else {
+      // Se não houver sub-prompts, usar o prompt principal
+      const selectedPrompt = prompts.find(p => 
+        normalizeString(p.category) === normalizeString(category)
+      );
+      
+      if (selectedPrompt) {
+        onSelectPrompt(selectedPrompt.prompt, category);
+        console.log('Prompt selecionado:', selectedPrompt.prompt, 'Categoria:', category);
+      } else {
+        console.log('Nenhum prompt encontrado para categoria:', category);
+        toast({
+          title: "Erro",
+          description: `Nenhum prompt encontrado para ${category}`,
+          variant: "destructive",
+        });
+      }
     }
   };
 
