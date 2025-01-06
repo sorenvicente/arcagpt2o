@@ -31,13 +31,11 @@ const ActionButtons = ({ onSelectPrompt, activeCategory }: ActionButtonsProps) =
         normalizeString(p.category) === normalizeString(category)
       );
       
-      if (!selectedPrompt) {
+      if (selectedPrompt) {
+        onSelectPrompt(selectedPrompt.prompt, category);
+        console.log('Prompt selecionado:', selectedPrompt.prompt, 'Categoria:', category);
+      } else {
         console.log('Nenhum prompt encontrado para categoria:', category);
-        toast({
-          title: "Prompt não encontrado",
-          description: `Nenhum prompt configurado para a categoria ${category}`,
-          variant: "destructive",
-        });
       }
     }
   };

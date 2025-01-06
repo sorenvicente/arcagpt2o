@@ -32,7 +32,8 @@ export const usePromptLoader = () => {
 
         const { data, error } = await supabase
           .from('prompt_blocks')
-          .select('*');
+          .select('*')
+          .order('created_at', { ascending: false });
         
         if (error) {
           console.error('Erro ao carregar prompts:', error);
