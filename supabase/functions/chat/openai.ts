@@ -1,6 +1,8 @@
 import { corsHeaders, defaultConfig } from './config.ts';
 
 export async function callOpenAI(apiKey: any, messages: any[], temperature: number) {
+  console.log('Tentando usar OpenAI...');
+  
   if (!apiKey.openai_key) {
     throw new Error('OpenAI API key não configurada');
   }
@@ -9,7 +11,7 @@ export async function callOpenAI(apiKey: any, messages: any[], temperature: numb
     const openAIResponse = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${apiKey.openai_key}`,
+        'Authorization': `Bearer ${apiKey.openai_key.trim()}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -22,7 +24,8 @@ export async function callOpenAI(apiKey: any, messages: any[], temperature: numb
 
     if (!openAIResponse.ok) {
       const error = await openAIResponse.json();
-      throw new Error(error.error?.message || 'Erro ao chamar OpenAI');
+      console.error('Erro na API do OpenAI:', error);
+      throw new Error(error.error?.message || 'Erro ao chamar a API do OpenAI');
     }
 
     const data = await openAIResponse.json();

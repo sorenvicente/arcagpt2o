@@ -1,6 +1,6 @@
 import { Book, Brain, GraduationCap, School, Target } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
 interface ActionButtonsProps {
@@ -10,8 +10,6 @@ interface ActionButtonsProps {
 
 const ActionButtons = ({ onSelectPrompt, activeCategory }: ActionButtonsProps) => {
   const [prompts, setPrompts] = useState<any[]>([]);
-  const [subPrompts, setSubPrompts] = useState<any[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -53,14 +51,8 @@ const ActionButtons = ({ onSelectPrompt, activeCategory }: ActionButtonsProps) =
         }
 
         if (data) {
-          // Separar prompts principais e sub-prompts
-          const mainPrompts = data.filter(p => !p.parent_category);
-          const subPrompts = data.filter(p => p.parent_category);
-          
-          setPrompts(mainPrompts);
-          setSubPrompts(subPrompts);
-          console.log('Prompts carregados:', mainPrompts);
-          console.log('Sub-prompts carregados:', subPrompts);
+          setPrompts(data);
+          console.log('Prompts carregados:', data);
         }
       } catch (error) {
         console.error('Erro ao carregar prompts:', error);
@@ -102,56 +94,22 @@ const ActionButtons = ({ onSelectPrompt, activeCategory }: ActionButtonsProps) =
   };
 
   const handlePromptSelect = (category: string) => {
-    setSelectedCategory(category);
-    
-    // Filtrar sub-prompts da categoria selecionada
-    const categorySubPrompts = subPrompts.filter(p => 
-      normalizeString(p.parent_category) === normalizeString(category)
+    const selectedPrompt = prompts.find(p => 
+      normalizeString(p.category) === normalizeString(category)
     );
     
-    if (categorySubPrompts.length > 0) {
-      // Mostrar menu de sub-prompts
-      toast({
-        title: `Sub-prompts de ${category}`,
-        description: (
-          <div className="space-y-2">
-            {categorySubPrompts.map((subPrompt) => (
-              <button
-                key={subPrompt.id}
-                onClick={() => handleSubPromptSelect(subPrompt)}
-                className="w-full text-left px-3 py-2 rounded-lg hover:bg-gray-700 transition-colors"
-              >
-                {subPrompt.name}
-              </button>
-            ))}
-          </div>
-        ),
-        duration: 10000, // 10 segundos para escolher
-      });
+    if (selectedPrompt) {
+      const systemMessage = `Você acionou a assistente de ${category}`;
+      onSelectPrompt(systemMessage, category);
+      console.log('Prompt selecionado:', selectedPrompt.prompt, 'Categoria:', category);
     } else {
-      // Se não houver sub-prompts, usar o prompt principal
-      const selectedPrompt = prompts.find(p => 
-        normalizeString(p.category) === normalizeString(category)
-      );
-      
-      if (selectedPrompt) {
-        onSelectPrompt(selectedPrompt.prompt, category);
-        console.log('Prompt selecionado:', selectedPrompt.prompt, 'Categoria:', category);
-      } else {
-        console.log('Nenhum prompt encontrado para categoria:', category);
-        toast({
-          title: "Erro",
-          description: `Nenhum prompt encontrado para ${category}`,
-          variant: "destructive",
-        });
-      }
+      console.log('Nenhum prompt encontrado para categoria:', category);
+      toast({
+        title: "Erro",
+        description: `Nenhum prompt encontrado para ${category}`,
+        variant: "destructive",
+      });
     }
-  };
-
-  const handleSubPromptSelect = (subPrompt: any) => {
-    // Preencher a área de texto com o prompt para edição
-    onSelectPrompt(subPrompt.prompt, subPrompt.category);
-    console.log('Sub-prompt selecionado:', subPrompt.prompt, 'Categoria:', subPrompt.category);
   };
 
   const actions = [
