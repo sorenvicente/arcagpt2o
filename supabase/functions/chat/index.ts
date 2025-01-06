@@ -11,41 +11,43 @@ serve(async (req) => {
   }
 
   try {
-    console.log('Iniciando processamento da requisição de chat...');
+    console.log('🚀 Iniciando nova requisição de chat...');
     
     const { supabaseClient } = await authenticateUser(req.headers.get('Authorization'));
-    const apiKey = await getApiKeys(supabaseClient);
+    console.log('✅ Usuário autenticado com sucesso');
     
+    const apiKey = await getApiKeys(supabaseClient);
     if (!apiKey) {
-      console.error('Nenhuma chave API encontrada');
+      console.error('❌ Nenhuma chave API encontrada');
       throw new Error('Por favor, configure suas chaves API na página de Configurações.');
     }
+    console.log('✅ Chaves API carregadas com sucesso');
 
     const { messages, temperature = 0.7 } = await req.json();
-    console.log('Processando requisição de chat com mensagens:', messages);
+    console.log(`📝 Processando ${messages.length} mensagens com temperatura ${temperature}`);
 
     // Tenta OpenRouter primeiro se configurado
     if (apiKey.openrouter_key) {
       try {
-        console.log('Tentando usar OpenRouter primeiro...');
+        console.log('🔄 Tentando OpenRouter primeiro...');
         const openRouterResponse = await callOpenRouter(apiKey, messages, temperature);
         if (openRouterResponse) {
-          console.log('OpenRouter respondeu com sucesso');
+          console.log('✨ OpenRouter respondeu com sucesso');
           return openRouterResponse;
         }
       } catch (error) {
-        console.error('OpenRouter falhou:', error);
+        console.error('⚠️ OpenRouter falhou:', error);
       }
-      console.log('OpenRouter falhou, tentando OpenAI...');
+      console.log('↪️ OpenRouter falhou, tentando OpenAI...');
     }
 
     // Tenta OpenAI se OpenRouter falhou ou não está configurado
     if (apiKey.openai_key) {
       try {
-        console.log('Tentando usar OpenAI...');
+        console.log('🔄 Tentando OpenAI...');
         return await callOpenAI(apiKey, messages, temperature);
       } catch (error) {
-        console.error('OpenAI falhou:', error);
+        console.error('❌ OpenAI falhou:', error);
         throw error;
       }
     }
@@ -53,7 +55,7 @@ serve(async (req) => {
     throw new Error('Nenhuma chave API válida configurada');
 
   } catch (error) {
-    console.error('Erro na função de chat:', error);
+    console.error('❌ Erro na função de chat:', error);
     return new Response(
       JSON.stringify({ 
         error: error.message,
