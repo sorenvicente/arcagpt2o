@@ -47,9 +47,10 @@ export const AuthForm = () => {
             confirmation_text: 'Verifique seu email para fazer login',
           },
           verify_otp: {
+            email_input_label: 'Email',
+            token_input_label: 'Código de verificação',
             button_label: 'Reenviar email de confirmação',
             loading_button_label: 'Reenviando...',
-            confirmation_text: 'Verifique seu email para confirmar',
           },
           errors: {
             password_length: 'A senha deve ter pelo menos 6 caracteres',
