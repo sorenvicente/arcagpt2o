@@ -7,6 +7,11 @@ export async function callOpenAI(apiKey: any, messages: any[], temperature: numb
     throw new Error('OpenAI API key não configurada');
   }
 
+  // Validar formato da chave OpenAI
+  if (!apiKey.openai_key.trim().startsWith('sk-') || apiKey.openai_key.trim().startsWith('sk-proj-')) {
+    throw new Error('Formato inválido da chave OpenAI. A chave deve começar com "sk-". Por favor, verifique se você está usando uma chave válida da OpenAI.');
+  }
+
   try {
     const openAIResponse = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
