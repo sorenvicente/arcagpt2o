@@ -32,7 +32,9 @@ export const useSession = () => {
   };
 
   const checkSessionExpiry = async (currentSession: Session) => {
-    const tokenExpiryTime = new Date(currentSession.expires_at! * 1000);
+    if (!currentSession.expires_at) return currentSession;
+    
+    const tokenExpiryTime = new Date(currentSession.expires_at * 1000);
     const now = new Date();
     const fiveMinutesFromNow = new Date(now.getTime() + 5 * 60000);
 

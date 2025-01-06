@@ -22,6 +22,7 @@ export const useAuth = (requiredRole?: 'admin' | 'user') => {
         
         if (!currentSession) {
           console.log('⚠️ No active session found');
+          setIsLoading(false);
           navigate('/login');
           return;
         }
@@ -40,10 +41,12 @@ export const useAuth = (requiredRole?: 'admin' | 'user') => {
               variant: "destructive"
             });
             navigate('/');
+            setIsLoading(false);
             return;
           }
           console.log('✅ Admin role confirmed');
         }
+        setIsLoading(false);
       } catch (error) {
         console.error('❌ Auth error:', error);
         toast({
@@ -53,7 +56,6 @@ export const useAuth = (requiredRole?: 'admin' | 'user') => {
         });
         await handleSignOut();
         navigate('/login');
-      } finally {
         setIsLoading(false);
       }
     };
