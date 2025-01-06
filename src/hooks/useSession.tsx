@@ -19,14 +19,14 @@ export const useSession = () => {
     }
   };
 
-  const checkSessionExpiry = async (currentSession: Session) => {
+  const checkSessionExpiry = async (currentSession: Session | null) => {
     if (!currentSession) return null;
     
     const tokenExpiryTime = new Date(currentSession.expires_at! * 1000);
     const now = new Date();
-    const tenMinutesFromNow = new Date(now.getTime() + 10 * 60000);
+    const fifteenMinutesFromNow = new Date(now.getTime() + 15 * 60000);
 
-    if (tokenExpiryTime < tenMinutesFromNow) {
+    if (tokenExpiryTime < fifteenMinutesFromNow) {
       console.log('Token expiring soon, refreshing...');
       return await refreshSession();
     }
@@ -42,7 +42,6 @@ export const useSession = () => {
         return null;
       }
       
-      if (!session) return null;
       return await checkSessionExpiry(session);
     } catch (error) {
       console.error('Error getting active session:', error);
@@ -52,6 +51,7 @@ export const useSession = () => {
 
   useEffect(() => {
     let mounted = true;
+    let sessionCheckInterval: NodeJS.Timeout;
 
     const initSession = async () => {
       const activeSession = await getActiveSession();
@@ -65,21 +65,23 @@ export const useSession = () => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, currentSession) => {
       console.log('Auth state changed:', event);
       
-      if (currentSession && mounted) {
-        const validSession = await checkSessionExpiry(currentSession);
-        setSession(validSession);
-      } else if (mounted) {
-        setSession(null);
+      if (mounted) {
+        if (currentSession) {
+          const validSession = await checkSessionExpiry(currentSession);
+          setSession(validSession);
+        } else {
+          setSession(null);
+        }
       }
     });
 
-    // Configurar intervalo para verificar a sessão periodicamente
-    const sessionCheckInterval = setInterval(async () => {
+    // Check session less frequently to avoid too many requests
+    sessionCheckInterval = setInterval(async () => {
       if (mounted) {
         const activeSession = await getActiveSession();
         setSession(activeSession);
       }
-    }, 4 * 60 * 1000); // Verificar a cada 4 minutos
+    }, 10 * 60 * 1000); // Check every 10 minutes
 
     return () => {
       mounted = false;
