@@ -8,10 +8,12 @@ export const useLoginRedirect = () => {
   const { toast } = useToast();
 
   useEffect(() => {
+    let mounted = true;
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       console.log("Auth state changed:", event, session);
       
-      if (event === 'SIGNED_IN' && session) {
+      if (event === 'SIGNED_IN' && session && mounted) {
         try {
           const { data: profile, error: profileError } = await supabase
             .from('profiles')
@@ -32,18 +34,21 @@ export const useLoginRedirect = () => {
           });
         } catch (error) {
           console.error('Error during login:', error);
-          toast({
-            title: "Erro ao fazer login",
-            description: "Por favor, verifique suas credenciais e tente novamente.",
-            variant: "destructive"
-          });
+          if (mounted) {
+            toast({
+              title: "Erro ao fazer login",
+              description: "Por favor, verifique suas credenciais e tente novamente.",
+              variant: "destructive"
+            });
+          }
         }
-      } else if (event === 'SIGNED_OUT') {
+      } else if (event === 'SIGNED_OUT' && mounted) {
         navigate('/login');
       }
     });
 
     return () => {
+      mounted = false;
       subscription.unsubscribe();
     };
   }, [navigate, toast]);
