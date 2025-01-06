@@ -5,8 +5,8 @@ export const colors = {
   background: "hsl(var(--background))",
   foreground: "hsl(var(--foreground))",
   chatgpt: {
-    sidebar: "#202123",
-    main: "#343541",
+    sidebar: "#202123", // Mantendo a cor original da sidebar
+    main: "#343541", // Cor principal atualizada
     secondary: "#444654",
     hover: "#2A2B32",
     border: "#4E4F60",
