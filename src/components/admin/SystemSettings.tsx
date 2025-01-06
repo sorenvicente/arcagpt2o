@@ -6,16 +6,39 @@ import { useAuth } from "@/hooks/useAuth";
 import { LoadingSpinner } from "@/components/auth/LoadingSpinner";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import { useToast } from "@/components/ui/use-toast";
 
 export const SystemSettings = () => {
   const { isLoading, user } = useAuth('admin');
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   useEffect(() => {
-    if (!isLoading && !user) {
-      navigate('/login');
-    }
-  }, [isLoading, user, navigate]);
+    const checkAccess = async () => {
+      try {
+        console.log('🔍 Verificando acesso às configurações...');
+        if (!isLoading && !user) {
+          console.log('❌ Usuário não autenticado, redirecionando...');
+          toast({
+            title: "Acesso negado",
+            description: "Você precisa estar logado como administrador para acessar esta página.",
+            variant: "destructive",
+          });
+          navigate('/login');
+        }
+      } catch (error) {
+        console.error('❌ Erro ao verificar acesso:', error);
+        toast({
+          title: "Erro ao verificar acesso",
+          description: "Por favor, tente novamente.",
+          variant: "destructive",
+        });
+        navigate('/login');
+      }
+    };
+
+    checkAccess();
+  }, [isLoading, user, navigate, toast]);
 
   if (isLoading) {
     return <LoadingSpinner />;
