@@ -13,26 +13,18 @@ export const useAuth = (requiredRole?: 'admin' | 'user') => {
   const { session, getActiveSession } = useSession();
 
   useEffect(() => {
-    let mounted = true;
-    let checkTimeout: NodeJS.Timeout;
-
     const checkAuth = async () => {
       try {
         const currentSession = await getActiveSession();
         
         if (!currentSession) {
-          if (mounted) {
-            setUser(null);
-            navigate('/login');
-          }
+          navigate('/login');
           return;
         }
 
-        if (mounted) {
-          setUser(currentSession.user);
-        }
+        setUser(currentSession.user);
 
-        if (requiredRole === 'admin' && mounted) {
+        if (requiredRole === 'admin') {
           const isAdmin = await checkAdminRole(currentSession.user.id);
           
           if (!isAdmin) {
@@ -47,39 +39,23 @@ export const useAuth = (requiredRole?: 'admin' | 'user') => {
         }
       } catch (error) {
         console.error('Auth error:', error);
-        if (mounted) {
-          toast({
-            title: "Erro de autenticação",
-            description: "Por favor, faça login novamente.",
-            variant: "destructive"
-          });
-          await handleSignOut();
-          navigate('/login');
-        }
+        toast({
+          title: "Erro de autenticação",
+          description: "Por favor, faça login novamente.",
+          variant: "destructive"
+        });
+        await handleSignOut();
+        navigate('/login');
       } finally {
-        if (mounted) {
-          setIsLoading(false);
-        }
+        setIsLoading(false);
       }
     };
 
     checkAuth();
-
-    // Schedule periodic checks less frequently
-    checkTimeout = setInterval(checkAuth, 5 * 60 * 1000); // Check every 5 minutes
-
-    return () => {
-      mounted = false;
-      clearInterval(checkTimeout);
-    };
   }, [navigate, requiredRole, toast, getActiveSession]);
 
   useEffect(() => {
-    if (session?.user) {
-      setUser(session.user);
-    } else {
-      setUser(null);
-    }
+    setUser(session?.user ?? null);
   }, [session]);
 
   const signOut = async () => {

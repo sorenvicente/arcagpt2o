@@ -21,8 +21,3 @@
 .selected-item {
   @apply bg-chatgpt-secondary text-white border-l-4 border-chatgpt-border;
 }
-
-/* Main content area styles */
-.main-content {
-  @apply bg-chatgpt-main;
-}

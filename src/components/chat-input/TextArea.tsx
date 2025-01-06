@@ -18,7 +18,7 @@ const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
         onKeyDown={onKeyDown}
         placeholder="Digite sua mensagem..."
         className="w-full resize-none rounded-xl px-4 py-4 pr-16
-          bg-[#343541] text-white
+          bg-chatgpt-input text-white
           placeholder:text-gray-400"
         style={{ 
           maxHeight: "50vh",

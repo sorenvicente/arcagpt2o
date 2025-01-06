@@ -22,22 +22,6 @@ export const useChatMessages = (
     }
   };
 
-  const getPersonalizationPrompt = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('prompt_blocks')
-        .select('prompt')
-        .eq('category', 'personalizar_chatgpt')
-        .single();
-
-      if (error) throw error;
-      return data?.prompt || '';
-    } catch (error) {
-      console.error('Error fetching personalization prompt:', error);
-      return '';
-    }
-  };
-
   const sendMessage = async (content: string, category?: string) => {
     try {
       setIsLoading(true);
@@ -68,18 +52,12 @@ export const useChatMessages = (
           throw new Error('No authentication token available');
         }
 
-        // Get the personalization prompt before sending the message
-        const systemPrompt = await getPersonalizationPrompt();
-        
         controller = new AbortController();
 
         const { data, error } = await supabase.functions.invoke('chat', {
           body: { 
-            messages: systemPrompt ? [
-              { role: 'system', content: systemPrompt },
-              ...updatedMessages
-            ] : updatedMessages,
-            signal: controller.signal
+            messages: updatedMessages,
+            signal: controller.signal // This will be handled by the Edge Function
           },
           headers: {
             Authorization: `Bearer ${session.access_token}`

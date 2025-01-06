@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -32,8 +32,7 @@ export const usePromptLoader = () => {
 
         const { data, error } = await supabase
           .from('prompt_blocks')
-          .select('*')
-          .order('created_at', { ascending: false });
+          .select('*');
         
         if (error) {
           console.error('Erro ao carregar prompts:', error);

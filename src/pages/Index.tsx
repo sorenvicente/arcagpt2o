@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Sidebar from '@/components/Sidebar';
 import ChatHeader from '@/components/ChatHeader';
 import ChatInput from '@/components/ChatInput';
-import ActionButtons from '@/components/action-buttons/ActionButtons';
+import ActionButtons from '@/components/ActionButtons';
 import MessageList from '@/components/MessageList';
+import EditorButton from '@/components/editor/EditorButton';
 import { useChat } from '@/hooks/useChat';
 
 const Index = () => {
@@ -76,6 +77,8 @@ const Index = () => {
           )}
         </div>
       </main>
+      
+      <EditorButton />
     </div>
   );
 };
