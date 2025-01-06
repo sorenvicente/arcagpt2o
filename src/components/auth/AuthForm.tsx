@@ -46,7 +46,7 @@ export const AuthForm = () => {
             loading_button_label: 'Enviando link...',
             confirmation_text: 'Verifique seu email para fazer login',
           },
-          confirmation: {
+          verify_otp: {
             button_label: 'Reenviar email de confirmação',
             loading_button_label: 'Reenviando...',
             confirmation_text: 'Verifique seu email para confirmar',
