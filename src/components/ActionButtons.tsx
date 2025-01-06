@@ -99,8 +99,7 @@ const ActionButtons = ({ onSelectPrompt, activeCategory }: ActionButtonsProps) =
     );
     
     if (selectedPrompt) {
-      const systemMessage = `Você acionou a assistente de ${category}`;
-      onSelectPrompt(systemMessage, category);
+      onSelectPrompt(selectedPrompt.prompt, category);
       console.log('Prompt selecionado:', selectedPrompt.prompt, 'Categoria:', category);
     } else {
       console.log('Nenhum prompt encontrado para categoria:', category);
