@@ -41,6 +41,24 @@ export const AuthForm = () => {
             loading_button_label: 'Enviando instruções...',
             confirmation_text: 'Verifique seu email para redefinir sua senha',
           },
+          magic_link: {
+            button_label: 'Enviar link mágico',
+            loading_button_label: 'Enviando link...',
+            confirmation_text: 'Verifique seu email para fazer login',
+          },
+          confirmation: {
+            button_label: 'Reenviar email de confirmação',
+            loading_button_label: 'Reenviando...',
+            confirmation_text: 'Verifique seu email para confirmar',
+          },
+          errors: {
+            password_length: 'A senha deve ter pelo menos 6 caracteres',
+            email_required: 'Email é obrigatório',
+            password_required: 'Senha é obrigatória',
+            email_invalid: 'Email inválido',
+            invalid_credentials: 'Email ou senha incorretos',
+            user_exists: 'Um usuário com este email já existe',
+          }
         },
       }}
     />
