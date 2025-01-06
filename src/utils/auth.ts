@@ -11,19 +11,6 @@ export const checkAdminRole = async (userId: string) => {
 
     if (error) {
       console.error('❌ Error fetching profile:', error);
-      if (error.code === 'PGRST116') {
-        console.log('⚠️ Profile not found, might need to wait for creation');
-        // Wait a bit and retry once
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        const { data: retryProfile, error: retryError } = await supabase
-          .from('profiles')
-          .select('role')
-          .eq('id', userId)
-          .single();
-        
-        if (retryError) throw retryError;
-        return retryProfile?.role === 'admin';
-      }
       throw error;
     }
 
