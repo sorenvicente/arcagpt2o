@@ -51,16 +51,8 @@ export const AuthForm = () => {
             token_input_label: 'Código de verificação',
             button_label: 'Reenviar email de confirmação',
             loading_button_label: 'Reenviando...',
-          },
-          errors: {
-            password_length: 'A senha deve ter pelo menos 6 caracteres',
-            email_required: 'Email é obrigatório',
-            password_required: 'Senha é obrigatória',
-            email_invalid: 'Email inválido',
-            invalid_credentials: 'Email ou senha incorretos',
-            user_exists: 'Um usuário com este email já existe',
           }
-        },
+        }
       }}
     />
   );
