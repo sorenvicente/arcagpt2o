@@ -85,6 +85,7 @@ export type Database = {
           description: string | null
           id: string
           name: string
+          parent_category: string | null
           prompt: string
           updated_at: string
         }
@@ -94,6 +95,7 @@ export type Database = {
           description?: string | null
           id?: string
           name: string
+          parent_category?: string | null
           prompt: string
           updated_at?: string
         }
@@ -103,6 +105,7 @@ export type Database = {
           description?: string | null
           id?: string
           name?: string
+          parent_category?: string | null
           prompt?: string
           updated_at?: string
         }
