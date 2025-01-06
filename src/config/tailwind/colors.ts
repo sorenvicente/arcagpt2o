@@ -6,7 +6,7 @@ export const colors = {
   foreground: "hsl(var(--foreground))",
   chatgpt: {
     sidebar: "#202123", // Mantendo a cor original da sidebar
-    main: "#343541", // Cor principal atualizada
+    main: "#1E1F20", // Cor principal atualizada para o tom do Lovable
     secondary: "#444654",
     hover: "#2A2B32",
     border: "#4E4F60",
