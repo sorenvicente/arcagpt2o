@@ -8,11 +8,14 @@ export const useLoginRedirect = () => {
   const { toast } = useToast();
 
   useEffect(() => {
+    console.log('🔄 Setting up login redirect...');
+    
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log("Auth state changed:", event, session);
+      console.log("🔔 Auth state changed:", event, session?.user?.email);
       
       if (event === 'SIGNED_IN' && session) {
         try {
+          console.log('🔍 Fetching user profile...');
           const { data: profile, error: profileError } = await supabase
             .from('profiles')
             .select('role')
@@ -20,10 +23,26 @@ export const useLoginRedirect = () => {
             .single();
 
           if (profileError) {
-            console.error('Error fetching profile:', profileError);
-            throw profileError;
+            console.error('❌ Error fetching profile:', profileError);
+            if (profileError.code === 'PGRST116') {
+              console.log('⚠️ Profile not found, might need to wait for creation');
+              // Wait a bit and retry once
+              await new Promise(resolve => setTimeout(resolve, 1000));
+              const { error: retryError } = await supabase
+                .from('profiles')
+                .select('role')
+                .eq('id', session.user.id)
+                .single();
+              
+              if (retryError) {
+                throw retryError;
+              }
+            } else {
+              throw profileError;
+            }
           }
 
+          console.log('✅ Login successful, redirecting to app');
           navigate('/app');
           
           toast({
@@ -31,7 +50,7 @@ export const useLoginRedirect = () => {
             description: "Bem-vindo de volta! Estamos felizes em ter você aqui."
           });
         } catch (error) {
-          console.error('Error during login:', error);
+          console.error('❌ Error during login:', error);
           toast({
             title: "Erro ao fazer login",
             description: "Por favor, verifique suas credenciais e tente novamente.",
@@ -39,11 +58,13 @@ export const useLoginRedirect = () => {
           });
         }
       } else if (event === 'SIGNED_OUT') {
+        console.log('👋 User signed out, redirecting to login');
         navigate('/login');
       }
     });
 
     return () => {
+      console.log('🧹 Cleaning up login redirect subscription');
       subscription.unsubscribe();
     };
   }, [navigate, toast]);
