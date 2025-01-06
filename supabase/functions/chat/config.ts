@@ -6,5 +6,5 @@ export const corsHeaders = {
 export const defaultConfig = {
   max_tokens: 4000,
   defaultOpenRouterModel: 'anthropic/claude-2',
-  defaultOpenAIModel: 'gpt-4-1106-preview'
+  defaultOpenAIModel: 'gpt-4'
 };

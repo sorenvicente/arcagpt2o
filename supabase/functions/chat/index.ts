@@ -17,12 +17,30 @@ serve(async (req) => {
     const { messages, temperature = 0.7 } = await req.json();
     console.log('Processando requisição de chat com mensagens:', messages);
 
-    // Try OpenRouter first if configured
+    // Primeiro tenta usar OpenRouter se configurado
     if (apiKey.openrouter_key) {
       try {
-        const openRouterResponse = await callOpenRouter(apiKey, messages, temperature);
-        if (openRouterResponse) {
-          return openRouterResponse;
+        const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${apiKey.openrouter_key}`,
+            'Content-Type': 'application/json',
+            'HTTP-Referer': Deno.env.get('SUPABASE_URL') || 'http://localhost:5173',
+            'X-Title': 'Lovable Chat App',
+          },
+          body: JSON.stringify({
+            model: apiKey.selected_openrouter_model || 'anthropic/claude-2',
+            messages: messages,
+            temperature: temperature,
+          }),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          return new Response(
+            JSON.stringify({ content: data.choices[0].message.content }),
+            { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          );
         }
       } catch (error) {
         console.error('OpenRouter falhou:', error);
@@ -30,10 +48,33 @@ serve(async (req) => {
       console.log('OpenRouter falhou, tentando OpenAI...');
     }
 
-    // Try OpenAI if configured
+    // Tenta OpenAI se configurado
     if (apiKey.openai_key) {
       try {
-        return await callOpenAI(apiKey, messages, temperature);
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${apiKey.openai_key}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            model: apiKey.selected_openai_model || 'gpt-4',
+            messages: messages,
+            temperature: temperature,
+          }),
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          console.error('Erro na API do OpenAI:', error);
+          throw new Error(error.error?.message || 'Erro ao chamar a API do OpenAI');
+        }
+
+        const data = await response.json();
+        return new Response(
+          JSON.stringify({ content: data.choices[0].message.content }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
       } catch (error) {
         console.error('OpenAI falhou:', error);
         throw error;
