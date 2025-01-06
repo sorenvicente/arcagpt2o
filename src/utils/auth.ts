@@ -7,18 +7,23 @@ export const checkAdminRole = async (userId: string) => {
       .from('profiles')
       .select('role')
       .eq('id', userId)
-      .single();
+      .maybeSingle(); // Changed from single() to maybeSingle()
 
     if (error) {
       console.error('❌ Error fetching profile:', error);
-      throw error;
+      return false;
     }
 
-    console.log('✅ Admin role check complete:', profile?.role === 'admin');
-    return profile?.role === 'admin';
+    if (!profile) {
+      console.log('⚠️ No profile found for user');
+      return false;
+    }
+
+    console.log('✅ Admin role check complete:', profile.role === 'admin');
+    return profile.role === 'admin';
   } catch (error) {
     console.error('❌ Error checking admin role:', error);
-    throw error;
+    return false;
   }
 };
 
