@@ -49,9 +49,9 @@ const EditableMessage = ({ content, onSave }: EditableMessageProps) => {
       onChange={(e) => setEditedContent(e.target.value)}
       onBlur={() => onSave(editedContent)}
       onKeyDown={handleKeyDown}
-      className="w-full min-w-[300px] bg-transparent outline-none resize-none 
+      className="w-full min-w-[300px] bg-[#343541] outline-none resize-none 
         overflow-y-auto min-h-[24px] p-2 rounded-lg text-white
-        focus:bg-gray-700/30 transition-colors"
+        focus:bg-[#444654] transition-colors"
       style={{
         maxWidth: '100%',
         maxHeight: '40vh',
