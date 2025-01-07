@@ -7,6 +7,17 @@
   @apply bg-chatgpt-main text-white;
 }
 
+/* Smooth page transitions */
+.page-transition {
+  @apply transition-opacity duration-300 ease-in-out;
+}
+
+/* Auth container - prevent layout shifts */
+.auth-container {
+  @apply min-h-screen flex items-center justify-center;
+  height: 100vh; /* Prevent content jumping */
+}
+
 /* Custom scrollbar styling */
 ::-webkit-scrollbar {
   @apply w-1.5 sm:w-2;
