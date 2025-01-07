@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { User } from "@supabase/supabase-js";
 import { useToast } from "@/hooks/use-toast";
 import { useSession } from "./useSession";
-import { checkAdminRole, handleSignOut } from "@/utils/auth";
+import { handleSignOut } from "@/utils/auth";
 import { supabase } from "@/integrations/supabase/client";
 
 export const useAuth = (requiredRole?: 'admin' | 'user') => {
@@ -38,18 +38,19 @@ export const useAuth = (requiredRole?: 'admin' | 'user') => {
 
         setUser(currentSession.user);
 
-        // Verificar perfil do usuário
+        // Verificar perfil do usuário usando maybeSingle() em vez de single()
         const { data: profile, error: profileError } = await supabase
           .from('profiles')
           .select('role')
           .eq('id', currentSession.user.id)
-          .single();
+          .maybeSingle();
 
         if (profileError) {
           console.error('Erro ao buscar perfil:', profileError);
           throw new Error('Falha ao verificar permissões');
         }
 
+        // Se não encontrou perfil, considerar como usuário comum
         const userIsAdmin = profile?.role === 'admin';
         setIsAdmin(userIsAdmin);
 
