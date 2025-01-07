@@ -1,18 +1,18 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { User } from "@supabase/supabase-js";
 import { useToast } from "@/hooks/use-toast";
 import { useSession } from "./useSession";
-import { handleSignOut } from "@/utils/auth";
-import { supabase } from "@/integrations/supabase/client";
+import { useAuthState } from "./auth/useAuthState";
+import { useProfileCheck } from "./auth/useProfileCheck";
+import { useAuthSignOut } from "./auth/useAuthSignOut";
 
 export const useAuth = (requiredRole?: 'admin' | 'user') => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState(true);
-  const [user, setUser] = useState<User | null>(null);
-  const { session, getActiveSession } = useSession();
-  const [isAdmin, setIsAdmin] = useState(false);
+  const { getActiveSession } = useSession();
+  const { isLoading, setIsLoading, user, setUser, isAdmin, setIsAdmin } = useAuthState();
+  const { checkUserProfile } = useProfileCheck();
+  const { signOut } = useAuthSignOut();
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -37,21 +37,7 @@ export const useAuth = (requiredRole?: 'admin' | 'user') => {
         }
 
         setUser(currentSession.user);
-
-        // Verificar perfil do usuário usando maybeSingle() em vez de single()
-        const { data: profile, error: profileError } = await supabase
-          .from('profiles')
-          .select('role')
-          .eq('id', currentSession.user.id)
-          .maybeSingle();
-
-        if (profileError) {
-          console.error('Erro ao buscar perfil:', profileError);
-          throw new Error('Falha ao verificar permissões');
-        }
-
-        // Se não encontrou perfil, considerar como usuário comum
-        const userIsAdmin = profile?.role === 'admin';
+        const userIsAdmin = await checkUserProfile(currentSession.user.id);
         setIsAdmin(userIsAdmin);
 
         if (requiredRole === 'admin' && !userIsAdmin) {
@@ -75,33 +61,14 @@ export const useAuth = (requiredRole?: 'admin' | 'user') => {
           description: "Por favor, faça login novamente.",
           variant: "destructive"
         });
-        await handleSignOut();
+        await signOut();
         navigate('/login');
         setIsLoading(false);
       }
     };
 
     checkAuth();
-  }, [navigate, requiredRole, toast, getActiveSession]);
-
-  useEffect(() => {
-    setUser(session?.user ?? null);
-  }, [session]);
-
-  const signOut = async () => {
-    const { success, error } = await handleSignOut();
-    
-    setUser(null);
-    navigate('/login');
-    
-    toast({
-      title: success ? "Logout realizado" : "Aviso no logout",
-      description: success 
-        ? "Você foi desconectado com sucesso."
-        : "Houve um problema ao desconectar sua conta, mas você foi deslogado localmente.",
-      variant: success ? "default" : "destructive"
-    });
-  };
+  }, [navigate, requiredRole, toast, getActiveSession, setIsLoading, setUser, setIsAdmin, checkUserProfile, signOut]);
 
   return { isLoading, user, signOut, isAdmin };
 };
