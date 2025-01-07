@@ -4,6 +4,7 @@ import { User } from "@supabase/supabase-js";
 import { useToast } from "@/hooks/use-toast";
 import { useSession } from "./useSession";
 import { checkAdminRole, handleSignOut } from "@/utils/auth";
+import { supabase } from "@/integrations/supabase/client";
 
 export const useAuth = (requiredRole?: 'admin' | 'user') => {
   const navigate = useNavigate();
@@ -11,6 +12,7 @@ export const useAuth = (requiredRole?: 'admin' | 'user') => {
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState<User | null>(null);
   const { session, getActiveSession } = useSession();
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -23,29 +25,47 @@ export const useAuth = (requiredRole?: 'admin' | 'user') => {
         if (!currentSession) {
           console.log('⚠️ Nenhuma sessão ativa encontrada');
           setIsLoading(false);
-          navigate('/login');
+          if (window.location.pathname !== '/login' && window.location.pathname !== '/') {
+            toast({
+              title: "Sessão expirada",
+              description: "Por favor, faça login novamente.",
+              variant: "destructive"
+            });
+            navigate('/login');
+          }
           return;
         }
 
         setUser(currentSession.user);
 
-        if (requiredRole === 'admin') {
-          console.log('🔍 Verificando permissão de administrador...');
-          const isAdmin = await checkAdminRole(currentSession.user.id);
-          
-          if (!isAdmin) {
-            console.log('🚫 Usuário não é administrador');
-            toast({
-              title: "Acesso negado",
-              description: "Você não tem permissão para acessar esta área.",
-              variant: "destructive"
-            });
-            navigate('/app');
-            setIsLoading(false);
-            return;
-          }
-          console.log('✅ Permissão de administrador confirmada');
+        // Verificar perfil do usuário
+        const { data: profile, error: profileError } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', currentSession.user.id)
+          .single();
+
+        if (profileError) {
+          console.error('Erro ao buscar perfil:', profileError);
+          throw new Error('Falha ao verificar permissões');
         }
+
+        const userIsAdmin = profile?.role === 'admin';
+        setIsAdmin(userIsAdmin);
+
+        if (requiredRole === 'admin' && !userIsAdmin) {
+          console.log('🚫 Usuário não é administrador');
+          toast({
+            title: "Acesso negado",
+            description: "Você não tem permissão para acessar esta área.",
+            variant: "destructive"
+          });
+          navigate('/app');
+          setIsLoading(false);
+          return;
+        }
+
+        console.log('✅ Autenticação verificada com sucesso');
         setIsLoading(false);
       } catch (error) {
         console.error('❌ Erro de autenticação:', error);
@@ -82,5 +102,5 @@ export const useAuth = (requiredRole?: 'admin' | 'user') => {
     });
   };
 
-  return { isLoading, user, signOut };
+  return { isLoading, user, signOut, isAdmin };
 };
