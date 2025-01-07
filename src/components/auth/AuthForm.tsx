@@ -3,7 +3,7 @@ import { ThemeSupa } from '@supabase/auth-ui-shared';
 import { supabase } from '@/integrations/supabase/client';
 import { GradientBackground } from './GradientBackground';
 
-const AuthForm = () => {
+export const AuthForm = () => {
   return (
     <div className="auth-container">
       <div className="w-full max-w-[400px] mx-auto p-4 relative z-10">
@@ -47,5 +47,3 @@ const AuthForm = () => {
     </div>
   );
 };
-
-export default AuthForm;
