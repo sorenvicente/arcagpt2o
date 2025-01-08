@@ -7,7 +7,7 @@ import { PromptList } from "@/components/admin/PromptList";
 
 const AdminPage = () => {
   const navigate = useNavigate();
-  const { isLoading } = useAuth("admin");
+  const { isLoading } = useAuth();
 
   if (isLoading) {
     return (

@@ -1,35 +1,26 @@
-import { useToast } from "@/hooks/use-toast";
-import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { User } from "@supabase/supabase-js";
+
+export const checkUserProfile = async (user: User) => {
+  try {
+    const { data: profile, error: profileError } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .maybeSingle();
+
+    if (profileError) {
+      console.error('Error fetching profile:', profileError);
+      throw new Error('Failed to check permissions');
+    }
+
+    return profile;
+  } catch (error) {
+    console.error('Error checking profile:', error);
+    return null;
+  }
+};
 
 export const useProfileCheck = () => {
-  const { toast } = useToast();
-  const navigate = useNavigate();
-
-  const checkUserProfile = async (userId: string) => {
-    try {
-      const { data: profile, error: profileError } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', userId)
-        .maybeSingle();
-
-      if (profileError) {
-        console.error('Erro ao buscar perfil:', profileError);
-        throw new Error('Falha ao verificar permissões');
-      }
-
-      return profile?.role === 'admin';
-    } catch (error) {
-      console.error('Erro ao verificar perfil:', error);
-      toast({
-        title: "Erro ao verificar perfil",
-        description: "Por favor, tente novamente mais tarde.",
-        variant: "destructive"
-      });
-      return false;
-    }
-  };
-
   return { checkUserProfile };
 };

@@ -7,7 +7,7 @@ import { UserManagement } from "@/components/admin/settings/UserManagement";
 
 const SystemSettingsPage = () => {
   const navigate = useNavigate();
-  const { isLoading } = useAuth("admin");
+  const { isLoading } = useAuth();
 
   if (isLoading) {
     return <div>Carregando...</div>;

@@ -6,7 +6,7 @@ import { useAuth } from "@/hooks/useAuth";
 
 const DashboardPage = () => {
   const navigate = useNavigate();
-  const { isLoading } = useAuth("admin");
+  const { isLoading } = useAuth();
 
   if (isLoading) {
     return <div>Carregando...</div>;

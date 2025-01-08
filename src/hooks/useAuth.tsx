@@ -64,10 +64,20 @@ export const useAuth = () => {
     };
   }, []);
 
+  const signOut = async () => {
+    try {
+      await supabase.auth.signOut();
+      navigate('/login');
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
+  };
+
   return {
     user,
     session,
     isLoading,
-    isAdmin
+    isAdmin,
+    signOut
   };
 };
