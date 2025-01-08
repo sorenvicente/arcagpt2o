@@ -9,7 +9,7 @@ import { useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
 
 export const SystemSettings = () => {
-  const { isLoading, user } = useAuth('admin');
+  const { isLoading, user, isAdmin } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -17,8 +17,8 @@ export const SystemSettings = () => {
     const checkAccess = async () => {
       try {
         console.log('🔍 Verificando acesso às configurações...');
-        if (!isLoading && !user) {
-          console.log('❌ Usuário não autenticado, redirecionando...');
+        if (!isLoading && (!user || !isAdmin)) {
+          console.log('❌ Usuário não autenticado ou sem permissão, redirecionando...');
           toast({
             title: "Acesso negado",
             description: "Você precisa estar logado como administrador para acessar esta página.",
@@ -38,13 +38,13 @@ export const SystemSettings = () => {
     };
 
     checkAccess();
-  }, [isLoading, user, navigate, toast]);
+  }, [isLoading, user, isAdmin, navigate, toast]);
 
   if (isLoading) {
     return <LoadingSpinner />;
   }
 
-  if (!user) {
+  if (!user || !isAdmin) {
     return null;
   }
 
