@@ -10,19 +10,27 @@ import ApiKeysPage from "@/pages/ApiKeys";
 import SystemSettingsPage from "@/pages/admin/Settings";
 import { useAuth } from "@/hooks/useAuth";
 
-// Create a client
 const queryClient = new QueryClient();
 
-// Protected Route Component
+const LoadingSpinner = () => (
+  <div className="fixed inset-0 flex items-center justify-center bg-chatgpt-main">
+    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white"></div>
+  </div>
+);
+
 const ProtectedRoute = ({ children, requireAdmin = false }: { children: React.ReactNode, requireAdmin?: boolean }) => {
-  const { user, isLoading } = useAuth();
+  const { user, isLoading, isAdmin } = useAuth();
   
   if (isLoading) {
-    return <div>Carregando...</div>;
+    return <LoadingSpinner />;
   }
   
   if (!user) {
     return <Navigate to="/login" replace />;
+  }
+
+  if (requireAdmin && !isAdmin) {
+    return <Navigate to="/app" replace />;
   }
 
   return <>{children}</>;
@@ -33,20 +41,13 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <Router>
         <Routes>
-          {/* Página inicial (Sales) como rota principal */}
           <Route path="/" element={<SalesPage />} />
-          
-          {/* Página de login */}
           <Route path="/login" element={<LoginPage />} />
-          
-          {/* Interface principal para todos os usuários */}
           <Route path="/app" element={
             <ProtectedRoute>
               <IndexPage />
             </ProtectedRoute>
           } />
-          
-          {/* Rotas administrativas (protegidas) */}
           <Route path="/admin" element={
             <ProtectedRoute requireAdmin>
               <AdminPage />
