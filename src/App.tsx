@@ -13,8 +13,8 @@ import { useAuth } from "@/hooks/useAuth";
 const queryClient = new QueryClient();
 
 const LoadingSpinner = () => (
-  <div className="fixed inset-0 flex items-center justify-center bg-chatgpt-main">
-    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white"></div>
+  <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-75 z-50">
+    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
   </div>
 );
 
@@ -69,6 +69,8 @@ function App() {
               <ApiKeysPage />
             </ProtectedRoute>
           } />
+          {/* Catch-all route for unknown paths */}
+          <Route path="*" element={<Navigate to="/app" replace />} />
         </Routes>
         <Toaster />
       </Router>
