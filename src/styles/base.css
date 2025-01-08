@@ -40,9 +40,10 @@ html, body, #root {
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-chatgpt-scrollbar rounded-full;
+  background-color: #565869;
+  @apply rounded-full;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-chatgpt-scrollbar-hover;
+  background-color: #6B6D80;
 }
