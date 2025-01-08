@@ -1,9 +1,9 @@
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { LoadingSpinner } from "@/components/auth/LoadingSpinner";
 import { LoginForm } from "@/components/auth/LoginForm";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
   const { toast } = useToast();
@@ -54,32 +54,11 @@ const LoginPage = () => {
     checkAuth();
   }, [navigate, toast]);
 
-  const handleLogout = async () => {
-    try {
-      console.log('🔄 Fazendo logout...');
-      const { error } = await supabase.auth.signOut();
-      if (error) throw error;
-      
-      console.log('✅ Logout realizado com sucesso');
-      toast({
-        title: "Logout realizado",
-        description: "Você foi desconectado com sucesso."
-      });
-    } catch (error) {
-      console.error('❌ Erro ao fazer logout:', error);
-      toast({
-        title: "Erro ao fazer logout",
-        description: "Por favor, tente novamente.",
-        variant: "destructive"
-      });
-    }
-  };
-
   if (isLoading) {
     return <LoadingSpinner />;
   }
 
-  return <LoginForm onLogout={handleLogout} />;
+  return <LoginForm />;
 };
 
 export default LoginPage;

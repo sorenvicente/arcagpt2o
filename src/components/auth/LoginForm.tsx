@@ -1,13 +1,11 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { GradientBackground } from "./GradientBackground";
-import { AuthForm } from "./AuthForm";
+import { Auth } from '@supabase/auth-ui-react';
+import { ThemeSupa } from '@supabase/auth-ui-shared';
+import { supabase } from '@/integrations/supabase/client';
 import { useLoginRedirect } from "@/hooks/useLoginRedirect";
 
-interface LoginFormProps {
-  onLogout: () => Promise<void>;
-}
-
-export const LoginForm = ({ onLogout }: LoginFormProps) => {
+export const LoginForm = () => {
   useLoginRedirect();
 
   return (
@@ -23,9 +21,39 @@ export const LoginForm = ({ onLogout }: LoginFormProps) => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              <AuthForm />
-            </div>
+            <Auth
+              supabaseClient={supabase}
+              appearance={{
+                theme: ThemeSupa,
+                variables: {
+                  default: {
+                    colors: {
+                      brand: '#2563eb',
+                      brandAccent: '#1d4ed8',
+                    },
+                  },
+                },
+                className: {
+                  container: 'auth-form-container',
+                  button: 'auth-button !bg-blue-600 hover:!bg-blue-700 transition-colors',
+                  input: 'auth-input',
+                },
+              }}
+              localization={{
+                variables: {
+                  sign_in: {
+                    email_label: 'Email',
+                    password_label: 'Senha',
+                    button_label: 'Entrar',
+                  },
+                  sign_up: {
+                    email_label: 'Email',
+                    password_label: 'Senha',
+                    button_label: 'Cadastrar',
+                  },
+                },
+              }}
+            />
           </CardContent>
         </Card>
       </div>
