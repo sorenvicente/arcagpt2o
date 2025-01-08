@@ -14,7 +14,6 @@ export const useAuth = () => {
 
   useEffect(() => {
     let mounted = true;
-    let authListener: any;
 
     const initialize = async () => {
       try {
@@ -40,7 +39,7 @@ export const useAuth = () => {
         }
 
         // Set up auth listener
-        authListener = supabase.auth.onAuthStateChange(async (event, currentSession) => {
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, currentSession) => {
           console.log('Auth state changed:', event);
           
           if (mounted) {
@@ -62,6 +61,13 @@ export const useAuth = () => {
             setIsLoading(false);
           }
         });
+
+        return () => {
+          mounted = false;
+          if (subscription) {
+            subscription.unsubscribe();
+          }
+        };
       } catch (error) {
         console.error("Auth error:", error);
         if (mounted) {
@@ -76,13 +82,6 @@ export const useAuth = () => {
     };
 
     initialize();
-
-    return () => {
-      mounted = false;
-      if (authListener) {
-        authListener.subscription.unsubscribe();
-      }
-    };
   }, [toast]);
 
   const signOut = async () => {
