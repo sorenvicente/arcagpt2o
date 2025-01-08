@@ -30,6 +30,7 @@ const ProtectedRoute = ({ children, requireAdmin = false }: { children: React.Re
   }
 
   if (requireAdmin && !isAdmin) {
+    console.log('User is not admin, redirecting to app');
     return <Navigate to="/app" replace />;
   }
 

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
-import { checkUserProfile } from "./auth/useProfileCheck";
 import { useNavigate } from "react-router-dom";
 
 export const useAuth = () => {
@@ -24,7 +23,14 @@ export const useAuth = () => {
           if (initialSession) {
             setSession(initialSession);
             setUser(initialSession.user);
-            const profile = await checkUserProfile(initialSession.user);
+            
+            // Check if user is admin
+            const { data: profile } = await supabase
+              .from('profiles')
+              .select('role')
+              .eq('id', initialSession.user.id)
+              .single();
+              
             setIsAdmin(profile?.role === 'admin');
           }
           setIsLoading(false);
@@ -37,7 +43,12 @@ export const useAuth = () => {
             setUser(currentSession?.user ?? null);
             
             if (currentSession?.user) {
-              const profile = await checkUserProfile(currentSession.user);
+              const { data: profile } = await supabase
+                .from('profiles')
+                .select('role')
+                .eq('id', currentSession.user.id)
+                .single();
+                
               setIsAdmin(profile?.role === 'admin');
             } else {
               setIsAdmin(false);
