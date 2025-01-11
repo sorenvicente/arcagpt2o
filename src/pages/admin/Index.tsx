@@ -1,12 +1,8 @@
-import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { PromptCreator } from "@/components/admin/PromptCreator";
 import { PromptList } from "@/components/admin/PromptList";
 
 const AdminPage = () => {
-  const navigate = useNavigate();
   const { isLoading } = useAuth();
 
   if (isLoading) {
@@ -26,16 +22,8 @@ const AdminPage = () => {
   return (
     <div className="min-h-screen bg-[#1A1F2C] text-white">
       <div className="container mx-auto py-8 px-4">
-        <div className="flex justify-between items-center mb-8">
+        <div className="mb-8">
           <h1 className="text-2xl font-bold">Gerenciar Prompts</h1>
-          <Button
-            variant="outline"
-            className="flex items-center gap-2 rounded-xl border-chatgpt-border hover:bg-chatgpt-hover text-white"
-            onClick={() => navigate("/app")}
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Voltar à Interface
-          </Button>
         </div>
 
         <div className="grid gap-8 md:grid-cols-[1fr_2fr]">

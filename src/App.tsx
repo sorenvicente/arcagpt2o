@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Sales from "./pages/Sales";
 import Index from "./pages/admin/Index";
 import Login from "./pages/auth/Login";
-import AdminPage from "./pages/admin/Index";
+import AdminLayout from "./components/layouts/AdminLayout";
 import SystemSettings from "./pages/admin/Settings";
 import ActionButtonsPage from "./pages/admin/ActionButtons";
 import ApiKeys from "./pages/ApiKeys";
@@ -20,10 +20,12 @@ function App() {
           <Route path="/" element={<Sales />} />
           <Route path="/app" element={<Index />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/admin" element={<AdminPage />} />
-          <Route path="/admin/settings" element={<SystemSettings />} />
-          <Route path="/admin/action-buttons" element={<ActionButtonsPage />} />
-          <Route path="/api-keys" element={<ApiKeys />} />
+          
+          {/* Admin routes with AdminLayout */}
+          <Route path="/admin" element={<AdminLayout><Index /></AdminLayout>} />
+          <Route path="/admin/settings" element={<AdminLayout><SystemSettings /></AdminLayout>} />
+          <Route path="/admin/action-buttons" element={<AdminLayout><ActionButtonsPage /></AdminLayout>} />
+          <Route path="/api-keys" element={<AdminLayout><ApiKeys /></AdminLayout>} />
         </Routes>
         <Toaster />
       </Router>
