@@ -5,6 +5,7 @@ import ChatInput from '@/components/ChatInput';
 import ActionButtons from '@/components/ActionButtons';
 import MessageList from '@/components/MessageList';
 import { useChat } from '@/hooks/useChat';
+import { UserMenu } from '@/components/UserMenu';
 
 const Index = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -31,10 +32,15 @@ const Index = () => {
       />
       
       <main className={`flex-1 transition-all duration-300 relative ${isSidebarOpen ? 'ml-[240px]' : 'ml-0'}`}>
-        <ChatHeader 
-          isSidebarOpen={isSidebarOpen}
-          activeCategory={activeAssistant}
-        />
+        <div className="fixed top-0 z-50 w-full flex items-center justify-between bg-chatgpt-main px-4 py-2 h-[60px]">
+          <ChatHeader 
+            isSidebarOpen={isSidebarOpen}
+            activeCategory={activeAssistant}
+          />
+          <div className="flex items-center gap-2">
+            <UserMenu />
+          </div>
+        </div>
         
         <div className={`flex h-full flex-col pt-[60px] pb-4`}>
           {messages.length === 0 ? (
