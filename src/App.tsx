@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import Sales from "./pages/Sales";
 import Index from "./pages/admin/Index";
-import Login from "./pages/Login";
+import Login from "./pages/auth/Login";
 import AdminPage from "./pages/admin/Index";
 import SystemSettings from "./pages/admin/Settings";
 import ActionButtonsPage from "./pages/admin/ActionButtons";

@@ -1,4 +1,4 @@
-import { Key, LayoutDashboard, Settings, MessageSquare, Store, Button } from "lucide-react";
+import { Key, LayoutDashboard, Settings, MessageSquare, Store } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 
@@ -25,7 +25,7 @@ export function AdminMenuItems() {
         onClick={() => navigate("/admin/action-buttons")}
         className="px-3 py-2 text-gray-200 hover:bg-chatgpt-hover hover:text-white focus:bg-chatgpt-hover cursor-pointer rounded-lg mx-1"
       >
-        <Button className="mr-2 h-4 w-4" />
+        <Settings className="mr-2 h-4 w-4" />
         <span>Gerenciar Botões</span>
       </DropdownMenuItem>
       <DropdownMenuItem 
