@@ -1,55 +1,32 @@
-import { Key, LayoutDashboard, Settings, MessageSquare, Store } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
+import { Settings, Key, MousePointerClick } from "lucide-react";
+import { Link } from "react-router-dom";
 
-export function AdminMenuItems() {
-  const navigate = useNavigate();
-  
+const AdminMenuItems = () => {
   return (
-    <>
-      <DropdownMenuItem 
-        onClick={() => navigate("/app")}
-        className="px-3 py-2 text-gray-200 hover:bg-chatgpt-hover hover:text-white focus:bg-chatgpt-hover cursor-pointer rounded-lg mx-1"
+    <div className="flex flex-col gap-2">
+      <Link
+        to="/admin/settings"
+        className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-lg hover:bg-gray-800"
       >
-        <MessageSquare className="mr-2 h-4 w-4" />
-        <span>Interface Principal</span>
-      </DropdownMenuItem>
-      <DropdownMenuItem 
-        onClick={() => navigate("/admin")}
-        className="px-3 py-2 text-gray-200 hover:bg-chatgpt-hover hover:text-white focus:bg-chatgpt-hover cursor-pointer rounded-lg mx-1"
+        <Settings className="w-4 h-4" />
+        <span>Configurações do Sistema</span>
+      </Link>
+      <Link
+        to="/api-keys"
+        className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-lg hover:bg-gray-800"
       >
-        <Settings className="mr-2 h-4 w-4" />
-        <span>Gerenciar Prompts</span>
-      </DropdownMenuItem>
-      <DropdownMenuItem 
-        onClick={() => navigate("/admin/action-buttons")}
-        className="px-3 py-2 text-gray-200 hover:bg-chatgpt-hover hover:text-white focus:bg-chatgpt-hover cursor-pointer rounded-lg mx-1"
+        <Key className="w-4 h-4" />
+        <span>Chaves de API</span>
+      </Link>
+      <Link
+        to="/admin/action-buttons"
+        className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-lg hover:bg-gray-800"
       >
-        <Settings className="mr-2 h-4 w-4" />
-        <span>Gerenciar Botões</span>
-      </DropdownMenuItem>
-      <DropdownMenuItem 
-        onClick={() => navigate("/api-keys")}
-        className="px-3 py-2 text-gray-200 hover:bg-chatgpt-hover hover:text-white focus:bg-chatgpt-hover cursor-pointer rounded-lg mx-1"
-      >
-        <Key className="mr-2 h-4 w-4" />
-        <span>API Keys</span>
-      </DropdownMenuItem>
-      <DropdownMenuItem 
-        onClick={() => navigate("/admin/settings")}
-        className="px-3 py-2 text-gray-200 hover:bg-chatgpt-hover hover:text-white focus:bg-chatgpt-hover cursor-pointer rounded-lg mx-1"
-      >
-        <Settings className="mr-2 h-4 w-4" />
-        <span>Configurações</span>
-      </DropdownMenuItem>
-      <DropdownMenuItem 
-        onClick={() => navigate("/")}
-        className="px-3 py-2 text-gray-200 hover:bg-chatgpt-hover hover:text-white focus:bg-chatgpt-hover cursor-pointer rounded-lg mx-1"
-      >
-        <Store className="mr-2 h-4 w-4" />
-        <span>Página de Vendas</span>
-      </DropdownMenuItem>
-      <DropdownMenuSeparator className="bg-chatgpt-border" />
-    </>
+        <MousePointerClick className="w-4 h-4" />
+        <span>Botões de Ação</span>
+      </Link>
+    </div>
   );
-}
+};
+
+export default AdminMenuItems;
