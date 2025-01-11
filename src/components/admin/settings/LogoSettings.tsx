@@ -140,7 +140,7 @@ export const LogoSettings = () => {
   return (
     <div className="space-y-8">
       <div className="space-y-4">
-        <Label>Nome da Aplicação</Label>
+        <Label className="text-gray-200">Nome da Aplicação</Label>
         <div className="flex items-center gap-4">
           {isEditingName ? (
             <div className="flex items-center gap-2">
@@ -148,12 +148,13 @@ export const LogoSettings = () => {
                 value={newAppName}
                 onChange={(e) => setNewAppName(e.target.value)}
                 placeholder="Nome da aplicação"
-                className="max-w-xs"
+                className="max-w-xs bg-[#40414F]/70 border-[#4E4F60]/30 rounded-xl focus:ring-2 focus:ring-[#4E4F60]/50 transition-all duration-300"
               />
               <Button
                 onClick={handleSaveName}
                 disabled={updateAppName.isPending}
                 size="sm"
+                className="rounded-xl shadow-sm hover:shadow-md transition-all duration-300"
               >
                 {updateAppName.isPending ? "Salvando..." : "Salvar"}
               </Button>
@@ -162,18 +163,19 @@ export const LogoSettings = () => {
                 onClick={handleCancelEditName}
                 disabled={updateAppName.isPending}
                 size="sm"
+                className="rounded-xl border-[#4E4F60]/30 hover:bg-[#40414F]/30 transition-all duration-300"
               >
                 Cancelar
               </Button>
             </div>
           ) : (
             <div className="flex items-center gap-2">
-              <span className="text-lg">{settings?.application_name}</span>
+              <span className="text-lg text-gray-200">{settings?.application_name}</span>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={handleStartEditName}
-                className="h-8 w-8 p-0"
+                className="h-8 w-8 p-0 rounded-lg hover:bg-[#40414F]/30 transition-all duration-300"
               >
                 <Edit2 className="h-4 w-4" />
               </Button>
@@ -183,24 +185,24 @@ export const LogoSettings = () => {
       </div>
 
       <div>
-        <Label>Logo</Label>
+        <Label className="text-gray-200">Logo</Label>
         <div className="mt-2 space-y-4">
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-4 p-4 border rounded-lg">
+            <div className="flex items-center gap-4 p-6 border border-[#4E4F60]/20 rounded-xl bg-[#40414F]/30 backdrop-blur-sm shadow-sm">
               <div className="text-center">
-                <p className="text-sm text-gray-500 mb-2">Logo Atual</p>
+                <p className="text-sm text-gray-400 mb-2">Logo Atual</p>
                 <HexLogo
                   size="64"
-                  className="text-gray-800"
+                  className="text-gray-200"
                   customLogoUrl={settings?.logo_url}
                 />
               </div>
               {previewUrl && (
                 <div className="text-center">
-                  <p className="text-sm text-gray-500 mb-2">Prévia</p>
+                  <p className="text-sm text-gray-400 mb-2">Prévia</p>
                   <HexLogo
                     size="64"
-                    className="text-gray-800"
+                    className="text-gray-200"
                     customLogoUrl={previewUrl}
                   />
                 </div>
@@ -213,13 +215,14 @@ export const LogoSettings = () => {
               type="file"
               accept="image/*"
               onChange={handleLogoUpload}
-              className="max-w-xs"
+              className="max-w-xs bg-[#40414F]/70 border-[#4E4F60]/30 rounded-xl file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:bg-[#4E4F60]/30 file:text-gray-200 hover:file:bg-[#4E4F60]/50 transition-all duration-300"
             />
             {logoFile && (
               <div className="flex gap-2">
                 <Button
                   onClick={handleSave}
                   disabled={updateLogo.isPending}
+                  className="rounded-xl shadow-sm hover:shadow-md transition-all duration-300"
                 >
                   {updateLogo.isPending ? "Salvando..." : "Salvar"}
                 </Button>
@@ -227,6 +230,7 @@ export const LogoSettings = () => {
                   variant="outline"
                   onClick={handleCancel}
                   disabled={updateLogo.isPending}
+                  className="rounded-xl border-[#4E4F60]/30 hover:bg-[#40414F]/30 transition-all duration-300"
                 >
                   Cancelar
                 </Button>
