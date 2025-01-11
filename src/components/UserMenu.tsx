@@ -5,7 +5,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { LogOut } from "lucide-react";
-import { AdminMenuItems } from "./admin/AdminMenuItems";
+import AdminMenuItems from "./admin/AdminMenuItems";
 import { UserProfileLabel } from "./user/UserProfileLabel";
 
 export function UserMenu() {
