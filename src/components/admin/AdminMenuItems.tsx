@@ -1,4 +1,4 @@
-import { Settings, Key, MousePointerClick, Home } from "lucide-react";
+import { Settings, Key, MousePointerClick, Home, MessageSquare } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const AdminMenuItems = () => {
@@ -10,6 +10,13 @@ const AdminMenuItems = () => {
       >
         <Home className="w-4 h-4" />
         <span>ChatGPT Home</span>
+      </Link>
+      <Link
+        to="/admin"
+        className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-lg hover:bg-gray-800"
+      >
+        <MessageSquare className="w-4 h-4" />
+        <span>Gerenciar Prompts</span>
       </Link>
       <Link
         to="/admin/settings"
