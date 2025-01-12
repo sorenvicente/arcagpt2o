@@ -1,9 +1,16 @@
-import { Settings, Key, MousePointerClick } from "lucide-react";
+import { Settings, Key, MousePointerClick, Home } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const AdminMenuItems = () => {
   return (
     <div className="flex flex-col gap-2">
+      <Link
+        to="/app"
+        className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-lg hover:bg-gray-800"
+      >
+        <Home className="w-4 h-4" />
+        <span>ChatGPT Home</span>
+      </Link>
       <Link
         to="/admin/settings"
         className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-lg hover:bg-gray-800"
