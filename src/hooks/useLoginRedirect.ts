@@ -28,7 +28,7 @@ export const useLoginRedirect = () => {
               console.log('⚠️ Profile not found, might need to wait for creation');
               // Wait a bit and retry once
               await new Promise(resolve => setTimeout(resolve, 1000));
-              const { error: retryError } = await supabase
+              const { data: retryProfile, error: retryError } = await supabase
                 .from('profiles')
                 .select('role')
                 .eq('id', session.user.id)
@@ -37,13 +37,29 @@ export const useLoginRedirect = () => {
               if (retryError) {
                 throw retryError;
               }
-            } else {
-              throw profileError;
+
+              // Use the retry profile if available
+              if (retryProfile) {
+                console.log('✅ Profile found after retry:', retryProfile.role);
+                if (retryProfile.role === 'admin') {
+                  navigate('/admin');
+                } else {
+                  navigate('/app');
+                }
+                return;
+              }
             }
+            throw profileError;
           }
 
-          console.log('✅ Login successful, redirecting to app');
-          navigate('/app');
+          console.log('✅ Login successful, redirecting based on role:', profile?.role);
+          
+          // Redirect based on user role
+          if (profile?.role === 'admin') {
+            navigate('/admin');
+          } else {
+            navigate('/app');
+          }
           
           toast({
             title: "Login realizado com sucesso",
