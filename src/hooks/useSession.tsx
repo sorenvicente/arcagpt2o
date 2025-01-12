@@ -12,17 +12,29 @@ export const useSession = () => {
   const refreshSession = async () => {
     try {
       console.log('🔄 Refreshing session...');
-      const { data: { session }, error } = await supabase.auth.refreshSession();
+      const { data: { session: newSession }, error } = await supabase.auth.refreshSession();
+      
       if (error) {
-        console.error('❌ Error refreshing session:', error);
+        if (error.message.includes('refresh_token_not_found')) {
+          console.log('❌ No valid refresh token found, redirecting to login');
+          await supabase.auth.signOut();
+          navigate('/login');
+          toast({
+            title: "Sessão expirada",
+            description: "Por favor, faça login novamente.",
+            variant: "destructive",
+          });
+          return null;
+        }
         throw error;
       }
+      
       console.log('✅ Session refreshed successfully');
-      return session;
+      return newSession;
     } catch (error) {
       console.error('❌ Error in refreshSession:', error);
       toast({
-        title: "Sessão expirada",
+        title: "Erro ao atualizar sessão",
         description: "Por favor, faça login novamente.",
         variant: "destructive",
       });
@@ -49,20 +61,20 @@ export const useSession = () => {
   const getActiveSession = async () => {
     try {
       console.log('🔍 Getting active session...');
-      const { data: { session }, error } = await supabase.auth.getSession();
+      const { data: { session: currentSession }, error } = await supabase.auth.getSession();
       
       if (error) {
         console.error('❌ Error getting session:', error);
         throw error;
       }
       
-      if (!session) {
+      if (!currentSession) {
         console.log('⚠️ No active session found');
         return null;
       }
       
       console.log('✅ Active session found');
-      return await checkSessionExpiry(session);
+      return await checkSessionExpiry(currentSession);
     } catch (error) {
       console.error('❌ Error in getActiveSession:', error);
       return null;
@@ -74,12 +86,12 @@ export const useSession = () => {
     
     getActiveSession().then(setSession);
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, currentSession) => {
       console.log('🔔 Auth state changed:', event);
       
-      if (session) {
+      if (currentSession) {
         try {
-          const validSession = await checkSessionExpiry(session);
+          const validSession = await checkSessionExpiry(currentSession);
           setSession(validSession);
         } catch (error) {
           console.error('❌ Error handling auth state change:', error);
