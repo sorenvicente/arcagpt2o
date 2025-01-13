@@ -2,22 +2,65 @@ import { Book, Brain, GraduationCap, School, Target, MoreHorizontal } from "luci
 import { useToast } from "@/components/ui/use-toast";
 import ActionButton from "./ActionButton";
 import { usePromptLoader } from "./usePromptLoader";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { supabase } from "@/integrations/supabase/client";
 
 interface ActionButtonsProps {
   onSelectPrompt: (prompt: string, category: string) => void;
   activeCategory: string | null;
 }
 
+interface ActionButton {
+  id: string;
+  name: string;
+  icon: string;
+  label: string;
+  category: string;
+  color: string;
+}
+
 const ActionButtons = ({ onSelectPrompt, activeCategory }: ActionButtonsProps) => {
   const { prompts } = usePromptLoader();
   const { toast } = useToast();
-  const [showMore, setShowMore] = useState(false);
+  const [customButtons, setCustomButtons] = useState<ActionButton[]>([]);
+
+  useEffect(() => {
+    const loadCustomButtons = async () => {
+      const { data, error } = await supabase
+        .from('action_buttons')
+        .select('*');
+      
+      if (error) {
+        console.error('Error loading custom buttons:', error);
+        return;
+      }
+      
+      setCustomButtons(data || []);
+    };
+
+    loadCustomButtons();
+
+    // Subscribe to changes in action_buttons table
+    const channel = supabase
+      .channel('action_buttons_changes')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'action_buttons' },
+        () => {
+          loadCustomButtons();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      channel.unsubscribe();
+    };
+  }, []);
 
   const normalizeString = (str: string) => {
     return str.toLowerCase()
@@ -52,22 +95,27 @@ const ActionButtons = ({ onSelectPrompt, activeCategory }: ActionButtonsProps) =
     { icon: <Book className="h-4 w-4 text-red-400" />, label: "Conteúdo", category: "conteudo" },
   ];
 
-  // Get additional buttons from prompts that aren't in mainActions
-  const additionalButtons = prompts
-    .filter(prompt => !mainActions.some(action => 
-      normalizeString(action.category) === normalizeString(prompt.category)
-    ))
-    .map(prompt => ({
-      icon: <Target className="h-4 w-4 text-gray-400" />,
-      label: prompt.name,
-      category: prompt.category
-    }));
+  // Get custom buttons that aren't in mainActions
+  const additionalButtons = customButtons.filter(button => 
+    !mainActions.some(action => normalizeString(action.category) === normalizeString(button.category))
+  );
+
+  const getIconComponent = (iconName: string) => {
+    const icons = {
+      Target: <Target className="h-4 w-4" />,
+      Brain: <Brain className="h-4 w-4" />,
+      School: <School className="h-4 w-4" />,
+      GraduationCap: <GraduationCap className="h-4 w-4" />,
+      Book: <Book className="h-4 w-4" />,
+    };
+    return icons[iconName as keyof typeof icons] || <Target className="h-4 w-4" />;
+  };
 
   return (
     <div className="flex gap-2 flex-wrap justify-center mb-4">
       {mainActions.map((action) => (
         <ActionButton 
-          key={action.label}
+          key={action.category}
           icon={action.icon}
           label={action.label}
           isActive={normalizeString(activeCategory || '') === normalizeString(action.category)}
@@ -83,16 +131,18 @@ const ActionButtons = ({ onSelectPrompt, activeCategory }: ActionButtonsProps) =
               <span>Mais</span>
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="bg-chatgpt-secondary border-chatgpt-border">
-            {additionalButtons.map((action) => (
-              <ActionButton
-                key={action.label}
-                icon={action.icon}
-                label={action.label}
-                isActive={normalizeString(activeCategory || '') === normalizeString(action.category)}
-                onClick={() => handlePromptSelect(action.category)}
-              />
-            ))}
+          <DropdownMenuContent className="bg-chatgpt-secondary border-chatgpt-border p-2 rounded-lg">
+            <div className="flex flex-col gap-2">
+              {additionalButtons.map((button) => (
+                <ActionButton
+                  key={button.id}
+                  icon={getIconComponent(button.icon)}
+                  label={button.label}
+                  isActive={normalizeString(activeCategory || '') === normalizeString(button.category)}
+                  onClick={() => handlePromptSelect(button.category)}
+                />
+              ))}
+            </div>
           </DropdownMenuContent>
         </DropdownMenu>
       )}
