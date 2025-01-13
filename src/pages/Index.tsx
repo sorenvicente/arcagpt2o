@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Sidebar from '@/components/Sidebar';
 import ChatHeader from '@/components/ChatHeader';
 import ChatInput from '@/components/ChatInput';
-import ActionButtons from '@/components/ActionButtons';
+import ActionButtons from '@/components/action-buttons/ActionButtons';
 import MessageList from '@/components/MessageList';
 import { useChat } from '@/hooks/useChat';
 import { UserMenu } from '@/components/UserMenu';
