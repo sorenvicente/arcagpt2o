@@ -1,4 +1,4 @@
-import { corsHeaders, defaultConfig } from './config.ts';
+import { corsHeaders } from './config.ts';
 
 export async function callOpenAI(apiKey: string, messages: any[], temperature: number) {
   console.log('🔄 Iniciando chamada OpenAI...');
@@ -8,13 +8,11 @@ export async function callOpenAI(apiKey: string, messages: any[], temperature: n
       throw new Error('OpenAI key não configurada');
     }
 
-    const model = defaultConfig.defaultOpenAIModel;
-    console.log(`📝 Enviando requisição para OpenAI usando modelo: ${model}`);
+    console.log('📝 Enviando requisição para OpenAI');
     
     const requestBody = {
-      model: model,
+      model: "gpt-4-turbo-preview",
       messages: messages,
-      max_tokens: defaultConfig.max_tokens,
       temperature: temperature,
     };
     console.log('📦 Corpo da requisição:', JSON.stringify(requestBody, null, 2));

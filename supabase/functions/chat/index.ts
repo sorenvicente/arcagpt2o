@@ -11,44 +11,59 @@ serve(async (req) => {
   }
 
   try {
-    const { openai_key, openrouter_key, model, messages } = await req.json();
+    const { messages, temperature = 0.7 } = await req.json();
     console.log('📨 Requisição recebida:', { 
-      hasOpenAIKey: !!openai_key,
-      hasOpenRouterKey: !!openrouter_key,
-      model,
       messagesCount: messages?.length 
     });
 
-    // Verificar se temos as chaves necessárias
-    if (!openai_key && !openrouter_key) {
-      console.error('❌ Nenhuma chave API fornecida');
-      throw new Error('É necessário fornecer pelo menos uma chave API (OpenAI ou OpenRouter)');
+    // Fetch API keys from database
+    const { data: apiKeys, error: apiKeysError } = await fetch(
+      `${Deno.env.get('SUPABASE_URL')}/rest/v1/api_keys?select=*&order=created_at.desc&limit=1`,
+      {
+        headers: {
+          'apikey': Deno.env.get('SUPABASE_ANON_KEY') || '',
+          'Authorization': `Bearer ${Deno.env.get('SUPABASE_ANON_KEY')}`,
+        },
+      }
+    ).then(res => res.json());
+
+    if (apiKeysError) {
+      console.error('❌ Erro ao buscar chaves API:', apiKeysError);
+      throw new Error('Falha ao buscar chaves API');
     }
 
-    // Verificar se o modelo foi especificado
-    if (!model) {
-      console.error('❌ Nenhum modelo especificado');
-      throw new Error('É necessário especificar um modelo');
+    const apiKey = apiKeys[0];
+    if (!apiKey) {
+      throw new Error('Nenhuma chave API configurada');
     }
 
-    // Determinar qual serviço usar baseado no modelo e chaves disponíveis
-    const isOpenRouterModel = model.includes('/') || model.includes('anthropic') || model.includes('claude');
-    
-    if (isOpenRouterModel) {
-      if (!openrouter_key) {
-        console.error('❌ Chave OpenRouter necessária para este modelo');
-        throw new Error('Chave OpenRouter é necessária para este modelo');
-      }
-      console.log('🔄 Redirecionando para OpenRouter');
-      return await handleOpenRouterRequest(req);
-    } else {
-      if (!openai_key) {
-        console.error('❌ Chave OpenAI necessária para este modelo');
-        throw new Error('Chave OpenAI é necessária para este modelo');
-      }
-      console.log('🔄 Redirecionando para OpenAI');
-      return await callOpenAI(openai_key, messages, 0.7);
+    // Check which API keys are available and their selected models
+    const hasOpenAI = apiKey.openai_key && apiKey.selected_openai_model;
+    const hasOpenRouter = apiKey.openrouter_key && apiKey.selected_openrouter_model;
+
+    if (!hasOpenAI && !hasOpenRouter) {
+      throw new Error('É necessário configurar pelo menos uma chave API (OpenAI ou OpenRouter)');
     }
+
+    // Prefer OpenAI if available, otherwise use OpenRouter
+    if (hasOpenAI) {
+      console.log('🔄 Usando OpenAI');
+      return await callOpenAI(apiKey.openai_key, messages, temperature);
+    } else if (hasOpenRouter) {
+      console.log('🔄 Usando OpenRouter');
+      const openRouterReq = new Request(req.url, {
+        method: 'POST',
+        headers: req.headers,
+        body: JSON.stringify({
+          openrouter_key: apiKey.openrouter_key,
+          model: apiKey.selected_openrouter_model,
+          messages
+        })
+      });
+      return await handleOpenRouterRequest(openRouterReq);
+    }
+
+    throw new Error('Configuração de API inválida');
 
   } catch (error: any) {
     console.error('❌ Erro no processamento:', error);
