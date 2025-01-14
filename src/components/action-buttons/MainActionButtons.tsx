@@ -1,6 +1,8 @@
 import { Book, Brain, GraduationCap, School, Target, ChevronDown, ChevronUp } from "lucide-react";
 import { useState } from "react";
 import ActionButton from "./ActionButton";
+import CustomActionButtons from "./CustomActionButtons";
+import { useActionButtons } from "./useActionButtons";
 
 interface MainActionButtonsProps {
   activeCategory: string | null;
@@ -10,6 +12,7 @@ interface MainActionButtonsProps {
 
 const MainActionButtons = ({ activeCategory, onSelectPrompt, normalizeString }: MainActionButtonsProps) => {
   const [showMore, setShowMore] = useState(false);
+  const { customButtons } = useActionButtons();
 
   const mainActions = [
     { icon: <Target className="h-4 w-4 text-purple-400" />, label: "Propósito", category: "proposito" },
@@ -41,7 +44,7 @@ const MainActionButtons = ({ activeCategory, onSelectPrompt, normalizeString }: 
       {showMore && (
         <div className="flex gap-2 flex-wrap justify-center">
           <CustomActionButtons 
-            buttons={[]} // This will be filled by the parent component
+            buttons={customButtons}
             activeCategory={activeCategory}
             onSelectPrompt={onSelectPrompt}
             normalizeString={normalizeString}
