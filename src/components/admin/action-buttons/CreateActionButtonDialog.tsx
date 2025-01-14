@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import {
+  Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
@@ -30,7 +31,7 @@ interface CreateActionButtonDialogProps {
     category: string;
     color: string;
   };
-  onUpdate?: (button: ActionButtonFormData) => void;
+  onUpdate?: (button: { id: string } & ActionButtonFormData) => void;
 }
 
 const CreateActionButtonDialog = ({
@@ -79,64 +80,66 @@ const CreateActionButtonDialog = ({
   };
 
   return (
-    <DialogContent>
-      <DialogHeader>
-        <DialogTitle>
-          {editingButton ? "Editar Botão" : "Criar Novo Botão"}
-        </DialogTitle>
-      </DialogHeader>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="name">Nome</Label>
-          <Input
-            id="name"
-            {...register("name")}
-            readOnly={!!editingButton}
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="icon">Ícone</Label>
-          <Input
-            id="icon"
-            {...register("icon")}
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="label">Label</Label>
-          <Input
-            id="label"
-            {...register("label")}
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="category">Categoria</Label>
-          <Input
-            id="category"
-            {...register("category")}
-            readOnly={!!editingButton}
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="color">Cor</Label>
-          <Input
-            id="color"
-            {...register("color")}
-          />
-        </div>
-        <div className="flex justify-end gap-2">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => onOpenChange(false)}
-          >
-            Cancelar
-          </Button>
-          <Button type="submit">
-            {editingButton ? "Salvar" : "Criar"}
-          </Button>
-        </div>
-      </form>
-    </DialogContent>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>
+            {editingButton ? "Editar Botão" : "Criar Novo Botão"}
+          </DialogTitle>
+        </DialogHeader>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="name">Nome</Label>
+            <Input
+              id="name"
+              {...register("name")}
+              readOnly={!!editingButton}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="icon">Ícone</Label>
+            <Input
+              id="icon"
+              {...register("icon")}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="label">Label</Label>
+            <Input
+              id="label"
+              {...register("label")}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="category">Categoria</Label>
+            <Input
+              id="category"
+              {...register("category")}
+              readOnly={!!editingButton}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="color">Cor</Label>
+            <Input
+              id="color"
+              {...register("color")}
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => onOpenChange(false)}
+            >
+              Cancelar
+            </Button>
+            <Button type="submit">
+              {editingButton ? "Salvar" : "Criar"}
+            </Button>
+          </div>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 };
 
