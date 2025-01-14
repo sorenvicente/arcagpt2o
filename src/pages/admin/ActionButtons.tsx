@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Plus, Trash2, Pencil } from "lucide-react";
+import { ArrowLeft, Plus, Pencil } from "lucide-react";
 import { Link } from "react-router-dom";
 import {
   Dialog,
@@ -70,65 +70,74 @@ const ActionButtons = () => {
   };
 
   return (
-    <div className="container mx-auto p-6">
-      <div className="mb-8 flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-white">Gerenciar Botões de Ação</h1>
-        <div className="flex gap-4">
-          <Link to="/">
-            <Button variant="outline">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Voltar à Interface
-            </Button>
-          </Link>
-          <Button onClick={() => setIsCreateDialogOpen(true)}>
-            <Plus className="mr-2 h-4 w-4" />
-            Novo Botão
-          </Button>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {mainButtons.map((button) => (
-          <div
-            key={button.id}
-            className="bg-gray-800 rounded-lg p-4 flex justify-between items-center"
-          >
-            <div>
-              <h3 className="text-lg font-medium text-white">{button.name}</h3>
-              <p className="text-gray-400">Categoria: {button.category}</p>
-              <p className="text-gray-400">Ícone: {button.icon}</p>
-            </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => handleEdit(button)}
+    <div className="min-h-screen bg-chatgpt-main">
+      <div className="container mx-auto p-6">
+        <div className="mb-8 flex items-center justify-between">
+          <h1 className="text-2xl font-bold text-white">Gerenciar Botões de Ação</h1>
+          <div className="flex gap-4">
+            <Link to="/app">
+              <Button variant="outline" className="bg-chatgpt-secondary border-chatgpt-border hover:bg-chatgpt-hover">
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Voltar à Interface
+              </Button>
+            </Link>
+            <Button 
+              onClick={() => setIsCreateDialogOpen(true)}
+              className="bg-chatgpt-secondary border-chatgpt-border hover:bg-chatgpt-hover"
             >
-              <Pencil className="h-4 w-4" />
+              <Plus className="mr-2 h-4 w-4" />
+              Novo Botão
             </Button>
           </div>
-        ))}
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {mainButtons.map((button) => (
+            <div
+              key={button.id}
+              className="bg-chatgpt-secondary rounded-lg p-6 border border-chatgpt-border hover:border-gray-600 transition-colors"
+            >
+              <div className="flex justify-between items-start mb-4">
+                <h3 className="text-lg font-medium text-white">{button.name}</h3>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => handleEdit(button)}
+                  className="hover:bg-chatgpt-hover"
+                >
+                  <Pencil className="h-4 w-4 text-gray-400 hover:text-white" />
+                </Button>
+              </div>
+              <div className="space-y-2 text-gray-400">
+                <p>Categoria: {button.category}</p>
+                <p>Ícone: {button.icon}</p>
+                <div className={`w-4 h-4 rounded-full bg-${button.color}-400`} />
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <CreateActionButtonDialog
+          open={isCreateDialogOpen}
+          onOpenChange={setIsCreateDialogOpen}
+        />
+
+        <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+          <DialogContent className="bg-chatgpt-secondary border-chatgpt-border">
+            <DialogHeader>
+              <DialogTitle className="text-white">Editar Botão</DialogTitle>
+            </DialogHeader>
+            {selectedButton && (
+              <CreateActionButtonDialog
+                open={isEditDialogOpen}
+                onOpenChange={setIsEditDialogOpen}
+                editingButton={selectedButton}
+                onUpdate={handleUpdate}
+              />
+            )}
+          </DialogContent>
+        </Dialog>
       </div>
-
-      <CreateActionButtonDialog
-        open={isCreateDialogOpen}
-        onOpenChange={setIsCreateDialogOpen}
-      />
-
-      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Editar Botão</DialogTitle>
-          </DialogHeader>
-          {selectedButton && (
-            <CreateActionButtonDialog
-              open={isEditDialogOpen}
-              onOpenChange={setIsEditDialogOpen}
-              editingButton={selectedButton}
-              onUpdate={handleUpdate}
-            />
-          )}
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };
