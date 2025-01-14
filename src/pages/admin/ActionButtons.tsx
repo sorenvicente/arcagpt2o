@@ -76,14 +76,14 @@ const ActionButtons = () => {
           <h1 className="text-2xl font-bold text-white">Gerenciar Botões de Ação</h1>
           <div className="flex gap-4">
             <Link to="/app">
-              <Button variant="outline" className="bg-chatgpt-secondary border-chatgpt-border hover:bg-chatgpt-hover">
+              <Button variant="outline" className="bg-chatgpt-secondary border-chatgpt-border hover:bg-chatgpt-hover rounded-full">
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 Voltar à Interface
               </Button>
             </Link>
             <Button 
               onClick={() => setIsCreateDialogOpen(true)}
-              className="bg-chatgpt-secondary border-chatgpt-border hover:bg-chatgpt-hover"
+              className="bg-chatgpt-secondary border-chatgpt-border hover:bg-chatgpt-hover rounded-full"
             >
               <Plus className="mr-2 h-4 w-4" />
               Novo Botão
@@ -95,7 +95,7 @@ const ActionButtons = () => {
           {mainButtons.map((button) => (
             <div
               key={button.id}
-              className="bg-chatgpt-secondary rounded-lg p-6 border border-chatgpt-border hover:border-gray-600 transition-colors"
+              className="bg-chatgpt-secondary rounded-2xl p-6 border border-chatgpt-border hover:border-gray-600 transition-colors shadow-lg hover:shadow-xl"
             >
               <div className="flex justify-between items-start mb-4">
                 <h3 className="text-lg font-medium text-white">{button.name}</h3>
@@ -103,7 +103,7 @@ const ActionButtons = () => {
                   variant="ghost"
                   size="icon"
                   onClick={() => handleEdit(button)}
-                  className="hover:bg-chatgpt-hover"
+                  className="hover:bg-chatgpt-hover rounded-full"
                 >
                   <Pencil className="h-4 w-4 text-gray-400 hover:text-white" />
                 </Button>
@@ -123,7 +123,7 @@ const ActionButtons = () => {
         />
 
         <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-          <DialogContent className="bg-chatgpt-secondary border-chatgpt-border">
+          <DialogContent className="bg-chatgpt-secondary border-chatgpt-border rounded-2xl">
             <DialogHeader>
               <DialogTitle className="text-white">Editar Botão</DialogTitle>
             </DialogHeader>

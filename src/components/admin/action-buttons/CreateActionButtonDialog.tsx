@@ -81,7 +81,7 @@ const CreateActionButtonDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-chatgpt-secondary border-chatgpt-border">
+      <DialogContent className="bg-chatgpt-secondary border-chatgpt-border rounded-2xl">
         <DialogHeader>
           <DialogTitle className="text-white">
             {editingButton ? "Editar Botão" : "Criar Novo Botão"}
@@ -94,7 +94,7 @@ const CreateActionButtonDialog = ({
               id="name"
               {...register("name")}
               readOnly={!!editingButton}
-              className="bg-chatgpt-main border-chatgpt-border text-white"
+              className="bg-chatgpt-main border-chatgpt-border text-white rounded-xl"
             />
           </div>
           <div className="space-y-2">
@@ -102,7 +102,7 @@ const CreateActionButtonDialog = ({
             <Input
               id="icon"
               {...register("icon")}
-              className="bg-chatgpt-main border-chatgpt-border text-white"
+              className="bg-chatgpt-main border-chatgpt-border text-white rounded-xl"
             />
           </div>
           <div className="space-y-2">
@@ -110,7 +110,7 @@ const CreateActionButtonDialog = ({
             <Input
               id="label"
               {...register("label")}
-              className="bg-chatgpt-main border-chatgpt-border text-white"
+              className="bg-chatgpt-main border-chatgpt-border text-white rounded-xl"
             />
           </div>
           <div className="space-y-2">
@@ -119,7 +119,7 @@ const CreateActionButtonDialog = ({
               id="category"
               {...register("category")}
               readOnly={!!editingButton}
-              className="bg-chatgpt-main border-chatgpt-border text-white"
+              className="bg-chatgpt-main border-chatgpt-border text-white rounded-xl"
             />
           </div>
           <div className="space-y-2">
@@ -127,7 +127,7 @@ const CreateActionButtonDialog = ({
             <Input
               id="color"
               {...register("color")}
-              className="bg-chatgpt-main border-chatgpt-border text-white"
+              className="bg-chatgpt-main border-chatgpt-border text-white rounded-xl"
             />
           </div>
           <div className="flex justify-end gap-2">
@@ -135,13 +135,13 @@ const CreateActionButtonDialog = ({
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
-              className="bg-chatgpt-main border-chatgpt-border hover:bg-chatgpt-hover text-white"
+              className="bg-chatgpt-main border-chatgpt-border hover:bg-chatgpt-hover text-white rounded-full"
             >
               Cancelar
             </Button>
             <Button 
               type="submit"
-              className="bg-chatgpt-secondary border-chatgpt-border hover:bg-chatgpt-hover text-white"
+              className="bg-chatgpt-secondary border-chatgpt-border hover:bg-chatgpt-hover text-white rounded-full"
             >
               {editingButton ? "Salvar" : "Criar"}
             </Button>
