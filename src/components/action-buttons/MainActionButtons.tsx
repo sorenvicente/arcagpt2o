@@ -1,4 +1,5 @@
-import { Book, Brain, GraduationCap, School, Target } from "lucide-react";
+import { Book, Brain, GraduationCap, School, Target, ChevronDown, ChevronUp } from "lucide-react";
+import { useState } from "react";
 import ActionButton from "./ActionButton";
 
 interface MainActionButtonsProps {
@@ -8,6 +9,8 @@ interface MainActionButtonsProps {
 }
 
 const MainActionButtons = ({ activeCategory, onSelectPrompt, normalizeString }: MainActionButtonsProps) => {
+  const [showMore, setShowMore] = useState(false);
+
   const mainActions = [
     { icon: <Target className="h-4 w-4 text-purple-400" />, label: "Propósito", category: "proposito" },
     { icon: <Brain className="h-4 w-4 text-blue-400" />, label: "Método", category: "metodo" },
@@ -17,16 +20,34 @@ const MainActionButtons = ({ activeCategory, onSelectPrompt, normalizeString }: 
   ];
 
   return (
-    <div className="flex gap-2 flex-wrap justify-center">
-      {mainActions.map((action) => (
+    <div className="flex flex-col gap-4">
+      <div className="flex gap-2 flex-wrap justify-center">
+        {mainActions.map((action) => (
+          <ActionButton 
+            key={action.category}
+            icon={action.icon}
+            label={action.label}
+            isActive={normalizeString(activeCategory || '') === normalizeString(action.category)}
+            onClick={() => onSelectPrompt(action.category)}
+          />
+        ))}
         <ActionButton 
-          key={action.category}
-          icon={action.icon}
-          label={action.label}
-          isActive={normalizeString(activeCategory || '') === normalizeString(action.category)}
-          onClick={() => onSelectPrompt(action.category)}
+          icon={showMore ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+          label="Mais"
+          isActive={false}
+          onClick={() => setShowMore(!showMore)}
         />
-      ))}
+      </div>
+      {showMore && (
+        <div className="flex gap-2 flex-wrap justify-center">
+          <CustomActionButtons 
+            buttons={[]} // This will be filled by the parent component
+            activeCategory={activeCategory}
+            onSelectPrompt={onSelectPrompt}
+            normalizeString={normalizeString}
+          />
+        </div>
+      )}
     </div>
   );
 };

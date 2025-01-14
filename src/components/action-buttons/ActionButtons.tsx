@@ -45,12 +45,6 @@ const ActionButtons = ({ onSelectPrompt, activeCategory }: ActionButtonsProps) =
         onSelectPrompt={handlePromptSelect}
         normalizeString={normalizeString}
       />
-      <CustomActionButtons
-        buttons={customButtons}
-        activeCategory={activeCategory}
-        onSelectPrompt={handlePromptSelect}
-        normalizeString={normalizeString}
-      />
     </div>
   );
 };
