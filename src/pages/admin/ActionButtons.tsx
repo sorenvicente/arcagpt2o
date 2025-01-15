@@ -1,13 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Plus, Pencil } from "lucide-react";
+import { ArrowLeft, Plus } from "lucide-react";
 import { Link } from "react-router-dom";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import CreateActionButtonDialog from "@/components/admin/action-buttons/CreateActionButtonDialog";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -31,43 +25,7 @@ const mainButtons = [
 
 const ActionButtons = () => {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [selectedButton, setSelectedButton] = useState<ActionButton | null>(null);
   const { toast } = useToast();
-
-  const handleEdit = (button: ActionButton) => {
-    setSelectedButton(button);
-    setIsEditDialogOpen(true);
-  };
-
-  const handleUpdate = async (updatedButton: ActionButton) => {
-    try {
-      const { error } = await supabase
-        .from('action_buttons')
-        .update({
-          icon: updatedButton.icon,
-          label: updatedButton.label,
-          color: updatedButton.color
-        })
-        .eq('category', updatedButton.category);
-
-      if (error) throw error;
-
-      toast({
-        title: "Botão atualizado",
-        description: "As alterações foram salvas com sucesso",
-      });
-      
-      setIsEditDialogOpen(false);
-    } catch (error) {
-      console.error('Erro ao atualizar botão:', error);
-      toast({
-        title: "Erro",
-        description: "Não foi possível atualizar o botão",
-        variant: "destructive",
-      });
-    }
-  };
 
   return (
     <div className="min-h-screen bg-chatgpt-main">
@@ -99,14 +57,9 @@ const ActionButtons = () => {
             >
               <div className="flex justify-between items-start mb-4">
                 <h3 className="text-lg font-medium text-white">{button.name}</h3>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => handleEdit(button)}
-                  className="hover:bg-chatgpt-hover rounded-full"
-                >
-                  <Pencil className="h-4 w-4 text-gray-400 hover:text-white" />
-                </Button>
+                <div className="text-xs text-gray-400 px-2 py-1 bg-chatgpt-hover rounded-full">
+                  Principal
+                </div>
               </div>
               <div className="space-y-2 text-gray-400">
                 <p>Categoria: {button.category}</p>
@@ -121,22 +74,6 @@ const ActionButtons = () => {
           open={isCreateDialogOpen}
           onOpenChange={setIsCreateDialogOpen}
         />
-
-        <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-          <DialogContent className="bg-chatgpt-secondary border-chatgpt-border rounded-2xl">
-            <DialogHeader>
-              <DialogTitle className="text-white">Editar Botão</DialogTitle>
-            </DialogHeader>
-            {selectedButton && (
-              <CreateActionButtonDialog
-                open={isEditDialogOpen}
-                onOpenChange={setIsEditDialogOpen}
-                editingButton={selectedButton}
-                onUpdate={handleUpdate}
-              />
-            )}
-          </DialogContent>
-        </Dialog>
       </div>
     </div>
   );
