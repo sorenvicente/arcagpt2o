@@ -1,24 +1,12 @@
-import { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
-  DialogTitle,
 } from "@/components/ui/dialog";
-
-interface ActionButtonFormData {
-  name: string;
-  icon: string;
-  label: string;
-  category: string;
-  color: string;
-}
+import ActionButtonForm, { ActionButtonFormData } from "./ActionButtonForm";
+import ActionButtonDialogHeader from "./ActionButtonDialogHeader";
 
 interface CreateActionButtonDialogProps {
   open: boolean;
@@ -41,19 +29,8 @@ const CreateActionButtonDialog = ({
   onUpdate,
 }: CreateActionButtonDialogProps) => {
   const { toast } = useToast();
-  const { register, handleSubmit, reset, setValue } = useForm<ActionButtonFormData>();
 
-  useEffect(() => {
-    if (editingButton) {
-      setValue("name", editingButton.name);
-      setValue("icon", editingButton.icon);
-      setValue("label", editingButton.label);
-      setValue("category", editingButton.category);
-      setValue("color", editingButton.color);
-    }
-  }, [editingButton, setValue]);
-
-  const onSubmit = async (data: ActionButtonFormData) => {
+  const handleSubmit = async (data: ActionButtonFormData) => {
     try {
       if (editingButton && onUpdate) {
         await onUpdate({ ...data, id: editingButton.id });
@@ -67,7 +44,6 @@ const CreateActionButtonDialog = ({
         });
       }
       
-      reset();
       onOpenChange(false);
     } catch (error) {
       console.error("Erro ao salvar botão:", error);
@@ -82,71 +58,12 @@ const CreateActionButtonDialog = ({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="bg-chatgpt-secondary border border-chatgpt-border rounded-3xl shadow-lg">
-        <DialogHeader>
-          <DialogTitle className="text-white text-xl font-semibold px-2">
-            {editingButton ? "Editar Botão" : "Criar Novo Botão"}
-          </DialogTitle>
-        </DialogHeader>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 px-2">
-          <div className="space-y-2">
-            <Label htmlFor="name" className="text-gray-300">Nome</Label>
-            <Input
-              id="name"
-              {...register("name")}
-              readOnly={!!editingButton}
-              className="bg-chatgpt-main border-chatgpt-border text-white rounded-xl focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="icon" className="text-gray-300">Ícone</Label>
-            <Input
-              id="icon"
-              {...register("icon")}
-              className="bg-chatgpt-main border-chatgpt-border text-white rounded-xl focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="label" className="text-gray-300">Label</Label>
-            <Input
-              id="label"
-              {...register("label")}
-              className="bg-chatgpt-main border-chatgpt-border text-white rounded-xl focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="category" className="text-gray-300">Categoria</Label>
-            <Input
-              id="category"
-              {...register("category")}
-              readOnly={!!editingButton}
-              className="bg-chatgpt-main border-chatgpt-border text-white rounded-xl focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="color" className="text-gray-300">Cor</Label>
-            <Input
-              id="color"
-              {...register("color")}
-              className="bg-chatgpt-main border-chatgpt-border text-white rounded-xl focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-          <div className="flex justify-end gap-3 pt-4">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => onOpenChange(false)}
-              className="bg-chatgpt-main border-chatgpt-border hover:bg-chatgpt-hover text-white rounded-full px-6"
-            >
-              Cancelar
-            </Button>
-            <Button 
-              type="submit"
-              className="bg-blue-600 hover:bg-blue-700 text-white rounded-full px-6"
-            >
-              {editingButton ? "Salvar" : "Criar"}
-            </Button>
-          </div>
-        </form>
+        <ActionButtonDialogHeader isEditing={!!editingButton} />
+        <ActionButtonForm
+          onSubmit={handleSubmit}
+          onCancel={() => onOpenChange(false)}
+          editingButton={editingButton}
+        />
       </DialogContent>
     </Dialog>
   );
