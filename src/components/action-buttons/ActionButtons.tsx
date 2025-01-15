@@ -1,8 +1,6 @@
 import { useToast } from "@/components/ui/use-toast";
 import { usePromptLoader } from "./usePromptLoader";
-import { useActionButtons } from "./useActionButtons";
 import MainActionButtons from "./MainActionButtons";
-import CustomActionButtons from "./CustomActionButtons";
 
 interface ActionButtonsProps {
   onSelectPrompt: (prompt: string, category: string) => void;
@@ -11,7 +9,6 @@ interface ActionButtonsProps {
 
 const ActionButtons = ({ onSelectPrompt, activeCategory }: ActionButtonsProps) => {
   const { prompts } = usePromptLoader();
-  const { customButtons } = useActionButtons();
   const { toast } = useToast();
 
   const normalizeString = (str: string) => {
