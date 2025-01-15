@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Plus, ChevronDown, ChevronUp } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -58,7 +58,7 @@ const ActionButtons = () => {
   };
 
   // Carregar prompts ao montar o componente
-  useState(() => {
+  useEffect(() => {
     loadPrompts();
   }, []);
 
