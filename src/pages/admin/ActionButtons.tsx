@@ -88,14 +88,19 @@ const ActionButtons = () => {
     );
   };
 
-  // Função recursiva para renderizar os sub-prompts
-  const renderSubPrompts = (category: string, level: number = 0) => {
-    const subPrompts = prompts.filter(p => p.parent_category === category);
+  const renderSubPrompts = (category: string, visitedCategories: Set<string> = new Set()) => {
+    // Adiciona a categoria atual ao conjunto de categorias visitadas
+    visitedCategories.add(category);
+    
+    // Filtra os sub-prompts, excluindo aqueles que criariam ciclos
+    const subPrompts = prompts.filter(p => 
+      p.parent_category === category && !visitedCategories.has(p.category)
+    );
     
     if (subPrompts.length === 0) return null;
 
     return (
-      <div className={`ml-${level * 4} space-y-2`}>
+      <div className="ml-4 space-y-2">
         {subPrompts.map(prompt => (
           <div key={prompt.id} className="flex flex-col">
             <div className="flex items-center justify-between bg-chatgpt-secondary p-3 rounded-lg">
@@ -113,7 +118,7 @@ const ActionButtons = () => {
               )}
             </div>
             {expandedCategories.includes(prompt.category) && 
-              renderSubPrompts(prompt.category, level + 1)}
+              renderSubPrompts(prompt.category, new Set(visitedCategories))}
           </div>
         ))}
       </div>
