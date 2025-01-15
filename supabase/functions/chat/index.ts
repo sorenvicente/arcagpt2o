@@ -16,6 +16,10 @@ serve(async (req) => {
       messagesCount: messages?.length 
     });
 
+    if (!messages || !Array.isArray(messages) || messages.length === 0) {
+      throw new Error('Mensagens inválidas ou vazias');
+    }
+
     // Fetch API keys from database
     const { data: apiKeys, error: apiKeysError } = await fetch(
       `${Deno.env.get('SUPABASE_URL')}/rest/v1/api_keys?select=*&order=created_at.desc&limit=1`,
@@ -32,9 +36,13 @@ serve(async (req) => {
       throw new Error('Falha ao buscar chaves API');
     }
 
+    if (!apiKeys || apiKeys.length === 0) {
+      throw new Error('Nenhuma chave API configurada');
+    }
+
     const apiKey = apiKeys[0];
     if (!apiKey) {
-      throw new Error('Nenhuma chave API configurada');
+      throw new Error('Configuração de API inválida');
     }
 
     // Check which API keys are available and their selected models
