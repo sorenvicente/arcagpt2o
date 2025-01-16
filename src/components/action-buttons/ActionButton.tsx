@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { LucideIcon } from "lucide-react";
 import * as Icons from "lucide-react";
 
 interface ActionButtonProps {
@@ -10,7 +10,7 @@ interface ActionButtonProps {
 }
 
 export function ActionButton({ name, icon, label, category, color }: ActionButtonProps) {
-  const IconComponent = Icons[icon as keyof typeof Icons];
+  const IconComponent = Icons[icon as keyof typeof Icons] as LucideIcon;
 
   return (
     <button 
