@@ -34,49 +34,61 @@ const mainButtons = [
 const ActionButtons = () => {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
+  const [customButtons, setCustomButtons] = useState<ActionButton[]>([]);
   const [prompts, setPrompts] = useState<PromptBlock[]>([]);
   const { toast } = useToast();
 
-  const loadPrompts = async () => {
+  const loadData = async () => {
     try {
-      const { data, error } = await supabase
+      // Carregar botões customizados
+      const { data: buttonsData, error: buttonsError } = await supabase
+        .from('action_buttons')
+        .select('*')
+        .order('created_at', { ascending: true });
+      
+      if (buttonsError) throw buttonsError;
+      setCustomButtons(buttonsData || []);
+
+      // Carregar prompts
+      const { data: promptsData, error: promptsError } = await supabase
         .from('prompt_blocks')
         .select('*')
         .order('created_at', { ascending: true });
       
-      if (error) throw error;
-      setPrompts(data || []);
-      console.log('Prompts carregados:', data);
+      if (promptsError) throw promptsError;
+      setPrompts(promptsData || []);
+      
     } catch (error) {
-      console.error('Erro ao carregar prompts:', error);
+      console.error('Erro ao carregar dados:', error);
       toast({
         title: "Erro",
-        description: "Não foi possível carregar os prompts.",
+        description: "Não foi possível carregar os dados.",
         variant: "destructive",
       });
     }
   };
 
   useEffect(() => {
-    loadPrompts();
+    loadData();
 
+    // Inscrever-se para atualizações em tempo real
     const channel = supabase
-      .channel('prompt_blocks_changes')
+      .channel('custom-all-channel')
       .on(
         'postgres_changes',
         {
           event: '*',
           schema: 'public',
-          table: 'prompt_blocks'
+          table: 'action_buttons'
         },
         () => {
-          loadPrompts();
+          loadData();
         }
       )
       .subscribe();
 
     return () => {
-      channel.unsubscribe();
+      supabase.removeChannel(channel);
     };
   }, []);
 
@@ -179,36 +191,34 @@ const ActionButtons = () => {
             </div>
           </div>
 
-          {/* Botões de Produtos */}
+          {/* Botões Customizados */}
           <div className="col-span-full">
-            <h2 className="text-xl font-semibold text-white mb-4">Botões de Produtos</h2>
+            <h2 className="text-xl font-semibold text-white mb-4">Botões Customizados</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {prompts
-                .filter(p => !p.parent_category && !mainButtons.some(b => b.category === p.category))
-                .map(prompt => (
-                  <div
-                    key={prompt.id}
-                    className="bg-chatgpt-secondary rounded-2xl p-6 border border-chatgpt-border hover:border-gray-600 transition-colors"
-                  >
-                    <div className="flex justify-between items-start mb-4">
-                      <h3 className="text-lg font-medium text-white">{prompt.name}</h3>
-                      <button
-                        onClick={() => toggleCategory(prompt.category)}
-                        className="text-gray-400 hover:text-white"
-                      >
-                        {expandedCategories.includes(prompt.category) 
-                          ? <ChevronUp className="h-4 w-4" />
-                          : <ChevronDown className="h-4 w-4" />
-                        }
-                      </button>
-                    </div>
-                    {expandedCategories.includes(prompt.category) && (
-                      <div className="mt-4 space-y-2">
-                        {renderSubPrompts(prompt.category)}
-                      </div>
-                    )}
+              {customButtons.map(button => (
+                <div
+                  key={button.id}
+                  className="bg-chatgpt-secondary rounded-2xl p-6 border border-chatgpt-border hover:border-gray-600 transition-colors"
+                >
+                  <div className="flex justify-between items-start mb-4">
+                    <h3 className="text-lg font-medium text-white">{button.name}</h3>
+                    <button
+                      onClick={() => toggleCategory(button.category)}
+                      className="text-gray-400 hover:text-white"
+                    >
+                      {expandedCategories.includes(button.category) 
+                        ? <ChevronUp className="h-4 w-4" />
+                        : <ChevronDown className="h-4 w-4" />
+                      }
+                    </button>
                   </div>
-                ))}
+                  {expandedCategories.includes(button.category) && (
+                    <div className="mt-4 space-y-2">
+                      {renderSubPrompts(button.category)}
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
           </div>
         </div>
