@@ -1,28 +1,10 @@
 import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft, Plus, ChevronDown, ChevronUp } from "lucide-react";
-import { Link } from "react-router-dom";
-import CreateActionButtonDialog from "@/components/admin/action-buttons/CreateActionButtonDialog";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { CustomActionButton } from "@/components/admin/action-buttons/CustomActionButton";
-
-interface ActionButton {
-  id: string;
-  name: string;
-  icon: string;
-  label: string;
-  category: string;
-  color: string;
-}
-
-interface PromptBlock {
-  id: string;
-  name: string;
-  description: string;
-  category: string;
-  parent_category: string | null;
-}
+import CreateActionButtonDialog from "@/components/admin/action-buttons/CreateActionButtonDialog";
+import Header from "@/components/admin/action-buttons/Header";
+import MainButtonsSection from "@/components/admin/action-buttons/MainButtonsSection";
+import CustomButtonsSection from "@/components/admin/action-buttons/CustomButtonsSection";
 
 const mainButtons = [
   { id: "proposito", name: "Propósito", icon: "Target", label: "Propósito", category: "proposito", color: "purple" },
@@ -35,8 +17,8 @@ const mainButtons = [
 const ActionButtons = () => {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
-  const [customButtons, setCustomButtons] = useState<ActionButton[]>([]);
-  const [prompts, setPrompts] = useState<PromptBlock[]>([]);
+  const [customButtons, setCustomButtons] = useState<any[]>([]);
+  const [prompts, setPrompts] = useState<any[]>([]);
   const { toast } = useToast();
 
   const loadData = async () => {
@@ -90,36 +72,6 @@ const ActionButtons = () => {
     };
   }, []);
 
-  const handleEdit = async (id: string) => {
-    // Implementar edição
-    console.log('Editar botão:', id);
-  };
-
-  const handleDelete = async (id: string) => {
-    try {
-      const { error } = await supabase
-        .from('action_buttons')
-        .delete()
-        .eq('id', id);
-
-      if (error) throw error;
-
-      toast({
-        title: "Sucesso",
-        description: "Botão removido com sucesso.",
-      });
-
-      loadData();
-    } catch (error) {
-      console.error('Erro ao deletar botão:', error);
-      toast({
-        title: "Erro",
-        description: "Não foi possível remover o botão.",
-        variant: "destructive",
-      });
-    }
-  };
-
   const toggleCategory = (category: string) => {
     setExpandedCategories(prev => 
       prev.includes(category)
@@ -163,77 +115,54 @@ const ActionButtons = () => {
     );
   };
 
+  const handleEdit = async (id: string) => {
+    console.log('Editar botão:', id);
+  };
+
+  const handleDelete = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from('action_buttons')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+
+      toast({
+        title: "Sucesso",
+        description: "Botão removido com sucesso.",
+      });
+
+      loadData();
+    } catch (error) {
+      console.error('Erro ao deletar botão:', error);
+      toast({
+        title: "Erro",
+        description: "Não foi possível remover o botão.",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-chatgpt-main">
       <div className="container mx-auto p-6">
-        <div className="mb-8 flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-white">Gerenciar Botões de Ação</h1>
-          <div className="flex gap-4">
-            <Link to="/app">
-              <Button variant="outline" className="bg-chatgpt-secondary border-chatgpt-border hover:bg-chatgpt-hover rounded-full">
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                Voltar à Interface
-              </Button>
-            </Link>
-            <Button 
-              onClick={() => setIsCreateDialogOpen(true)}
-              className="bg-chatgpt-secondary border-chatgpt-border hover:bg-chatgpt-hover rounded-full"
-            >
-              <Plus className="mr-2 h-4 w-4" />
-              Novo Botão
-            </Button>
-          </div>
-        </div>
+        <Header onCreateClick={() => setIsCreateDialogOpen(true)} />
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* Botões Principais */}
-          <div className="col-span-full mb-6">
-            <h2 className="text-xl font-semibold text-white mb-4">Botões Principais</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {mainButtons.map((button) => (
-                <div
-                  key={button.id}
-                  className="bg-chatgpt-secondary rounded-2xl p-6 border border-chatgpt-border hover:border-gray-600 transition-colors"
-                >
-                  <div className="flex justify-between items-start mb-4">
-                    <h3 className="text-lg font-medium text-white">{button.name}</h3>
-                    <button
-                      onClick={() => toggleCategory(button.category)}
-                      className="text-gray-400 hover:text-white"
-                    >
-                      {expandedCategories.includes(button.category) 
-                        ? <ChevronUp className="h-4 w-4" />
-                        : <ChevronDown className="h-4 w-4" />
-                      }
-                    </button>
-                  </div>
-                  {expandedCategories.includes(button.category) && (
-                    <div className="mt-4 space-y-2">
-                      {renderSubPrompts(button.category)}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
+          <MainButtonsSection
+            mainButtons={mainButtons}
+            expandedCategories={expandedCategories}
+            toggleCategory={toggleCategory}
+            renderSubPrompts={renderSubPrompts}
+            prompts={prompts}
+          />
 
-          {/* Botões Customizados */}
-          <div className="col-span-full">
-            <h2 className="text-xl font-semibold text-white mb-4">Botões Customizados</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {customButtons.map(button => (
-                <CustomActionButton
-                  key={button.id}
-                  id={button.id}
-                  name={button.name}
-                  label={button.label}
-                  category={button.category}
-                  onEdit={handleEdit}
-                  onDelete={handleDelete}
-                />
-              ))}
-            </div>
-          </div>
+          <CustomButtonsSection
+            customButtons={customButtons}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+          />
         </div>
 
         <CreateActionButtonDialog
