@@ -37,28 +37,27 @@ serve(async (req) => {
     }
 
     if (!apiKeys || apiKeys.length === 0) {
-      throw new Error('Nenhuma chave API configurada');
+      console.error('❌ Nenhuma chave API encontrada');
+      throw new Error('Por favor, configure suas chaves API na página de Configurações');
     }
 
     const apiKey = apiKeys[0];
-    if (!apiKey) {
-      throw new Error('Configuração de API inválida');
+    console.log('🔑 Chaves API encontradas:', {
+      hasOpenAI: !!apiKey.openai_key,
+      hasOpenRouter: !!apiKey.openrouter_key
+    });
+
+    // Check if at least one API key is configured
+    if (!apiKey.openai_key && !apiKey.openrouter_key) {
+      throw new Error('Por favor, configure pelo menos uma chave API (OpenAI ou OpenRouter) na página de Configurações');
     }
 
-    // Check which API keys are available and their selected models
-    const hasOpenAI = apiKey.openai_key && apiKey.selected_openai_model;
-    const hasOpenRouter = apiKey.openrouter_key && apiKey.selected_openrouter_model;
-
-    if (!hasOpenAI && !hasOpenRouter) {
-      throw new Error('É necessário configurar pelo menos uma chave API (OpenAI ou OpenRouter)');
-    }
-
-    // Prefer OpenAI if available, otherwise use OpenRouter
-    if (hasOpenAI) {
-      console.log('🔄 Usando OpenAI');
+    // Prefer OpenAI if available
+    if (apiKey.openai_key) {
+      console.log('🤖 Usando OpenAI');
       return await callOpenAI(apiKey.openai_key, messages, temperature);
-    } else if (hasOpenRouter) {
-      console.log('🔄 Usando OpenRouter');
+    } else if (apiKey.openrouter_key) {
+      console.log('🤖 Usando OpenRouter');
       const openRouterReq = new Request(req.url, {
         method: 'POST',
         headers: req.headers,
