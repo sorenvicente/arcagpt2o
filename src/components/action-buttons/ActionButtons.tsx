@@ -1,6 +1,6 @@
 import { useToast } from "@/components/ui/use-toast";
 import { usePromptLoader } from "./usePromptLoader";
-import MainActionButtons from "./MainActionButtons";
+import { MainActionButtons } from "./MainActionButtons";
 
 interface ActionButtonsProps {
   onSelectPrompt: (prompt: string, category: string) => void;
@@ -37,11 +37,7 @@ const ActionButtons = ({ onSelectPrompt, activeCategory }: ActionButtonsProps) =
 
   return (
     <div className="flex flex-col gap-4 mb-4">
-      <MainActionButtons
-        activeCategory={activeCategory}
-        onSelectPrompt={handlePromptSelect}
-        normalizeString={normalizeString}
-      />
+      <MainActionButtons />
     </div>
   );
 };
