@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import CreateActionButtonDialog from "@/components/admin/action-buttons/CreateActionButtonDialog";
 import Header from "@/components/admin/action-buttons/Header";
 import MainButtonsSection from "@/components/admin/action-buttons/MainButtonsSection";
