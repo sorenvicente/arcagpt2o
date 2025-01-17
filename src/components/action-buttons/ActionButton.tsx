@@ -1,5 +1,5 @@
 import React from 'react';
-import { LucideIcon } from "lucide-react";
+import { LucideIcon, LucideProps } from "lucide-react";
 import * as Icons from "lucide-react";
 import {
   Select,
@@ -51,7 +51,7 @@ export function IconSelect({ value, onValueChange }: { value: string; onValueCha
         {availableIcons.map((icon) => (
           <SelectItem key={icon.value} value={icon.value}>
             <div className="flex items-center gap-2">
-              {React.createElement(Icons[icon.value as keyof typeof Icons], { 
+              {React.createElement(Icons[icon.value as keyof typeof Icons] as LucideIcon, { 
                 className: "h-4 w-4" 
               })}
               {icon.label}
