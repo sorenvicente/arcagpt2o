@@ -1,101 +1,91 @@
-import { useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { useToast } from "@/components/ui/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
-export interface ActionButtonFormData {
-  name: string;
-  icon: string;
-  label: string;
-  category: string;
-  color: string;
-}
+import { Button } from "@/components/ui/button";
+import { IconSelect } from "@/components/action-buttons/ActionButton";
 
 interface ActionButtonFormProps {
-  onSubmit: (data: ActionButtonFormData) => void;
-  onCancel: () => void;
-  editingButton?: {
-    id: string;
-    name: string;
-    icon: string;
-    label: string;
-    category: string;
-    color: string;
-  };
+  onSuccess?: () => void;
 }
 
-const ActionButtonForm = ({ onSubmit, onCancel, editingButton }: ActionButtonFormProps) => {
-  const { register, handleSubmit } = useForm<ActionButtonFormData>({
-    defaultValues: editingButton
-  });
+export function ActionButtonForm({ onSuccess }: ActionButtonFormProps) {
+  const [name, setName] = useState("");
+  const [icon, setIcon] = useState("Target");
+  const [label, setLabel] = useState("");
+  const [category, setCategory] = useState("");
+  const [color, setColor] = useState("gray");
+  const { toast } = useToast();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const { error } = await supabase
+        .from('action_buttons')
+        .insert([
+          { name, icon, label, category, color }
+        ]);
+
+      if (error) throw error;
+
+      toast({
+        title: "Sucesso",
+        description: "Botão criado com sucesso!",
+      });
+
+      if (onSuccess) onSuccess();
+    } catch (error) {
+      console.error('Erro ao criar botão:', error);
+      toast({
+        title: "Erro",
+        description: "Não foi possível criar o botão.",
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 px-2">
+    <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2">
-        <Label htmlFor="name" className="text-gray-300">Nome do Botão Auxiliar</Label>
+        <Label htmlFor="name">Nome</Label>
         <Input
           id="name"
-          placeholder="Ex: Análise de Dados"
-          {...register("name")}
-          readOnly={!!editingButton}
-          className="bg-chatgpt-main border-chatgpt-border text-white rounded-xl focus:ring-2 focus:ring-blue-500"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Ex: VCL"
         />
       </div>
+
       <div className="space-y-2">
-        <Label htmlFor="icon" className="text-gray-300">Ícone</Label>
-        <Input
-          id="icon"
-          placeholder="Ex: Brain"
-          {...register("icon")}
-          className="bg-chatgpt-main border-chatgpt-border text-white rounded-xl focus:ring-2 focus:ring-blue-500"
-        />
+        <Label htmlFor="icon">Ícone</Label>
+        <IconSelect value={icon} onValueChange={setIcon} />
       </div>
+
       <div className="space-y-2">
-        <Label htmlFor="label" className="text-gray-300">Label</Label>
+        <Label htmlFor="label">Label</Label>
         <Input
           id="label"
-          placeholder="Ex: Análise"
-          {...register("label")}
-          className="bg-chatgpt-main border-chatgpt-border text-white rounded-xl focus:ring-2 focus:ring-blue-500"
+          value={label}
+          onChange={(e) => setLabel(e.target.value)}
+          placeholder="Ex: Video de Vendas"
         />
       </div>
+
       <div className="space-y-2">
-        <Label htmlFor="category" className="text-gray-300">Categoria</Label>
+        <Label htmlFor="category">Categoria</Label>
         <Input
           id="category"
-          placeholder="Ex: analise_dados"
-          {...register("category")}
-          readOnly={!!editingButton}
-          className="bg-chatgpt-main border-chatgpt-border text-white rounded-xl focus:ring-2 focus:ring-blue-500"
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          placeholder="Ex: vsl"
         />
       </div>
-      <div className="space-y-2">
-        <Label htmlFor="color" className="text-gray-300">Cor</Label>
-        <Input
-          id="color"
-          placeholder="Ex: blue"
-          {...register("color")}
-          className="bg-chatgpt-main border-chatgpt-border text-white rounded-xl focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
-      <div className="flex justify-end gap-3 pt-4">
-        <Button
-          type="button"
-          variant="outline"
-          onClick={onCancel}
-          className="bg-chatgpt-main border-chatgpt-border hover:bg-chatgpt-hover text-white rounded-full px-6"
-        >
-          Cancelar
-        </Button>
-        <Button 
-          type="submit"
-          className="bg-blue-600 hover:bg-blue-700 text-white rounded-full px-6"
-        >
-          {editingButton ? "Salvar" : "Criar"}
-        </Button>
-      </div>
+
+      <Button type="submit" className="w-full">
+        Criar Botão
+      </Button>
     </form>
   );
-};
-
-export default ActionButtonForm;
+}
