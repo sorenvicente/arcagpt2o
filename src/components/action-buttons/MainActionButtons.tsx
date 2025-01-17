@@ -91,13 +91,14 @@ export function MainActionButtons() {
       </div>
 
       <div className="mt-4">
-        <button
+        <ActionButton
+          name="more"
+          icon="Plus"
+          label="Mais ações"
+          category="more"
+          color="gray"
           onClick={() => setShowCustomButtons(!showCustomButtons)}
-          className="flex items-center gap-2 px-4 py-2 text-sm text-gray-300 rounded-lg hover:bg-gray-800 transition-colors"
-        >
-          <Plus className="w-4 h-4" />
-          <span>Mais ações</span>
-        </button>
+        />
 
         {showCustomButtons && customButtons.length > 0 && (
           <div className="mt-2 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
