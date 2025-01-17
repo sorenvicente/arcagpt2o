@@ -52,7 +52,7 @@ export function MainActionButtons() {
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
         <ActionButton
           name="proposito"
           icon="Target"
@@ -88,33 +88,30 @@ export function MainActionButtons() {
           category="conteudo"
           color="red"
         />
-      </div>
-
-      <div className="mt-4">
         <ActionButton
           name="more"
           icon="Plus"
-          label="Mais ações"
+          label="Mais"
           category="more"
           color="gray"
           onClick={() => setShowCustomButtons(!showCustomButtons)}
         />
-
-        {showCustomButtons && customButtons.length > 0 && (
-          <div className="mt-2 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
-            {customButtons.map((button) => (
-              <ActionButton
-                key={button.id}
-                name={button.name}
-                icon={button.icon}
-                label={button.label}
-                category={button.category}
-                color={button.color}
-              />
-            ))}
-          </div>
-        )}
       </div>
+
+      {showCustomButtons && customButtons.length > 0 && (
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
+          {customButtons.map((button) => (
+            <ActionButton
+              key={button.id}
+              name={button.name}
+              icon={button.icon}
+              label={button.label}
+              category={button.category}
+              color={button.color}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
