@@ -24,17 +24,16 @@ export default function CreateActionButtonDialog({
   const [icon, setIcon] = useState("Target");
   const [label, setLabel] = useState("");
   const [category, setCategory] = useState("");
-  const [parentCategory, setParentCategory] = useState("");
-  const [color, setColor] = useState("blue");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !icon || !label || !category || !color) {
+    
+    if (!name || !icon || !label || !category) {
       toast({
         title: "Campos obrigatórios",
-        description: "Por favor, preencha todos os campos obrigatórios.",
+        description: "Por favor, preencha todos os campos.",
         variant: "destructive",
       });
       return;
@@ -43,51 +42,36 @@ export default function CreateActionButtonDialog({
     setIsSubmitting(true);
 
     try {
-      const { error: buttonError } = await supabase
+      const { error } = await supabase
         .from('action_buttons')
         .insert([
           {
             name,
             icon,
             label,
-            category,
-            color,
+            category: category.toLowerCase(),
+            color: 'gray'
           }
         ]);
 
-      if (buttonError) throw buttonError;
-
-      const { error: promptError } = await supabase
-        .from('prompt_blocks')
-        .insert([
-          {
-            name,
-            description: `Prompt para ${name}`,
-            prompt: `Você é um assistente especializado em ${label}`,
-            category,
-            parent_category: parentCategory || null,
-          }
-        ]);
-
-      if (promptError) throw promptError;
+      if (error) throw error;
 
       toast({
         title: "Sucesso",
         description: "Botão de ação criado com sucesso!",
       });
 
-      onOpenChange(false);
+      // Reset form
       setName("");
       setIcon("Target");
       setLabel("");
       setCategory("");
-      setParentCategory("");
-      setColor("blue");
+      onOpenChange(false);
     } catch (error) {
       console.error('Erro ao criar botão:', error);
       toast({
         title: "Erro",
-        description: "Não foi possível criar o botão de ação.",
+        description: "Não foi possível criar o botão de ação. Por favor, tente novamente.",
         variant: "destructive",
       });
     } finally {
@@ -134,16 +118,6 @@ export default function CreateActionButtonDialog({
               onChange={(e) => setCategory(e.target.value)}
               className="bg-[#2A2F3C] border-[#3A3F4C] text-white placeholder-gray-400 focus:border-[#9b87f5] focus:ring-[#9b87f5] rounded-xl"
               placeholder="Ex: vsl"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-300">Categoria Pai (opcional)</label>
-            <Input
-              value={parentCategory}
-              onChange={(e) => setParentCategory(e.target.value)}
-              className="bg-[#2A2F3C] border-[#3A3F4C] text-white placeholder-gray-400 focus:border-[#9b87f5] focus:ring-[#9b87f5] rounded-xl"
-              placeholder="Ex: vsl_roteiro"
             />
           </div>
 
