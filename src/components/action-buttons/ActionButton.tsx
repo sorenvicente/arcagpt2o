@@ -33,9 +33,9 @@ export function ActionButton({ name, icon, label, category, color, onClick }: Ac
   return (
     <button 
       onClick={onClick}
-      className="relative flex h-[36px] items-center gap-1.5 rounded-full border px-2.5 py-1.5 text-start text-[12px] text-white transition enabled:hover:bg-chatgpt-secondary disabled:cursor-not-allowed xl:gap-2 xl:text-[13px] cursor-pointer border-[#383737] hover:bg-chatgpt-hover"
+      className="relative flex h-[32px] items-center gap-1.5 rounded-full border px-2.5 py-1.5 text-start text-[11px] text-white transition enabled:hover:bg-chatgpt-secondary disabled:cursor-not-allowed xl:gap-1.5 xl:text-[12px] cursor-pointer border-[#383737] hover:bg-chatgpt-hover"
     >
-      {IconComponent && <IconComponent className={`h-3.5 w-3.5 text-${color}-400`} />}
+      {IconComponent && <IconComponent className={`h-3 w-3 text-${color}-400`} />}
       {label}
     </button>
   );
