@@ -6,6 +6,7 @@ interface CustomButtonsSectionProps {
     name: string;
     label: string;
     category: string;
+    icon: string;
   }>;
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
@@ -27,6 +28,7 @@ const CustomButtonsSection = ({
             name={button.name}
             label={button.label}
             category={button.category}
+            icon={button.icon}
             onEdit={onEdit}
             onDelete={onDelete}
           />
