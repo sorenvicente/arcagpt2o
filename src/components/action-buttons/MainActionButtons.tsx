@@ -53,53 +53,92 @@ export function MainActionButtons() {
   return (
     <div className="flex flex-col gap-2">
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
-        <ActionButton
-          name="proposito"
-          icon="Target"
-          label="Propósito"
-          category="proposito"
-          color="purple"
-        />
-        <ActionButton
-          name="metodo"
-          icon="Brain"
-          label="Método"
-          category="metodo"
-          color="blue"
-        />
-        <ActionButton
-          name="mentoria"
-          icon="School"
-          label="Mentoria"
-          category="mentoria"
-          color="green"
-        />
-        <ActionButton
-          name="curso"
-          icon="GraduationCap"
-          label="Curso"
-          category="curso"
-          color="yellow"
-        />
-        <ActionButton
-          name="conteudo"
-          icon="Book"
-          label="Conteúdo"
-          category="conteudo"
-          color="red"
-        />
-        <ActionButton
-          name="more"
-          icon="Plus"
-          label="Mais"
-          category="more"
-          color="gray"
-          onClick={() => setShowCustomButtons(!showCustomButtons)}
-        />
+        {/* Mobile: Show only first 3 buttons + More */}
+        <div className="block sm:hidden col-span-2">
+          <div className="grid grid-cols-2 gap-2">
+            <ActionButton
+              name="proposito"
+              icon="Target"
+              label="Propósito"
+              category="proposito"
+              color="purple"
+            />
+            <ActionButton
+              name="metodo"
+              icon="Brain"
+              label="Método"
+              category="metodo"
+              color="blue"
+            />
+            <ActionButton
+              name="mentoria"
+              icon="School"
+              label="Mentoria"
+              category="mentoria"
+              color="green"
+            />
+            <ActionButton
+              name="more"
+              icon="Plus"
+              label="Mais"
+              category="more"
+              color="gray"
+              onClick={() => setShowCustomButtons(!showCustomButtons)}
+            />
+          </div>
+        </div>
+
+        {/* Desktop: Show all main buttons */}
+        <div className="hidden sm:contents">
+          <ActionButton
+            name="proposito"
+            icon="Target"
+            label="Propósito"
+            category="proposito"
+            color="purple"
+          />
+          <ActionButton
+            name="metodo"
+            icon="Brain"
+            label="Método"
+            category="metodo"
+            color="blue"
+          />
+          <ActionButton
+            name="mentoria"
+            icon="School"
+            label="Mentoria"
+            category="mentoria"
+            color="green"
+          />
+          <ActionButton
+            name="curso"
+            icon="GraduationCap"
+            label="Curso"
+            category="curso"
+            color="yellow"
+          />
+          <ActionButton
+            name="conteudo"
+            icon="Book"
+            label="Conteúdo"
+            category="conteudo"
+            color="red"
+          />
+          <ActionButton
+            name="more"
+            icon="Plus"
+            label="Mais"
+            category="more"
+            color="gray"
+            onClick={() => setShowCustomButtons(!showCustomButtons)}
+          />
+        </div>
       </div>
 
+      {/* Show custom buttons when More is clicked */}
       {showCustomButtons && customButtons.length > 0 && (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 mt-2">
           {customButtons.map((button) => (
             <ActionButton
               key={button.id}
