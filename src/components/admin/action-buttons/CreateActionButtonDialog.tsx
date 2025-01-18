@@ -81,7 +81,7 @@ export default function CreateActionButtonDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-[#1A1F2C] border border-[#2A2F3C] text-white rounded-xl max-w-md">
+      <DialogContent className="max-w-md bg-[#1A1F2C] border border-[#2A2F3C] text-white rounded-xl">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold">Criar Novo Botão de Ação</DialogTitle>
         </DialogHeader>
