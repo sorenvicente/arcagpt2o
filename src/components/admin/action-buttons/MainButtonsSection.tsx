@@ -29,10 +29,12 @@ const MainButtonsSection = ({
         {mainButtons.map((button) => (
           <div
             key={button.id}
-            className="bg-chatgpt-secondary rounded-2xl p-6 border border-chatgpt-border hover:border-gray-600 transition-colors"
+            className="bg-chatgpt-secondary rounded-2xl p-4 border border-chatgpt-border hover:border-gray-600 transition-colors"
           >
-            <div className="flex justify-between items-start mb-4">
-              <h3 className="text-lg font-medium text-white">{button.name}</h3>
+            <div className="flex justify-between items-start mb-3">
+              <div className="flex items-center gap-2">
+                <h3 className="text-base font-medium text-white">{button.name}</h3>
+              </div>
               <button
                 onClick={() => toggleCategory(button.category)}
                 className="text-gray-400 hover:text-white"
@@ -44,7 +46,7 @@ const MainButtonsSection = ({
               </button>
             </div>
             {expandedCategories.includes(button.category) && (
-              <div className="mt-4 space-y-2">
+              <div className="mt-3 space-y-2">
                 {renderSubPrompts(button.category)}
               </div>
             )}
