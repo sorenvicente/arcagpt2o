@@ -53,10 +53,10 @@ export function MainActionButtons() {
   return (
     <div className="flex flex-col gap-2">
       {/* Main buttons grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
+      <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-6 gap-2">
         {/* Mobile: Show all main buttons + More */}
-        <div className="block sm:hidden col-span-2">
-          <div className="grid grid-cols-2 gap-2">
+        <div className="block sm:hidden col-span-3">
+          <div className="grid grid-cols-3 gap-2">
             <ActionButton
               name="proposito"
               icon="Target"
@@ -153,7 +153,7 @@ export function MainActionButtons() {
 
       {/* Custom buttons section - Only show when More is clicked */}
       {showCustomButtons && customButtons.length > 0 && (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 mt-2">
+        <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-6 gap-2 mt-2">
           {customButtons.map((button) => (
             <ActionButton
               key={button.id}
