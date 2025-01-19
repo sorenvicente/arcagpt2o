@@ -54,7 +54,7 @@ export function MainActionButtons() {
     <div className="flex flex-col gap-2">
       {/* Main buttons grid */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
-        {/* Mobile: Show only first 3 buttons + More */}
+        {/* Mobile: Show all main buttons + More */}
         <div className="block sm:hidden col-span-2">
           <div className="grid grid-cols-2 gap-2">
             <ActionButton
@@ -77,6 +77,20 @@ export function MainActionButtons() {
               label="Mentoria"
               category="mentoria"
               color="green"
+            />
+            <ActionButton
+              name="curso"
+              icon="GraduationCap"
+              label="Curso"
+              category="curso"
+              color="yellow"
+            />
+            <ActionButton
+              name="conteudo"
+              icon="Book"
+              label="Conteúdo"
+              category="conteudo"
+              color="red"
             />
             <ActionButton
               name="more"
