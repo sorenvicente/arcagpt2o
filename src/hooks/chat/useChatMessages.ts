@@ -49,7 +49,7 @@ export const useChatMessages = (
         const { data: { session } } = await supabase.auth.getSession();
         
         if (!session?.access_token) {
-          throw new Error('No authentication token available');
+          throw new Error('Sessão expirada. Por favor, faça login novamente.');
         }
 
         controller = new AbortController();
@@ -57,7 +57,7 @@ export const useChatMessages = (
         const { data, error } = await supabase.functions.invoke('chat', {
           body: { 
             messages: updatedMessages,
-            signal: controller.signal // This will be handled by the Edge Function
+            signal: controller.signal
           },
           headers: {
             Authorization: `Bearer ${session.access_token}`
@@ -66,11 +66,17 @@ export const useChatMessages = (
 
         if (error) {
           console.error('Error from chat function:', error);
-          throw new Error(error.message || 'Failed to send message');
+          
+          // Check for specific API key configuration error
+          if (error.message?.includes('configure suas chaves API')) {
+            throw new Error('Por favor, configure pelo menos uma chave API (OpenAI ou OpenRouter) na página de Configurações para usar o chat.');
+          }
+          
+          throw new Error(error.message || 'Falha ao enviar mensagem');
         }
 
         if (!data?.content) {
-          throw new Error('No response content received');
+          throw new Error('Resposta inválida do servidor');
         }
 
         const botMessage: Message = {
@@ -90,7 +96,8 @@ export const useChatMessages = (
       toast({
         title: "Erro",
         description: error.message || "Não foi possível enviar a mensagem. Por favor, verifique suas chaves API.",
-        variant: "destructive"
+        variant: "destructive",
+        duration: 5000,
       });
     } finally {
       setIsLoading(false);
