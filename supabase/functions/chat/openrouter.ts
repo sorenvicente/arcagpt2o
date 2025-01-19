@@ -38,7 +38,25 @@ export async function handleOpenRouterRequest(req: Request) {
     const creditsData = await creditsResponse.json();
     console.log('💰 Créditos OpenRouter disponíveis:', creditsData.credits);
 
-    // Se temos créditos, prosseguir com a requisição
+    // Verificar se o modelo selecionado é gratuito
+    const freeModels = [
+      'meta-llama/llama-3.1-405b-instruct:free',
+      'meta-llama/llama-2-70b-chat',
+      'meta-llama/llama-2-13b-chat',
+      'meta-llama/llama-2-7b-chat',
+      'meta-llama/codellama-34b-instruct',
+      'meta-llama/codellama-70b-instruct',
+      'meta-llama/llama-2-13b-code-instruct',
+      'google/gemini-pro',
+      'anthropic/claude-2',
+      'mistral/mistral-7b',
+      'mistral/mixtral-8x7b'
+    ];
+
+    const isUsingFreeModel = freeModels.includes(model);
+    console.log('🎯 Usando modelo gratuito:', isUsingFreeModel);
+
+    // Se temos créditos ou estamos usando um modelo gratuito, prosseguir com a requisição
     console.log('📝 Enviando requisição para OpenRouter');
 
     const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
